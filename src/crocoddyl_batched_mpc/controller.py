@@ -3,6 +3,8 @@
 import torch
 from torch import Tensor
 
+from .ddp_problem import DDPProblem
+from .problem import LQRProblem
 from .result import MPCResult
 from .solver import BatchedMPC
 
@@ -18,7 +20,18 @@ class MPCController:
     def __init__(self, solver: BatchedMPC) -> None:
         self.solver = solver
         p = solver.problem
-        self._last_action = p.A.new_zeros(p.batch_size, p.nu)
+
+        # Get dimensions based on problem type
+        if isinstance(p, LQRProblem):
+            batch_size, nu = p.batch_size, p.nu
+            device, dtype = p.A.device, p.A.dtype
+        elif isinstance(p, DDPProblem):
+            batch_size, nu = p.batch_size, p.nu
+            device, dtype = p.device, p.dtype
+        else:
+            raise TypeError(f"Unsupported problem type: {type(p)}")
+
+        self._last_action = torch.zeros(batch_size, nu, device=device, dtype=dtype)
 
     @torch.no_grad()
     def compute(self, state: Tensor) -> tuple[Tensor, MPCResult]:
