@@ -1,2 +1,78 @@
 # Crocoddyl-batched-mpc
-A downstream package for batched Crocoddyl-based MPC, targeting GPU acceleration and Torch integration for parallel robot learning and control.
+
+为批量 RL 训练构建统一 CPU/GPU MPC 后端，面向 Isaac Lab 的 Torch CUDA tensor 调用。
+这是独立的 downstream 包，不修改 Crocoddyl 源码。
+
+## 当前阶段：0.1 初始可运行框架
+
+| 能力 | 当前实现 |
+| --- | --- |
+| 统一接口 | `LQRProblem` → `BatchedMPC.solve(x0)` → `MPCResult` |
+| Torch CPU/CUDA | 批量 Riccati 递推，环境维并行、时间维顺序 |
+| 数学问题 | 有限时域、时变仿射动力学、二次及线性代价、无约束 LQR |
+| Crocoddyl CPU | 可选 `ActionModelLQR` + `ShootingProblem` + `SolverDDP` 参考后端 |
+| RL 控制器 | 首步动作、逐环境状态、失败时保持上次有效动作、按 mask 重置 |
+| Isaac Lab | Tensor bridge 示例及 DirectRLEnv 接入说明 |
+| 验证 | 独立稠密解、闭环、批量隔离、CPU/CUDA 一致性、CUDA stream 测试 |
+
+当前 GPU 求解器是 Torch 实现的 LQR 基线。通用 Crocoddyl action model 的 GPU 执行、
+非线性 DDP/FDDP、接触动力学、控制约束、可微求解、原生 C++/CUDA 内核和 CUDA Graph
+均在后续计划中。Isaac Sim 真实任务尚未联调；tensor bridge 不是完整机器人环境。
+
+## 安装与运行
+
+在已有 PyTorch 环境内安装。Isaac Lab 用户优先使用其配套 Python/Torch 环境，
+保留与模拟器匹配的 CUDA 版本。基础包只依赖 Torch，无需 Crocoddyl、Pinocchio 或 Isaac Sim。
+
+```bash
+python -m pip install -e .
+python examples/double_integrator.py --device cpu
+python examples/double_integrator.py --device cuda --batch-size 1024
+python examples/isaaclab_tensor_bridge.py --device cuda
+```
+
+```python
+import torch
+from crocoddyl_batched_mpc import BatchedMPC, MPCController
+from crocoddyl_batched_mpc.models import double_integrator
+
+problem = double_integrator(batch_size=4096, horizon=20, device="cuda:0")
+controller = MPCController(BatchedMPC(problem, backend="torch"))
+x0 = torch.zeros(4096, 2, device="cuda:0")
+actions, result = controller.compute(x0)  # [4096, 1]，留在 CUDA 上
+controller.reset(torch.zeros(4096, dtype=torch.bool, device="cuda:0"))
+```
+
+输入必须与模型 device/dtype 一致，不自动迁移、不自动降级到 CPU。`result.status`
+是同设备的逐环境 tensor；训练热路径不要调用 `.item()` / `.cpu()` 读取状态。
+保持动作是基础回退机制，机器人任务需自行定义动作单位、限幅和失败策略。
+
+可选 Crocoddyl CPU 对照（在提供 Crocoddyl bindings 的平台/环境运行）：
+
+```bash
+python -m pip install -e '.[crocoddyl]'
+python examples/double_integrator.py --device cpu --backend crocoddyl
+```
+
+## 开发与验证
+
+```bash
+python -m pip install -e '.[dev]'
+python -m pytest -q
+ruff check .
+python benchmarks/bench_lqr.py --device cpu --batch-size 1024
+python benchmarks/bench_lqr.py --device cuda --batch-size 1024
+```
+
+CUDA/Crocoddyl 不可用时对应测试明确跳过。CI 有独立 Crocoddyl 对照任务；
+CPU CI 不能替代 GPU 验证。基准记录求解耗时，不代表完整 RL 训练吞吐。
+
+## 设计文档
+
+- [接口与架构](docs/architecture.md)：数学定义、tensor 布局、后端和失败语义。
+- [阶段计划](docs/roadmap.md)：从 LQR 到非线性批量 MPC 的验收条件。
+- [Isaac Lab 接入](docs/isaaclab.md)：控制时序、状态映射和环境重置。
+- [验证记录](docs/validation.md)：本机实际执行结果和未验证项。
+
+`src/crocoddyl_batched_mpc/` 包含 problem、result、solver、controller、backends；
+`tests/` 数值测试；`examples/` 调用示例；`benchmarks/` 性能入口。
