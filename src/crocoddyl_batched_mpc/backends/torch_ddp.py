@@ -38,7 +38,7 @@ class TorchDDPBackend:
 
         batch = problem.batch_size
         horizon = problem.horizon
-        nx, nu, ndx = problem.nx, problem.nu, problem.ndx
+        nu = problem.nu
         device, dtype = x0.device, x0.dtype
 
         # Initialize trajectory
@@ -61,9 +61,7 @@ class TorchDDPBackend:
         best_cost = cost.clone()
 
         # Regularization
-        reg = torch.full(
-            (batch,), problem.regularization_init, device=device, dtype=dtype
-        )
+        reg = torch.full((batch,), problem.regularization_init, device=device, dtype=dtype)
 
         for iteration in range(problem.max_iterations):
             # Backward pass: compute gains and expected cost reduction
@@ -94,9 +92,7 @@ class TorchDDPBackend:
             cost = torch.where(accept, cost_new, cost)
 
             # Update regularization
-            reg = self._update_regularization(
-                problem, reg, accept, improvement, expected_reduction
-            )
+            reg = self._update_regularization(problem, reg, accept, improvement, expected_reduction)
 
             # Check convergence
             relative_improvement = improvement / (torch.abs(best_cost) + 1e-8)
@@ -107,10 +103,9 @@ class TorchDDPBackend:
                 gradient_norm += offsets[:, t].abs().sum(-1)
 
             converged = (
-                ((relative_improvement < problem.cost_tolerance) |
-                 (gradient_norm < problem.gradient_tolerance)) &
-                valid
-            )
+                (relative_improvement < problem.cost_tolerance)
+                | (gradient_norm < problem.gradient_tolerance)
+            ) & valid
 
             if converged.all():
                 break
@@ -175,10 +170,9 @@ class TorchDDPBackend:
             expected_reduction: Expected cost improvement [batch]
             success: Whether backward pass succeeded for each env [batch]
         """
-        batch, horizon, nx, nu, ndx = (
+        batch, horizon, nu, ndx = (
             problem.batch_size,
             problem.horizon,
-            problem.nx,
             problem.nu,
             problem.ndx,
         )
@@ -210,9 +204,7 @@ class TorchDDPBackend:
 
             Qxx = lxx + torch.matmul(torch.matmul(Fx.transpose(-1, -2), Vxx), Fx)
             Quu = luu + torch.matmul(torch.matmul(Fu.transpose(-1, -2), Vxx), Fu)
-            Qux = lxu.transpose(-1, -2) + torch.matmul(
-                torch.matmul(Fu.transpose(-1, -2), Vxx), Fx
-            )
+            Qux = lxu.transpose(-1, -2) + torch.matmul(torch.matmul(Fu.transpose(-1, -2), Vxx), Fx)
 
             # Add regularization: Quu += λ·I
             Quu_reg = Quu + reg[:, None, None] * eye_nu
@@ -271,8 +263,10 @@ class TorchDDPBackend:
         batch, horizon, nx, nu = problem.batch_size, problem.horizon, problem.nx, problem.nu
         device, dtype = x0.device, x0.dtype
 
-        # Line search parameters
-        alphas = torch.tensor([1.0, 0.5, 0.25, 0.1, 0.01], device=device, dtype=dtype)
+        # Line search parameters - more aggressive
+        alphas = torch.tensor(
+            [1.0, 0.8, 0.6, 0.4, 0.2, 0.1, 0.05, 0.01], device=device, dtype=dtype
+        )
 
         best_xs = xs_nom.clone()
         best_us = us_nom.clone()
@@ -308,13 +302,11 @@ class TorchDDPBackend:
             cost_new = torch.where(
                 rollout_valid,
                 self._compute_cost(problem, xs_new, us_new),
-                torch.full((batch,), float('inf'), device=device, dtype=dtype)
+                torch.full((batch,), float("inf"), device=device, dtype=dtype),
             )
 
             # Check improvement
             improvement = cost_nom - cost_new
-            # More relaxed Armijo condition
-            sufficient = improvement > 1e-8 * alpha * expected_reduction.abs()
             improved = (improvement > 0) & torch.isfinite(cost_new) & rollout_valid
 
             # Update best for environments that improved
@@ -334,26 +326,43 @@ class TorchDDPBackend:
         improvement: Tensor,
         expected_improvement: Tensor,
     ) -> Tensor:
-        """Adaptive regularization update."""
+        """Adaptive regularization update with more aggressive tuning."""
         # Increase reg if step was rejected or improvement was poor
         # Decrease reg if step was good
 
         ratio = improvement / (expected_improvement.abs() + 1e-8)
 
-        # Decrease for good steps (ratio > 0.75)
-        decrease = accept & (ratio > 0.75)
+        # More aggressive decrease for very good steps (ratio > 0.9)
+        very_good = accept & (ratio > 0.9)
         reg = torch.where(
-            decrease,
-            torch.maximum(reg / problem.regularization_factor, torch.tensor(problem.regularization_min, device=reg.device)),
-            reg
+            very_good,
+            torch.maximum(
+                reg / (problem.regularization_factor * 2),  # Faster decrease
+                torch.tensor(problem.regularization_min, device=reg.device),
+            ),
+            reg,
         )
 
-        # Increase for bad steps
-        increase = ~accept | (ratio < 0.25)
+        # Normal decrease for good steps (0.5 < ratio <= 0.9)
+        good = accept & (ratio > 0.5) & (ratio <= 0.9) & ~very_good
+        reg = torch.where(
+            good,
+            torch.maximum(
+                reg / problem.regularization_factor,
+                torch.tensor(problem.regularization_min, device=reg.device),
+            ),
+            reg,
+        )
+
+        # Increase for rejected or poor steps
+        increase = ~accept | (ratio <= 0.25)
         reg = torch.where(
             increase,
-            torch.minimum(reg * problem.regularization_factor, torch.tensor(problem.regularization_max, device=reg.device)),
-            reg
+            torch.minimum(
+                reg * problem.regularization_factor,
+                torch.tensor(problem.regularization_max, device=reg.device),
+            ),
+            reg,
         )
 
         return reg

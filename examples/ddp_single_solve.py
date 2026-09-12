@@ -1,6 +1,7 @@
 """Test DDP solver with verbose output."""
 
 import torch
+
 from crocoddyl_batched_mpc import BatchedMPC, DDPProblem
 from crocoddyl_batched_mpc.manifolds import EuclideanManifold
 from crocoddyl_batched_mpc.models.pendulum import PendulumCost, PendulumDynamics
@@ -55,7 +56,7 @@ solver = BatchedMPC(problem, backend="torch")
 print("\nSolving...")
 result = solver.solve(x0)
 
-print(f"\nResult:")
+print("\nResult:")
 print(f"Status: {result.status.item()}")
 print(f"Final cost: {result.cost.item():.4f}")
 print(f"Iterations: {result.iterations.item()}")

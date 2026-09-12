@@ -16,7 +16,9 @@ from crocoddyl_batched_mpc.models.pendulum import PendulumCost, PendulumDynamics
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--device", default="cpu", help="Device: cpu or cuda")
-    parser.add_argument("--batch-size", type=int, default=16, help="Number of parallel environments")
+    parser.add_argument(
+        "--batch-size", type=int, default=16, help="Number of parallel environments"
+    )
     parser.add_argument("--horizon", type=int, default=50, help="MPC horizon")
     parser.add_argument("--steps", type=int, default=100, help="Simulation steps")
     parser.add_argument("--max-iters", type=int, default=50, help="Max DDP iterations per solve")
@@ -38,7 +40,9 @@ def main() -> None:
     u_zero = torch.zeros(1, device=device, dtype=dtype)
 
     for t in range(horizon):
-        x_init_single[t + 1] = dynamics.calc(x_init_single[t:t+1], u_zero.unsqueeze(0)).squeeze(0)
+        x_init_single[t + 1] = dynamics.calc(x_init_single[t : t + 1], u_zero.unsqueeze(0)).squeeze(
+            0
+        )
 
     x_init = x_init_single.unsqueeze(0).expand(batch_size, -1, -1).clone()
     u_init = torch.zeros(batch_size, horizon, 1, device=device, dtype=dtype)
@@ -67,7 +71,7 @@ def main() -> None:
 
     print(f"Device: {device}, Batch: {batch_size}, Horizon: {horizon}")
     print(f"Initial position RMS: {state[:, 0].square().mean().sqrt().item():.4f} rad")
-    print(f"Target: θ=π (upright)\n")
+    print("Target: θ=π (upright)\n")
 
     # Simulation loop
     total_failures = 0
@@ -86,9 +90,11 @@ def main() -> None:
             avg_angle_error = angle_error.mean().item()
             avg_vel = state[:, 1].abs().mean().item()
 
-            print(f"Step {step:3d}: angle_err={avg_angle_error:.4f} rad, "
-                  f"vel={avg_vel:.4f} rad/s, failures={failures}/{batch_size}, "
-                  f"avg_iters={result.iterations.float().mean().item():.1f}")
+            print(
+                f"Step {step:3d}: angle_err={avg_angle_error:.4f} rad, "
+                f"vel={avg_vel:.4f} rad/s, failures={failures}/{batch_size}, "
+                f"avg_iters={result.iterations.float().mean().item():.1f}"
+            )
 
         # Apply dynamics
         state = dynamics.calc(state, action)
@@ -101,9 +107,13 @@ def main() -> None:
     angle_error = ((final_angle - torch.pi) % (2 * torch.pi)).abs()
     angle_error = torch.minimum(angle_error, 2 * torch.pi - angle_error)
 
-    print(f"\n=== Final Results ===")
-    print(f"Final angle error: {angle_error.mean().item():.4f} ± {angle_error.std().item():.4f} rad")
-    print(f"Final velocity: {final_vel.abs().mean().item():.4f} ± {final_vel.abs().std().item():.4f} rad/s")
+    print("\n=== Final Results ===")
+    print(
+        f"Final angle error: {angle_error.mean().item():.4f} ± {angle_error.std().item():.4f} rad"
+    )
+    mean_velocity = final_vel.abs().mean().item()
+    std_velocity = final_vel.abs().std().item()
+    print(f"Final velocity: {mean_velocity:.4f} ± {std_velocity:.4f} rad/s")
     print(f"Success rate: {(angle_error < 0.1).sum().item()}/{batch_size} envs stabilized")
     print(f"Total failures: {total_failures}")
     print(f"Avg iterations per solve: {total_iterations / args.steps:.1f}")

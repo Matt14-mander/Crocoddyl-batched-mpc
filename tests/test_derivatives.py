@@ -44,7 +44,9 @@ def finite_difference_dynamics(
 
 def finite_difference_cost(
     cost_model, x: torch.Tensor, u: torch.Tensor | None, eps: float = 1e-6
-) -> tuple[torch.Tensor, torch.Tensor | None, torch.Tensor, torch.Tensor | None, torch.Tensor | None]:
+) -> tuple[
+    torch.Tensor, torch.Tensor | None, torch.Tensor, torch.Tensor | None, torch.Tensor | None
+]:
     """Compute cost derivatives using finite differences.
 
     Returns:

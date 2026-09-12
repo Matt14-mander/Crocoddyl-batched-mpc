@@ -34,8 +34,8 @@ class DDPProblem:
 
     # Solver parameters
     max_iterations: int = 100
-    cost_tolerance: float = 1e-6
-    gradient_tolerance: float = 1e-6
+    cost_tolerance: float = 1e-4  # More relaxed from 1e-6
+    gradient_tolerance: float = 1e-4  # More relaxed from 1e-6
     regularization_init: float = 1e-6
     regularization_min: float = 1e-9
     regularization_max: float = 1e9

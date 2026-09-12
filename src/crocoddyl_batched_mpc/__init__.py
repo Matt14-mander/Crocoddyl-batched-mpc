@@ -1,4 +1,4 @@
-"""Tensor-first batched MPC. The initial release implements affine LQR."""
+"""Tensor-first batched MPC with validated LQR and an experimental nonlinear DDP backend."""
 
 from .controller import MPCController
 from .ddp_problem import DDPProblem

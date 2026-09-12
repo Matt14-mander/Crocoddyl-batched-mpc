@@ -1,4 +1,5 @@
 import torch
+
 from crocoddyl_batched_mpc.models.pendulum import PendulumCost
 
 # Simple test
@@ -14,11 +15,11 @@ print("u:", u)
 print("error:", x - cost.x_ref)
 
 # Analytical
-l = cost.calc(x, u)
+value = cost.calc(x, u)
 lx, lu, lxx, luu, lxu = cost.calc_diff(x, u)
 
 print("\n=== Analytical ===")
-print(f"cost: {l.item():.6f}")
+print(f"cost: {value.item():.6f}")
 print(f"lx: {lx}")
 print(f"lu: {lu}")
 
@@ -29,7 +30,7 @@ for i in range(2):
     x_plus = x.clone()
     x_plus[:, i] += eps
     l_plus = cost.calc(x_plus, u)
-    lx_fd[:, i] = (l_plus - l) / eps
+    lx_fd[:, i] = (l_plus - value) / eps
 
 print("\n=== Finite Difference ===")
 print(f"lx_fd: {lx_fd}")

@@ -26,11 +26,13 @@ class BatchedMPC:
                     self.backend = TorchLQRBackend(regularization=regularization)
                 elif isinstance(problem, DDPProblem):
                     from .backends.torch_ddp import TorchDDPBackend
+
                     self.backend = TorchDDPBackend()
                 else:
                     raise TypeError(f"Unsupported problem type: {type(problem)}")
             elif backend == "crocoddyl":
                 from .backends.crocoddyl_cpu import CrocoddylCPUBackend
+
                 self.backend = CrocoddylCPUBackend(regularization=regularization)
             else:
                 raise ValueError(f"Unknown backend: {backend!r}; choose 'torch' or 'crocoddyl'")

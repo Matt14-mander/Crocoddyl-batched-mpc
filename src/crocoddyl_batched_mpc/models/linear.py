@@ -4,7 +4,7 @@ import math
 
 import torch
 
-from .problem import LQRProblem
+from ..problem import LQRProblem
 
 
 def double_integrator(

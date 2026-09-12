@@ -3,21 +3,23 @@
 为批量 RL 训练构建统一 CPU/GPU MPC 后端，面向 Isaac Lab 的 Torch CUDA tensor 调用。
 这是独立的 downstream 包，不修改 Crocoddyl 源码。
 
-## 当前阶段：0.1 初始可运行框架
+## 当前阶段：M1.5 工程稳定化
 
 | 能力 | 当前实现 |
 | --- | --- |
 | 统一接口 | `LQRProblem` → `BatchedMPC.solve(x0)` → `MPCResult` |
 | Torch CPU/CUDA | 批量 Riccati 递推，环境维并行、时间维顺序 |
 | 数学问题 | 有限时域、时变仿射动力学、二次及线性代价、无约束 LQR |
+| 非线性原型 | 批量 dynamics/cost/manifold 接口、Pendulum 模型、Torch DDP 原型 |
 | Crocoddyl CPU | 可选 `ActionModelLQR` + `ShootingProblem` + `SolverDDP` 参考后端 |
 | RL 控制器 | 首步动作、逐环境状态、失败时保持上次有效动作、按 mask 重置 |
 | Isaac Lab | Tensor bridge 示例及 DirectRLEnv 接入说明 |
 | 验证 | 独立稠密解、闭环、批量隔离、CPU/CUDA 一致性、CUDA stream 测试 |
 
-当前 GPU 求解器是 Torch 实现的 LQR 基线。通用 Crocoddyl action model 的 GPU 执行、
-非线性 DDP/FDDP、接触动力学、控制约束、可微求解、原生 C++/CUDA 内核和 CUDA Graph
-均在后续计划中。Isaac Sim 真实任务尚未联调；tensor bridge 不是完整机器人环境。
+LQR 后端已经通过独立稠密解和 CPU/CUDA 测试。非线性 DDP 目前是待完善原型：
+模型导数测试已通过，但收敛、逐环境状态机和 warm start 尚未达到 M1 验收条件。
+通用 Crocoddyl action model 的 GPU 执行、FDDP、接触动力学、控制约束、可微求解、
+原生 C++/CUDA 内核和 CUDA Graph 均在后续计划中。Isaac Sim 真实任务尚未联调。
 
 ## 安装与运行
 

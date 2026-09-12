@@ -1,6 +1,7 @@
 """Debug DDP backward pass."""
 
 import torch
+
 from crocoddyl_batched_mpc import DDPProblem
 from crocoddyl_batched_mpc.manifolds import EuclideanManifold
 from crocoddyl_batched_mpc.models.pendulum import PendulumCost, PendulumDynamics
