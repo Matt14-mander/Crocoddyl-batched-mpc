@@ -21,16 +21,21 @@ M0 不等于通用 GPU Crocoddyl 完成；实际执行结果见 validation.md。
 - [ ] 完成稳定的 Pendulum 闭环及 Crocoddyl 数值对照。
 - [ ] 分离全局模型参数与逐环境随机化参数。
 
-当前状态：**M1.5 稳定化中**。状态机和线性数值基准已经通过；Pendulum 长时闭环、
-Crocoddyl 对照和逐环境参数化仍未完成，因此暂不进入 M2。
+当前状态：**M1 正确性基线已冻结**。DDP 数值验收见 `ddp_acceptance.md`；未安装
+Crocoddyl 的环境仍会明确跳过外部 oracle。
 
 验收：导数通过有限差分；相同模型、初值、horizon 和容差下对齐轨迹、代价、反馈策略；
 覆盖不可行初始轨迹、非正定 Hessian 和预算耗尽。
 
 ## M2：批量非线性求解
 
-实现 backward/forward、逐环境线搜索/自适应正则化、固定迭代预算、失败和冻结 mask。
-加入 horizon shift warm start，reset 仅清除指定环境；设计 FDDP gap 处理。
+当前状态：**M2.0 已启动**。
+
+- [x] backward/forward、逐环境线搜索/自适应正则化、固定迭代预算、失败和冻结 mask。
+- [x] controller horizon-shift warm start；局部 reset 同时清除动作与轨迹缓存。
+- [ ] 分离全局模型参数与逐环境随机化参数，并定义更新/失效协议。
+- [ ] 设计和实现 FDDP gap 处理。
+
 控制 box 约束需要独立 QP/Box-DDP，最终动作裁剪不等价于受约束最优解。
 
 验收：批量元素与独立求解一致，局部重置不污染其他环境；参考/模型更新不读取陈旧缓存；

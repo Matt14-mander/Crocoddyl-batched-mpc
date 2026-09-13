@@ -24,6 +24,7 @@ markers = [
     "cuda: requires a CUDA device",
     "crocoddyl: requires optional Crocoddyl bindings",
     "ddp_acceptance: executable DDP correctness acceptance gate",
+    "m2_acceptance: M2 batched nonlinear MPC acceptance gate",
 ]
 
 [tool.ruff]

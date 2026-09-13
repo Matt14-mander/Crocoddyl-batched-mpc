@@ -85,6 +85,11 @@ best-so-far 轨迹。`MPCResult.usable` 对这两种状态为真，控制器可�
 只有 `NUMERICAL_FAILURE` 触发上次动作回退。单 shooting DDP 总是从当前 `x0` 和
 `u_init` 重建可行状态轨迹；`x_init` 暂仅保留作接口兼容提示，不参与当前求解。
 
+`MPCController` 对每个可用 DDP 解执行 horizon shift：下一次初值为 `u[1:]`，末端重复
+最后一个控制。数值失败的环境保留上一次有效 warm start。`reset(mask)` 只清除指定环境
+的 warm start 和失败回退动作；替换 `solver.problem` 对象会清除全部缓存。若调用方原地
+修改模型或参考 tensor，必须在下一次 `compute` 前对受影响环境调用 `reset(mask)`。
+
 ## Crocoddyl 与扩展
 
 Crocoddyl 参考后端延迟导入依赖、显式拒绝 CUDA，每次逐环境重建 LQR shooting problem。
