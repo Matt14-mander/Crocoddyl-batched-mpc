@@ -80,7 +80,7 @@ def main() -> None:
     for step in range(args.steps):
         action, result = controller.compute(state)
 
-        failures = (~result.success).sum().item()
+        failures = (~result.usable).sum().item()
         total_failures += failures
         total_iterations += result.iterations.float().mean().item()
 

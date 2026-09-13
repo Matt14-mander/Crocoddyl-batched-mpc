@@ -14,7 +14,7 @@ class SolveStatus(IntEnum):
 class MPCResult:
     """All tensors stay on the problem device, including per-environment status.
 
-    Failed trajectories/cost are NaN. action is zero for failed environments.
+    Numerically failed trajectories/cost are NaN. action is zero for those environments.
     No gradients: RL can use MPC as a controller/teacher, not a differentiable layer.
     """
 
@@ -29,7 +29,16 @@ class MPCResult:
         return self.status == SolveStatus.SUCCESS
 
     @property
+    def usable(self) -> Tensor:
+        """A finite candidate remains usable when a fixed iteration budget expires."""
+        import torch
+
+        return (self.status != SolveStatus.NUMERICAL_FAILURE) & torch.isfinite(self.us[:, 0]).all(
+            -1
+        )
+
+    @property
     def action(self) -> Tensor:
         import torch
 
-        return torch.where(self.success[:, None], self.us[:, 0], 0.0)
+        return torch.where(self.usable[:, None], self.us[:, 0], 0.0)

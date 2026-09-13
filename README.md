@@ -17,7 +17,8 @@
 | 验证 | 独立稠密解、闭环、批量隔离、CPU/CUDA 一致性、CUDA stream 测试 |
 
 LQR 后端已经通过独立稠密解和 CPU/CUDA 测试。非线性 DDP 目前是待完善原型：
-模型导数测试已通过，但收敛、逐环境状态机和 warm start 尚未达到 M1 验收条件。
+模型导数、逐环境状态机及线性 LQR 对照已通过，但 Pendulum 长时闭环、
+Crocoddyl 对照和 horizon-shift warm start 尚未达到 M1/M2 验收条件。
 通用 Crocoddyl action model 的 GPU 执行、FDDP、接触动力学、控制约束、可微求解、
 原生 C++/CUDA 内核和 CUDA Graph 均在后续计划中。Isaac Sim 真实任务尚未联调。
 

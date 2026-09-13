@@ -4,9 +4,14 @@
 
 - 解决 `models.py` 与 `models/` 同名造成的导入冲突，线性模型现位于 `models/linear.py`。
 - 根目录调试和手工运行脚本已归入 `examples/`。
-- 完整测试：**30 passed, 1 skipped**；跳过项为未安装的 Crocoddyl bindings。
+- 完整测试：**38 passed, 1 skipped**；跳过项为未安装的 Crocoddyl bindings。
 - Ruff 检查通过，M0 LQR 和 M1 模型导数测试可以在同一次测试运行中完成。
-- DDP solver 的收敛与异常状态测试尚未纳入正式测试，不能据此判定 M1 已验收。
+- DDP 新增 8 项状态机测试：与精确 LQR 对齐、当前 `x0` 轨迹一致性、逐环境失败、
+  Cholesky 失败的正则化重试、线搜索拒绝、固定预算可用解、模型 dtype 校验和
+  CUDA 无 host sync。
+- Pendulum 单次求解（B=1、T=20、最多 50 次迭代）在 5 次迭代收敛，
+  cost=519.4505，终态 θ=3.2642 rad、角速度 1.2589 rad/s。它证明单次求解明显改善，
+  尚不能替代长时闭环稳定验收。
 
 日期：2026-09-03。下列为本机执行结果，CI 配置尚未在远程运行。
 

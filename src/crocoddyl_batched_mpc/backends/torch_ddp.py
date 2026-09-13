@@ -1,11 +1,4 @@
-"""Differential Dynamic Programming (DDP) backend for nonlinear MPC.
-
-Implements batched DDP with:
-- Backward Riccati-like recursion for computing optimal feedback gains
-- Forward pass with line search for trajectory update
-- Adaptive regularization for numerical stability
-- Per-environment failure tracking and isolation
-"""
+"""Batched single-shooting DDP backend for nonlinear MPC."""
 
 import torch
 from torch import Tensor
@@ -14,162 +7,135 @@ from ..ddp_problem import DDPProblem
 from ..result import MPCResult, SolveStatus
 
 
-class TorchDDPBackend:
-    """Batched DDP solver using PyTorch on CPU or CUDA.
+def _mv(matrix: Tensor, vector: Tensor) -> Tensor:
+    return (matrix @ vector.unsqueeze(-1)).squeeze(-1)
 
-    Each environment in the batch is solved independently with shared dynamics/cost models.
-    Failed environments (non-PD Hessian, divergence) are isolated and don't affect others.
+
+class TorchDDPBackend:
+    """Fixed-budget batched DDP with per-environment solver state.
+
+    Environments remain independent. A rejected line-search step increases
+    regularization and can be retried; it is not a numerical failure. The
+    implementation deliberately runs the configured iteration count without
+    tensor-to-host convergence branches, which keeps the CUDA path asynchronous.
     """
 
-    def __init__(self) -> None:
-        pass
-
+    @torch.no_grad()
     def solve(self, problem: DDPProblem, x0: Tensor) -> MPCResult:
-        """Solve nonlinear optimal control problem using DDP.
-
-        Args:
-            problem: DDPProblem with dynamics, cost, and parameters
-            x0: Initial state [batch, nx]
-
-        Returns:
-            MPCResult with optimal trajectory and status
-        """
         problem.validate_state(x0)
-
-        batch = problem.batch_size
-        horizon = problem.horizon
-        nu = problem.nu
+        batch, horizon, nu = problem.batch_size, problem.horizon, problem.nu
         device, dtype = x0.device, x0.dtype
 
-        # Initialize trajectory
-        if problem.x_init is not None:
-            xs = problem.x_init.clone()
-        else:
-            # Simple forward rollout with zero control
-            xs = self._initialize_trajectory(problem, x0)
-
-        if problem.u_init is not None:
-            us = problem.u_init.clone()
-        else:
+        if problem.u_init is None:
             us = torch.zeros(batch, horizon, nu, device=device, dtype=dtype)
+        else:
+            us = problem.u_init.clone()
 
-        # Track which environments are still valid
-        valid = torch.ones(batch, dtype=torch.bool, device=device)
-
-        # Initial cost
+        initial_finite = torch.isfinite(x0).all(-1) & torch.isfinite(us).flatten(1).all(-1)
+        safe_x0 = torch.where(initial_finite[:, None], x0, 0.0)
+        us = torch.where(initial_finite[:, None, None], us, 0.0)
+        xs = self._rollout(problem, safe_x0, us)
         cost = self._compute_cost(problem, xs, us)
-        best_cost = cost.clone()
+        initial_finite &= torch.isfinite(xs).flatten(1).all(-1) & torch.isfinite(cost)
 
-        # Regularization
+        failed = ~initial_finite
+        converged = torch.zeros(batch, dtype=torch.bool, device=device)
+        iterations = torch.zeros(batch, dtype=torch.int64, device=device)
         reg = torch.full((batch,), problem.regularization_init, device=device, dtype=dtype)
+        reg_factor = problem.regularization_factor
 
-        for iteration in range(problem.max_iterations):
-            # Backward pass: compute gains and expected cost reduction
+        for _ in range(problem.max_iterations):
+            active = ~(failed | converged)
+            iterations += active.to(torch.int64)
+
             with torch.enable_grad():
-                gains, offsets, expected_reduction, bp_success = self._backward_pass(
+                gains, offsets, expected, backward_ok, derivatives_finite = self._backward_pass(
                     problem, xs, us, reg
                 )
 
-            valid = valid & bp_success
+            failed |= active & ~derivatives_finite
+            active &= derivatives_finite
 
-            if not valid.any():
-                # All environments failed
-                break
-
-            # Forward pass with line search
-            xs_new, us_new, cost_new, fp_success = self._forward_pass(
-                problem, x0, xs, us, gains, offsets, cost, expected_reduction
+            factorization_failed = active & ~backward_ok
+            failed |= factorization_failed & (reg >= problem.regularization_max)
+            reg = torch.where(
+                factorization_failed,
+                torch.clamp_max(reg * reg_factor, problem.regularization_max),
+                reg,
             )
 
-            valid = valid & fp_success
+            can_step = active & backward_ok
+            feedforward_norm = offsets.abs().flatten(1).amax(-1)
+            stationary = can_step & (feedforward_norm <= problem.gradient_tolerance)
+            converged |= stationary
+            attempted = can_step & ~stationary
 
-            # Update trajectories for successful environments
+            xs_new, us_new, cost_new, accepted, rollout_finite = self._forward_pass(
+                problem,
+                safe_x0,
+                xs,
+                us,
+                gains,
+                offsets,
+                cost,
+                expected,
+                attempted,
+            )
+            failed |= attempted & ~rollout_finite
+            accepted &= ~failed
+
             improvement = cost - cost_new
-            accept = (improvement > 0) & valid
+            relative_improvement = improvement / cost.abs().clamp_min(1.0)
+            xs = torch.where(accepted[:, None, None], xs_new, xs)
+            us = torch.where(accepted[:, None, None], us_new, us)
+            cost = torch.where(accepted, cost_new, cost)
 
-            xs = torch.where(accept[:, None, None], xs_new, xs)
-            us = torch.where(accept[:, None, None], us_new, us)
-            cost = torch.where(accept, cost_new, cost)
+            converged |= accepted & (relative_improvement <= problem.cost_tolerance)
+            reg = self._update_regularization(
+                problem, reg, attempted & ~failed, accepted, improvement, expected
+            )
 
-            # Update regularization
-            reg = self._update_regularization(problem, reg, accept, improvement, expected_reduction)
-
-            # Check convergence
-            relative_improvement = improvement / (torch.abs(best_cost) + 1e-8)
-            gradient_norm = torch.zeros(batch, device=device, dtype=dtype)
-
-            # Compute gradient norm for convergence check
-            for t in range(horizon):
-                gradient_norm += offsets[:, t].abs().sum(-1)
-
-            converged = (
-                (relative_improvement < problem.cost_tolerance)
-                | (gradient_norm < problem.gradient_tolerance)
-            ) & valid
-
-            if converged.all():
-                break
-
-        # Final status
+        finite_result = (
+            torch.isfinite(xs).flatten(1).all(-1)
+            & torch.isfinite(us).flatten(1).all(-1)
+            & torch.isfinite(cost)
+        )
+        failed |= ~finite_result
         status = torch.where(
-            valid,
-            torch.where(
-                converged,
-                SolveStatus.SUCCESS,
-                SolveStatus.MAX_ITERATIONS,
-            ),
+            failed,
             SolveStatus.NUMERICAL_FAILURE,
+            torch.where(converged, SolveStatus.SUCCESS, SolveStatus.MAX_ITERATIONS),
+        )
+        return MPCResult(
+            torch.where(failed[:, None, None], float("nan"), xs),
+            torch.where(failed[:, None, None], float("nan"), us),
+            torch.where(failed, float("nan"), cost),
+            status,
+            iterations,
         )
 
-        # Mark failed trajectories as NaN
-        xs = torch.where(valid[:, None, None], xs, float("nan"))
-        us = torch.where(valid[:, None, None], us, float("nan"))
-        cost = torch.where(valid, cost, float("nan"))
-
-        iterations = torch.full((batch,), iteration + 1, dtype=torch.int64, device=device)
-
-        return MPCResult(xs, us, cost, status, iterations)
-
-    def _initialize_trajectory(self, problem: DDPProblem, x0: Tensor) -> Tensor:
-        """Forward rollout with zero control to initialize state trajectory."""
-        batch, horizon, nx = problem.batch_size, problem.horizon, problem.nx
-        device, dtype = x0.device, x0.dtype
-
-        xs = torch.zeros(batch, horizon + 1, nx, device=device, dtype=dtype)
+    def _rollout(self, problem: DDPProblem, x0: Tensor, us: Tensor) -> Tensor:
+        xs = torch.empty(
+            problem.batch_size,
+            problem.horizon + 1,
+            problem.nx,
+            device=x0.device,
+            dtype=x0.dtype,
+        )
         xs[:, 0] = x0
-
-        u_zero = torch.zeros(batch, problem.nu, device=device, dtype=dtype)
-
-        for t in range(horizon):
-            xs[:, t + 1] = problem.dynamics.calc(xs[:, t], u_zero)
-
+        for t in range(problem.horizon):
+            xs[:, t + 1] = problem.dynamics.calc(xs[:, t], us[:, t])
         return xs
 
     def _compute_cost(self, problem: DDPProblem, xs: Tensor, us: Tensor) -> Tensor:
-        """Compute total cost for each environment."""
-        batch, horizon = problem.batch_size, problem.horizon
-        cost = torch.zeros(batch, device=xs.device, dtype=xs.dtype)
-
-        # Running cost
-        for t in range(horizon):
+        cost = torch.zeros(problem.batch_size, device=xs.device, dtype=xs.dtype)
+        for t in range(problem.horizon):
             cost += problem.cost.calc(xs[:, t], us[:, t])
-
-        # Terminal cost
-        cost += problem.cost.calc(xs[:, horizon], None)
-
-        return cost
+        return cost + problem.cost.calc(xs[:, problem.horizon], None)
 
     def _backward_pass(
         self, problem: DDPProblem, xs: Tensor, us: Tensor, reg: Tensor
-    ) -> tuple[Tensor, Tensor, Tensor, Tensor]:
-        """Compute optimal feedback gains via backward Riccati recursion.
-
-        Returns:
-            K: Feedback gains [batch, T, nu, ndx]
-            k: Feedforward terms [batch, T, nu]
-            expected_reduction: Expected cost improvement [batch]
-            success: Whether backward pass succeeded for each env [batch]
-        """
+    ) -> tuple[Tensor, Tensor, Tensor, Tensor, Tensor]:
         batch, horizon, nu, ndx = (
             problem.batch_size,
             problem.horizon,
@@ -177,192 +143,126 @@ class TorchDDPBackend:
             problem.ndx,
         )
         device, dtype = xs.device, xs.dtype
-
-        K = torch.zeros(batch, horizon, nu, ndx, device=device, dtype=dtype)
-        k = torch.zeros(batch, horizon, nu, device=device, dtype=dtype)
-
-        # Value function derivatives at terminal time
-        lx_T, _, lxx_T, _, _ = problem.cost.calc_diff(xs[:, horizon], None)
-        Vx = lx_T
-        Vxx = lxx_T
-
-        expected_reduction = torch.zeros(batch, device=device, dtype=dtype)
-        success = torch.ones(batch, dtype=torch.bool, device=device)
-
+        gains = torch.zeros(batch, horizon, nu, ndx, device=device, dtype=dtype)
+        offsets = torch.zeros(batch, horizon, nu, device=device, dtype=dtype)
         eye_nu = torch.eye(nu, device=device, dtype=dtype)
 
+        Vx, _, Vxx, _, _ = problem.cost.calc_diff(xs[:, horizon], None)
+        derivatives_finite = torch.isfinite(Vx).all(-1) & torch.isfinite(Vxx).flatten(1).all(-1)
+        factorization_ok = torch.ones(batch, dtype=torch.bool, device=device)
+        expected = torch.zeros(batch, device=device, dtype=dtype)
+
         for t in reversed(range(horizon)):
-            # Dynamics derivatives
             Fx, Fu = problem.dynamics.calc_diff(xs[:, t], us[:, t])
-
-            # Cost derivatives
             lx, lu, lxx, luu, lxu = problem.cost.calc_diff(xs[:, t], us[:, t])
+            assert lu is not None and luu is not None and lxu is not None
 
-            # Q-function derivatives
-            Qx = lx + torch.matmul(Fx.transpose(-1, -2), Vx.unsqueeze(-1)).squeeze(-1)
-            Qu = lu + torch.matmul(Fu.transpose(-1, -2), Vx.unsqueeze(-1)).squeeze(-1)
+            stage_finite = torch.ones(batch, dtype=torch.bool, device=device)
+            for value in (Fx, Fu, lx, lu, lxx, luu, lxu):
+                stage_finite &= torch.isfinite(value).flatten(1).all(-1)
+            derivatives_finite &= stage_finite
 
-            Qxx = lxx + torch.matmul(torch.matmul(Fx.transpose(-1, -2), Vxx), Fx)
-            Quu = luu + torch.matmul(torch.matmul(Fu.transpose(-1, -2), Vxx), Fu)
-            Qux = lxu.transpose(-1, -2) + torch.matmul(torch.matmul(Fu.transpose(-1, -2), Vxx), Fx)
+            FxT, FuT = Fx.transpose(-1, -2), Fu.transpose(-1, -2)
+            Qx = lx + _mv(FxT, Vx)
+            Qu = lu + _mv(FuT, Vx)
+            Qxx = lxx + FxT @ Vxx @ Fx
+            Quu = luu + FuT @ Vxx @ Fu
+            Qux = lxu.transpose(-1, -2) + FuT @ Vxx @ Fx
 
-            # Add regularization: Quu += λ·I
             Quu_reg = Quu + reg[:, None, None] * eye_nu
-
-            # Cholesky decomposition
             L, info = torch.linalg.cholesky_ex(Quu_reg, check_errors=False)
-            good = (info == 0) & torch.isfinite(L).flatten(1).all(-1)
-            success = success & good
-
-            # Compute gains (set to zero for failed environments)
+            good = stage_finite & (info == 0) & torch.isfinite(L).flatten(1).all(-1)
+            factorization_ok &= good
             L_safe = torch.where(good[:, None, None], L, eye_nu)
-
-            # Solve: Quu_reg·K = -Qux and Quu_reg·k = -Qu
             rhs = torch.cat((-Qux, -Qu.unsqueeze(-1)), dim=-1)
             intermediate = torch.linalg.solve_triangular(L_safe, rhs, upper=False)
             solution = torch.linalg.solve_triangular(
                 L_safe.transpose(-1, -2), intermediate, upper=True
             )
+            K = torch.where(good[:, None, None], solution[..., :ndx], 0.0)
+            k = torch.where(good[:, None], solution[..., ndx], 0.0)
+            gains[:, t], offsets[:, t] = K, k
 
-            K[:, t] = torch.where(good[:, None, None], solution[..., :ndx], 0.0)
-            k[:, t] = torch.where(good[:, None], solution[..., ndx], 0.0)
+            linear = (k * Qu).sum(-1)
+            quadratic = 0.5 * (k * _mv(Quu, k)).sum(-1)
+            expected += torch.where(good, -(linear + quadratic), 0.0)
 
-            # Expected cost reduction (for line search)
-            expected_reduction += torch.where(
-                good,
-                -0.5 * torch.matmul(k[:, t].unsqueeze(-2), Qu.unsqueeze(-1)).squeeze(),
-                0.0,
-            )
+            KT, QuxT = K.transpose(-1, -2), Qux.transpose(-1, -2)
+            Vx = Qx + _mv(KT, Qu) + _mv(QuxT, k) + _mv(KT, _mv(Quu, k))
+            Vxx = Qxx + QuxT @ K + KT @ Qux + KT @ Quu @ K
+            Vxx = 0.5 * (Vxx + Vxx.transpose(-1, -2))
 
-            # Update value function
-            Vx = Qx + torch.matmul(K[:, t].transpose(-1, -2), Qu.unsqueeze(-1)).squeeze(-1)
-            Vxx = Qxx + torch.matmul(torch.matmul(K[:, t].transpose(-1, -2), Quu), K[:, t])
-            Vxx = 0.5 * (Vxx + Vxx.transpose(-1, -2))  # Enforce symmetry
-
-        return K, k, expected_reduction, success
+        return gains, offsets, expected.clamp_min(0.0), factorization_ok, derivatives_finite
 
     def _forward_pass(
         self,
         problem: DDPProblem,
         x0: Tensor,
-        xs_nom: Tensor,
-        us_nom: Tensor,
-        K: Tensor,
-        k: Tensor,
-        cost_nom: Tensor,
-        expected_reduction: Tensor,
-    ) -> tuple[Tensor, Tensor, Tensor, Tensor]:
-        """Forward rollout with line search.
-
-        Returns:
-            xs_new: New state trajectory [batch, T+1, nx]
-            us_new: New control trajectory [batch, T, nu]
-            cost_new: New cost [batch]
-            success: Line search succeeded [batch]
-        """
-        batch, horizon, nx, nu = problem.batch_size, problem.horizon, problem.nx, problem.nu
-        device, dtype = x0.device, x0.dtype
-
-        # Line search parameters - more aggressive
-        alphas = torch.tensor(
-            [1.0, 0.8, 0.6, 0.4, 0.2, 0.1, 0.05, 0.01], device=device, dtype=dtype
+        xs_nominal: Tensor,
+        us_nominal: Tensor,
+        gains: Tensor,
+        offsets: Tensor,
+        cost_nominal: Tensor,
+        expected: Tensor,
+        eligible: Tensor,
+    ) -> tuple[Tensor, Tensor, Tensor, Tensor, Tensor]:
+        batch, horizon, nx, nu = (
+            problem.batch_size,
+            problem.horizon,
+            problem.nx,
+            problem.nu,
         )
-
-        best_xs = xs_nom.clone()
-        best_us = us_nom.clone()
-        best_cost = cost_nom.clone()
-        success = torch.zeros(batch, dtype=torch.bool, device=device)
+        device, dtype = x0.device, x0.dtype
+        alphas = (1.0, 0.8, 0.6, 0.4, 0.2, 0.1, 0.05, 0.01)
+        best_xs, best_us, best_cost = xs_nominal.clone(), us_nominal.clone(), cost_nominal.clone()
+        accepted = torch.zeros(batch, dtype=torch.bool, device=device)
+        any_finite = torch.zeros(batch, dtype=torch.bool, device=device)
 
         for alpha in alphas:
-            xs_new = torch.zeros(batch, horizon + 1, nx, device=device, dtype=dtype)
-            us_new = torch.zeros(batch, horizon, nu, device=device, dtype=dtype)
-            xs_new[:, 0] = x0
-
-            rollout_valid = torch.ones(batch, dtype=torch.bool, device=device)
-
-            # Rollout with updated controls
+            xs_candidate = torch.empty(batch, horizon + 1, nx, device=device, dtype=dtype)
+            us_candidate = torch.empty(batch, horizon, nu, device=device, dtype=dtype)
+            xs_candidate[:, 0] = x0
+            rollout_finite = torch.isfinite(x0).all(-1)
             for t in range(horizon):
-                # State deviation (in tangent space for manifolds)
-                dx = problem.manifold.diff(xs_new[:, t], xs_nom[:, t])
-
-                # Control update: u = u_nom + α·k + K·dx
-                us_new[:, t] = (
-                    us_nom[:, t]
-                    + alpha * k[:, t]
-                    + torch.matmul(K[:, t], dx.unsqueeze(-1)).squeeze(-1)
+                dx = problem.manifold.diff(xs_candidate[:, t], xs_nominal[:, t])
+                us_candidate[:, t] = us_nominal[:, t] + alpha * offsets[:, t] + _mv(gains[:, t], dx)
+                xs_candidate[:, t + 1] = problem.dynamics.calc(
+                    xs_candidate[:, t], us_candidate[:, t]
                 )
+                rollout_finite &= torch.isfinite(us_candidate[:, t]).all(-1)
+                rollout_finite &= torch.isfinite(xs_candidate[:, t + 1]).all(-1)
 
-                # Forward dynamics
-                xs_new[:, t + 1] = problem.dynamics.calc(xs_new[:, t], us_new[:, t])
-
-                # Check for NaN/Inf in rollout
-                rollout_valid = rollout_valid & torch.isfinite(xs_new[:, t + 1]).all(-1)
-
-            # Compute new cost only for valid rollouts
-            cost_new = torch.where(
-                rollout_valid,
-                self._compute_cost(problem, xs_new, us_new),
-                torch.full((batch,), float("inf"), device=device, dtype=dtype),
+            candidate_cost = self._compute_cost(problem, xs_candidate, us_candidate)
+            rollout_finite &= torch.isfinite(candidate_cost)
+            any_finite |= eligible & rollout_finite
+            improvement = cost_nominal - candidate_cost
+            required = 1e-4 * alpha * expected
+            acceptable = (
+                eligible
+                & rollout_finite
+                & ~accepted
+                & (improvement > 0.0)
+                & (improvement >= required)
             )
+            best_xs = torch.where(acceptable[:, None, None], xs_candidate, best_xs)
+            best_us = torch.where(acceptable[:, None, None], us_candidate, best_us)
+            best_cost = torch.where(acceptable, candidate_cost, best_cost)
+            accepted |= acceptable
 
-            # Check improvement
-            improvement = cost_nom - cost_new
-            improved = (improvement > 0) & torch.isfinite(cost_new) & rollout_valid
-
-            # Update best for environments that improved
-            update = improved & ~success
-            best_xs = torch.where(update[:, None, None], xs_new, best_xs)
-            best_us = torch.where(update[:, None, None], us_new, best_us)
-            best_cost = torch.where(update, cost_new, best_cost)
-            success = success | improved
-
-        return best_xs, best_us, best_cost, success
+        return best_xs, best_us, best_cost, accepted, any_finite | ~eligible
 
     def _update_regularization(
         self,
         problem: DDPProblem,
         reg: Tensor,
-        accept: Tensor,
+        attempted: Tensor,
+        accepted: Tensor,
         improvement: Tensor,
-        expected_improvement: Tensor,
+        expected: Tensor,
     ) -> Tensor:
-        """Adaptive regularization update with more aggressive tuning."""
-        # Increase reg if step was rejected or improvement was poor
-        # Decrease reg if step was good
-
-        ratio = improvement / (expected_improvement.abs() + 1e-8)
-
-        # More aggressive decrease for very good steps (ratio > 0.9)
-        very_good = accept & (ratio > 0.9)
-        reg = torch.where(
-            very_good,
-            torch.maximum(
-                reg / (problem.regularization_factor * 2),  # Faster decrease
-                torch.tensor(problem.regularization_min, device=reg.device),
-            ),
-            reg,
-        )
-
-        # Normal decrease for good steps (0.5 < ratio <= 0.9)
-        good = accept & (ratio > 0.5) & (ratio <= 0.9) & ~very_good
-        reg = torch.where(
-            good,
-            torch.maximum(
-                reg / problem.regularization_factor,
-                torch.tensor(problem.regularization_min, device=reg.device),
-            ),
-            reg,
-        )
-
-        # Increase for rejected or poor steps
-        increase = ~accept | (ratio <= 0.25)
-        reg = torch.where(
-            increase,
-            torch.minimum(
-                reg * problem.regularization_factor,
-                torch.tensor(problem.regularization_max, device=reg.device),
-            ),
-            reg,
-        )
-
-        return reg
+        ratio = improvement / expected.clamp_min(torch.finfo(reg.dtype).eps)
+        factor = problem.regularization_factor
+        decrease = accepted & (ratio >= 0.75)
+        increase = attempted & (~accepted | (ratio < 0.25))
+        reg = torch.where(decrease, torch.clamp_min(reg / factor, problem.regularization_min), reg)
+        return torch.where(increase, torch.clamp_max(reg * factor, problem.regularization_max), reg)

@@ -80,6 +80,11 @@ Torch 后端沿时间维 backward Riccati + forward rollout，环境维使用 ba
 `reset()` 清除全部。返回动作不暴露内部缓存。类型/形状/device 错误抛异常。
 Torch `iterations=1` 表示一次精确递推，不能与 DDP 迭代计数作性能比较。
 
+DDP 的 `SUCCESS` 表示满足收敛条件，`MAX_ITERATIONS` 表示预算耗尽但仍保留有限的
+best-so-far 轨迹。`MPCResult.usable` 对这两种状态为真，控制器可以应用其首步动作；
+只有 `NUMERICAL_FAILURE` 触发上次动作回退。单 shooting DDP 总是从当前 `x0` 和
+`u_init` 重建可行状态轨迹；`x_init` 暂仅保留作接口兼容提示，不参与当前求解。
+
 ## Crocoddyl 与扩展
 
 Crocoddyl 参考后端延迟导入依赖、显式拒绝 CUDA，每次逐环境重建 LQR shooting problem。

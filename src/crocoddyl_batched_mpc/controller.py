@@ -36,7 +36,7 @@ class MPCController:
     @torch.no_grad()
     def compute(self, state: Tensor) -> tuple[Tensor, MPCResult]:
         result = self.solver.solve(state)
-        action = torch.where(result.success[:, None], result.action, self._last_action)
+        action = torch.where(result.usable[:, None], result.action, self._last_action)
         self._last_action.copy_(action)
         return action, result
 

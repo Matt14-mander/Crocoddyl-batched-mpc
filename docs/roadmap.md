@@ -16,13 +16,13 @@ M0 不等于通用 GPU Crocoddyl 完成；实际执行结果见 validation.md。
 - [x] 定义批量 dynamics/cost/derivatives 和 state `integrate/diff` 接口。
 - [x] 实现 Pendulum 模型，并用有限差分验证 CPU/CUDA 导数。
 - [x] 实现 Torch DDP 的 backward/forward pass 原型。
-- [ ] 修正逐环境收敛、失败和线搜索状态机。
-- [ ] 验证 DDP 在线性问题上与 LQR 后端一致。
+- [x] 修正逐环境收敛、失败和线搜索状态机。
+- [x] 验证 DDP 在线性问题上与 LQR 后端一致。
 - [ ] 完成稳定的 Pendulum 闭环及 Crocoddyl 数值对照。
 - [ ] 分离全局模型参数与逐环境随机化参数。
 
-当前状态：**M1.5 稳定化中**。模型接口和导数已建立，DDP 求解器尚未满足以下验收标准，
-因此暂不进入 M2。
+当前状态：**M1.5 稳定化中**。状态机和线性数值基准已经通过；Pendulum 长时闭环、
+Crocoddyl 对照和逐环境参数化仍未完成，因此暂不进入 M2。
 
 验收：导数通过有限差分；相同模型、初值、horizon 和容差下对齐轨迹、代价、反馈策略；
 覆盖不可行初始轨迹、非正定 Hessian 和预算耗尽。
