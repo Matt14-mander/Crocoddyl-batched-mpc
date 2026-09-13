@@ -5,6 +5,8 @@ import torch
 
 from crocoddyl_batched_mpc import BatchedMPC, DDPProblem, LQRProblem, MPCController, SolveStatus
 
+pytestmark = pytest.mark.ddp_acceptance
+
 
 class LinearDynamics:
     def __init__(self, A: torch.Tensor, B: torch.Tensor) -> None:

@@ -76,6 +76,7 @@ CPU CI 不能替代 GPU 验证。基准记录求解耗时，不代表完整 RL �
 - [阶段计划](docs/roadmap.md)：从 LQR 到非线性批量 MPC 的验收条件。
 - [Isaac Lab 接入](docs/isaaclab.md)：控制时序、状态映射和环境重置。
 - [验证记录](docs/validation.md)：本机实际执行结果和未验证项。
+- [DDP 正确性验收](docs/ddp_acceptance.md)：数值门槛、运行命令和覆盖边界。
 
 `src/crocoddyl_batched_mpc/` 包含 problem、result、solver、controller、backends；
 `tests/` 数值测试；`examples/` 调用示例；`benchmarks/` 性能入口。

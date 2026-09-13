@@ -20,7 +20,11 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
-markers = ["cuda: requires a CUDA device", "crocoddyl: requires optional Crocoddyl bindings"]
+markers = [
+    "cuda: requires a CUDA device",
+    "crocoddyl: requires optional Crocoddyl bindings",
+    "ddp_acceptance: executable DDP correctness acceptance gate",
+]
 
 [tool.ruff]
 line-length = 100

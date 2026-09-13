@@ -73,15 +73,24 @@ class DDPProblem:
             raise ValueError(
                 "DDPProblem needs device/dtype explicitly or from its initial guess/models"
             )
-        object.__setattr__(self, "device", torch.device(inferred_device))
+        resolved_device = torch.device(inferred_device)
+        if resolved_device.type == "cuda" and resolved_device.index is None:
+            resolved_device = torch.device("cuda", torch.cuda.current_device())
+        object.__setattr__(self, "device", resolved_device)
         object.__setattr__(self, "dtype", inferred_dtype)
         if self.dtype not in (torch.float32, torch.float64):
             raise ValueError("DDP currently supports float32 and float64")
         for name, model in (("dynamics", self.dynamics), ("cost", self.cost)):
             model_device = getattr(model, "device", None)
             model_dtype = getattr(model, "dtype", None)
-            if model_device is not None and torch.device(model_device) != self.device:
-                raise ValueError(f"{name} device {model_device} != problem device {self.device}")
+            if model_device is not None:
+                resolved_model_device = torch.device(model_device)
+                if resolved_model_device.type == "cuda" and resolved_model_device.index is None:
+                    resolved_model_device = torch.device("cuda", torch.cuda.current_device())
+                if resolved_model_device != self.device:
+                    raise ValueError(
+                        f"{name} device {model_device} != problem device {self.device}"
+                    )
             if model_dtype is not None and model_dtype != self.dtype:
                 raise ValueError(f"{name} dtype {model_dtype} != problem dtype {self.dtype}")
 

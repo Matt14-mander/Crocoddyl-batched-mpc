@@ -8,6 +8,8 @@ import torch
 
 from crocoddyl_batched_mpc.models.pendulum import PendulumCost, PendulumDynamics
 
+pytestmark = pytest.mark.ddp_acceptance
+
 
 def finite_difference_dynamics(
     dynamics, x: torch.Tensor, u: torch.Tensor, eps: float = 1e-6
