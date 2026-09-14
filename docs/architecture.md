@@ -90,6 +90,12 @@ best-so-far 轨迹。`MPCResult.usable` 对这两种状态为真，控制器可�
 的 warm start 和失败回退动作；替换 `solver.problem` 对象会清除全部缓存。若调用方原地
 修改模型或参考 tensor，必须在下一次 `compute` 前对受影响环境调用 `reset(mask)`。
 
+Pendulum 提供两种参数模式：共享参数沿用普通标量/矩阵构造；随机化任务使用
+`PendulumDynamicsParameters` 和 `PendulumCostParameters`，其字段分别采用 `[B]` 和
+`[B,...]` 布局。`DDPProblem` 在构造时校验参数 batch。运行中优先通过
+`MPCController.update_parameters(mask, dynamics=..., cost=...)` 更新，它在同一设备上写入
+指定环境并同步清除这些环境的控制器缓存。
+
 ## Crocoddyl 与扩展
 
 Crocoddyl 参考后端延迟导入依赖、显式拒绝 CUDA，每次逐环境重建 LQR shooting problem。

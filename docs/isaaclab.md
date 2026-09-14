@@ -39,6 +39,19 @@ def _reset_idx(self, env_ids):
         self.mpc.reset(self.reset_mask)
 ```
 
+逐环境 domain randomization 应通过控制器更新，使参数与 warm-start 失效使用同一个 mask：
+
+```python
+self.mpc.update_parameters(
+    reset_mask,
+    dynamics={"mass": randomized_mass, "length": randomized_length},
+    cost={"x_ref": randomized_reference},
+)
+```
+
+更新 tensor 可以是完整 `[B,...]`、被选环境数量 `[N,...]`，或不带 batch 维的共享值；
+tensor 必须与 problem 位于同一 device 且 dtype 相同。
+
 `pack_mpc_state`、`problem`、`robot`、`control_joint_ids` 由任务提供。
 如果基类构造过程触发 reset，应确认控制器已初始化后再使用。
 

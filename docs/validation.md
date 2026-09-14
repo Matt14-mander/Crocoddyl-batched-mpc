@@ -4,10 +4,11 @@
 
 - 解决 `models.py` 与 `models/` 同名造成的导入冲突，线性模型现位于 `models/linear.py`。
 - 根目录调试和手工运行脚本已归入 `examples/`。
-- 完整测试：**46 passed, 2 skipped**；两个跳过项均为未安装的 Crocoddyl bindings。
-- DDP 正确性验收：**29 passed, 1 skipped**，包含模型导数、状态机、独立数值门槛
-  和 M2 warm-start 状态。
-- M2.0 验收：**5 passed**，覆盖 horizon shift、局部 reset、失败隔离和 problem 更新失效。
+- 完整测试：**52 passed, 2 skipped**；两个跳过项均为未安装的 Crocoddyl bindings。
+- DDP 正确性验收：**35 passed, 1 skipped**，包含模型导数、状态机、独立数值门槛
+  和 M2 跨周期状态。
+- M2.1 验收：**11 passed**，覆盖 horizon shift、局部 reset、失败隔离、problem 更新失效、
+  逐环境参数及 CPU/CUDA 一致性。
 - Ruff 检查通过，M0 LQR 和 M1 模型导数测试可以在同一次测试运行中完成。
 - DDP 新增 8 项状态机测试：与精确 LQR 对齐、当前 `x0` 轨迹一致性、逐环境失败、
   Cholesky 失败的正则化重试、线搜索拒绝、固定预算可用解、模型 dtype 校验和

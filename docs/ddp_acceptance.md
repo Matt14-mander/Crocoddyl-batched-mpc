@@ -33,7 +33,7 @@ python -m pytest -q
 | CUDA 热路径 | profiler 不出现 host synchronization 或 tensor scalar extraction | 通过 |
 | Crocoddyl oracle | 线性问题直接与 Crocoddyl DDP/LQR 参考对齐，误差 ≤ 1e-6 | 待依赖 |
 
-2026-09-13 本机结果：**29 passed, 1 skipped**；跳过项为未安装的 Crocoddyl bindings。
+2026-09-14 本机结果：**35 passed, 1 skipped**；跳过项为未安装的 Crocoddyl bindings。
 标准非线性场景实测 cost 由零控制的 1418.6707 降至 519.0529，一阶控制残差
 1.68e-3，终端角度误差 9.07e-3 rad，终端速度绝对值 0.1555 rad/s。
 

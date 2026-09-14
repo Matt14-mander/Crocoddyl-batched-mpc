@@ -1,6 +1,8 @@
 """Stateful tensor adapter for vectorized environments, including Isaac Lab."""
 
+from collections.abc import Mapping
 from dataclasses import replace
+from typing import Any
 
 import torch
 from torch import Tensor
@@ -81,14 +83,48 @@ class MPCController:
                 self._warm_controls.zero_()
                 self._warm_valid.zero_()
             return
-        if not isinstance(mask, Tensor) or mask.dtype != torch.bool:
-            raise TypeError("reset mask must be a bool tensor")
-        if mask.shape != self._last_action.shape[:1] or mask.device != self._last_action.device:
-            raise ValueError("reset mask must have shape [batch] on the problem device")
+        self._validate_mask(mask)
         self._last_action.masked_fill_(mask[:, None], 0.0)
         if self._warm_controls is not None and self._warm_valid is not None:
             self._warm_controls.masked_fill_(mask[:, None, None], 0.0)
             self._warm_valid.masked_fill_(mask, False)
+
+    @torch.no_grad()
+    def update_parameters(
+        self,
+        mask: Tensor,
+        *,
+        dynamics: Mapping[str, Any] | None = None,
+        cost: Mapping[str, Any] | None = None,
+    ) -> None:
+        """Update batched model parameters and invalidate the same environments.
+
+        Models opt into this API by implementing ``update_parameters(mask, **values)``.
+        Cache invalidation also runs when an update raises, so a partial model update
+        can never leave the previous warm start marked valid.
+        """
+        self._validate_mask(mask)
+        if not isinstance(self.solver.problem, DDPProblem):
+            raise TypeError("parameter updates require a DDPProblem")
+        if dynamics is None and cost is None:
+            raise ValueError("provide dynamics and/or cost parameter updates")
+        try:
+            for name, values in (("dynamics", dynamics), ("cost", cost)):
+                if values is None:
+                    continue
+                model = getattr(self.solver.problem, name)
+                update = getattr(model, "update_parameters", None)
+                if update is None:
+                    raise TypeError(f"{name} model does not support parameter updates")
+                update(mask, **dict(values))
+        finally:
+            self.reset(mask)
+
+    def _validate_mask(self, mask: Tensor) -> None:
+        if not isinstance(mask, Tensor) or mask.dtype != torch.bool:
+            raise TypeError("reset mask must be a bool tensor")
+        if mask.shape != self._last_action.shape[:1] or mask.device != self._last_action.device:
+            raise ValueError("reset mask must have shape [batch] on the problem device")
 
     def _handle_problem_replacement(self, problem: LQRProblem | DDPProblem) -> None:
         if problem is self._problem_identity:

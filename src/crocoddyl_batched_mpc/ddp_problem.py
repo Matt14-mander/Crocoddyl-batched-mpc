@@ -93,6 +93,12 @@ class DDPProblem:
                     )
             if model_dtype is not None and model_dtype != self.dtype:
                 raise ValueError(f"{name} dtype {model_dtype} != problem dtype {self.dtype}")
+            parameter_batch_size = getattr(model, "parameter_batch_size", None)
+            if parameter_batch_size is not None and parameter_batch_size != self.batch_size:
+                raise ValueError(
+                    f"{name} parameter batch {parameter_batch_size} "
+                    f"!= problem batch {self.batch_size}"
+                )
 
         # Validate initial trajectories if provided
         if self.x_init is not None:
