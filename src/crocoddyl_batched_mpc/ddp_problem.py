@@ -3,6 +3,7 @@
 Extends LQRProblem to support general nonlinear dynamics and costs.
 """
 
+import math
 from dataclasses import dataclass
 
 import torch
@@ -29,7 +30,7 @@ class DDPProblem:
     manifold: StateManifold
     batch_size: int
     horizon: int
-    x_init: Tensor | None = None  # Compatibility hint; states are rebuilt from x0/u_init
+    x_init: Tensor | None = None  # Optional state guess used by the FDDP backend
     u_init: Tensor | None = None  # Optional initial control guess [batch, T, nu]
     device: torch.device | str | None = None
     dtype: torch.dtype | None = None
@@ -42,6 +43,8 @@ class DDPProblem:
     regularization_min: float = 1e-9
     regularization_max: float = 1e9
     regularization_factor: float = 10.0
+    gap_tolerance: float = 1e-9
+    gap_penalty: float = 10.0
 
     def __post_init__(self) -> None:
         """Validate problem dimensions and parameters."""
@@ -130,6 +133,10 @@ class DDPProblem:
             raise ValueError("regularization_init must be <= regularization_max")
         if self.regularization_factor <= 1:
             raise ValueError("regularization_factor must be greater than 1")
+        if not math.isfinite(self.gap_tolerance) or self.gap_tolerance <= 0:
+            raise ValueError("gap_tolerance must be finite and positive")
+        if not math.isfinite(self.gap_penalty) or self.gap_penalty <= 0:
+            raise ValueError("gap_penalty must be finite and positive")
 
     @property
     def nx(self) -> int:

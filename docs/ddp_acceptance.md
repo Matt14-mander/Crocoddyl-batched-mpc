@@ -33,7 +33,7 @@ python -m pytest -q
 | CUDA 热路径 | profiler 不出现 host synchronization 或 tensor scalar extraction | 通过 |
 | Crocoddyl oracle | 线性问题直接与 Crocoddyl DDP/LQR 参考对齐，误差 ≤ 1e-6 | 待依赖 |
 
-2026-09-14 本机结果：**35 passed, 1 skipped**；跳过项为未安装的 Crocoddyl bindings。
+2026-09-14 本机结果：**42 passed, 1 skipped**；跳过项为未安装的 Crocoddyl bindings。
 标准非线性场景实测 cost 由零控制的 1418.6707 降至 519.0529，一阶控制残差
 1.68e-3，终端角度误差 9.07e-3 rad，终端速度绝对值 0.1555 rad/s。
 
@@ -46,5 +46,5 @@ python -m pytest -q
 - 一阶残差通过离散 costate backward sweep 重算，不使用 solver 的 feedforward norm。
 
 这些阈值验证当前模型与算法的数学一致性，不代表真实机器人稳定性、安全性或实时性能。
-本门槛已经纳入 horizon-shift warm start 的逐环境状态测试。尚未覆盖控制约束、FDDP、多体接触、
+本门槛已经纳入 horizon-shift warm start 和 FDDP gap 测试。尚未覆盖控制约束、多体接触、
 真实 Isaac Lab 动力学以及逐环境随机化参数；它们需要各自新增验收场景。

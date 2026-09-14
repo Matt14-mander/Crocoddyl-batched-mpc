@@ -3,14 +3,14 @@
 为批量 RL 训练构建统一 CPU/GPU MPC 后端，面向 Isaac Lab 的 Torch CUDA tensor 调用。
 这是独立的 downstream 包，不修改 Crocoddyl 源码。
 
-## 当前阶段：M2.1 参数化批量非线性求解
+## 当前阶段：M2.2 FDDP gap handling
 
 | 能力 | 当前实现 |
 | --- | --- |
 | 统一接口 | `LQRProblem` → `BatchedMPC.solve(x0)` → `MPCResult` |
 | Torch CPU/CUDA | 批量 Riccati 递推，环境维并行、时间维顺序 |
 | 数学问题 | 有限时域、时变仿射动力学、二次及线性代价、无约束 LQR |
-| 非线性求解 | 批量 dynamics/cost/manifold、逐环境 Pendulum 参数、Torch DDP |
+| 非线性求解 | 批量 dynamics/cost/manifold、逐环境参数、Torch DDP/FDDP |
 | Crocoddyl CPU | 可选 `ActionModelLQR` + `ShootingProblem` + `SolverDDP` 参考后端 |
 | RL 控制器 | 首步动作、DDP horizon-shift warm start、失败回退、按 mask 重置 |
 | Isaac Lab | Tensor bridge 示例及 DirectRLEnv 接入说明 |
@@ -18,9 +18,9 @@
 
 LQR 后端已经通过独立稠密解和 CPU/CUDA 测试。非线性 DDP 的导数、状态机、
 线性 LQR 对照和独立数值门禁已经通过；M2 已完成跨周期 warm start、逐环境物理参数、
-参考和代价权重更新，下一步是 FDDP gap 处理。Crocoddyl 外部对照仍需在提供 bindings
-的环境中执行。
-通用 Crocoddyl action model 的 GPU 执行、FDDP、接触动力学、控制约束、可微求解、
+参考和代价权重更新，并实现了 FDDP 动态 gap 的 modified Riccati sweep 与逐环境收缩。
+Crocoddyl 外部 FDDP 对照仍需在提供 bindings 的环境中执行。
+通用 Crocoddyl action model 的 GPU 执行、完整 Crocoddyl FDDP 数值规则、接触动力学、控制约束、可微求解、
 原生 C++/CUDA 内核和 CUDA Graph 均在后续计划中。Isaac Sim 真实任务尚未联调。
 
 ## 安装与运行
@@ -45,6 +45,16 @@ controller = MPCController(BatchedMPC(problem, backend="torch"))
 x0 = torch.zeros(4096, 2, device="cuda:0")
 actions, result = controller.compute(x0)  # [4096, 1]，留在 CUDA 上
 controller.reset(torch.zeros(4096, dtype=torch.bool, device="cuda:0"))
+```
+
+不连续状态轨迹可作为 FDDP 初值：
+
+```python
+from dataclasses import replace
+
+problem = replace(problem, x_init=state_guess, u_init=control_guess)
+solver = BatchedMPC(problem, backend="fddp")
+result = solver.solve(x0)
 ```
 
 输入必须与模型 device/dtype 一致，不自动迁移、不自动降级到 CPU。`result.status`
@@ -80,6 +90,7 @@ CPU CI 不能替代 GPU 验证。基准记录求解耗时，不代表完整 RL �
 - [验证记录](docs/validation.md)：本机实际执行结果和未验证项。
 - [DDP 正确性验收](docs/ddp_acceptance.md)：数值门槛、运行命令和覆盖边界。
 - [M2 验收](docs/m2_acceptance.md)：warm start、逐环境参数和更新失效协议。
+- [FDDP gap 设计](docs/fddp.md)：gap 定义、modified Riccati sweep、merit 和返回语义。
 
 `src/crocoddyl_batched_mpc/` 包含 problem、result、solver、controller、backends；
 `tests/` 数值测试；`examples/` 调用示例；`benchmarks/` 性能入口。

@@ -42,9 +42,13 @@ class MPCController:
         self._warm_start_enabled = warm_start and isinstance(p, DDPProblem)
         if isinstance(p, DDPProblem):
             self._warm_controls = torch.zeros(batch_size, p.horizon, nu, device=device, dtype=dtype)
+            self._warm_states = torch.zeros(
+                batch_size, p.horizon + 1, p.nx, device=device, dtype=dtype
+            )
             self._warm_valid = torch.zeros(batch_size, device=device, dtype=torch.bool)
         else:
             self._warm_controls = None
+            self._warm_states = None
             self._warm_valid = None
 
     @torch.no_grad()
@@ -58,11 +62,36 @@ class MPCController:
                 torch.zeros_like(self._warm_controls) if problem.u_init is None else problem.u_init
             )
             initial = torch.where(self._warm_valid[:, None, None], self._warm_controls, initial)
-            result = self.solver.backend.solve(replace(problem, u_init=initial), state)
+            solve_problem = replace(problem, u_init=initial)
+            if getattr(self.solver.backend, "uses_state_guess", False):
+                assert self._warm_states is not None
+                if problem.x_init is None:
+                    initial_states = torch.empty_like(self._warm_states)
+                    initial_states[:, 0] = state
+                    for t in range(problem.horizon):
+                        initial_states[:, t + 1] = problem.dynamics.calc(
+                            initial_states[:, t], initial[:, t]
+                        )
+                else:
+                    initial_states = problem.x_init.clone()
+                    initial_states[:, 0] = state
+                initial_states = torch.where(
+                    self._warm_valid[:, None, None], self._warm_states, initial_states
+                )
+                initial_states[:, 0] = state
+                solve_problem = replace(solve_problem, x_init=initial_states)
+            result = self.solver.backend.solve(solve_problem, state)
             shifted = torch.cat((result.us[:, 1:], result.us[:, -1:]), dim=1)
             self._warm_controls.copy_(
                 torch.where(result.usable[:, None, None], shifted, self._warm_controls)
             )
+            if getattr(self.solver.backend, "uses_state_guess", False):
+                assert self._warm_states is not None
+                tail = problem.dynamics.calc(result.xs[:, -1], result.us[:, -1])
+                shifted_states = torch.cat((result.xs[:, 1:], tail[:, None]), dim=1)
+                self._warm_states.copy_(
+                    torch.where(result.usable[:, None, None], shifted_states, self._warm_states)
+                )
             self._warm_valid |= result.usable
         else:
             result = self.solver.solve(state)
@@ -81,12 +110,16 @@ class MPCController:
             self._last_action.zero_()
             if self._warm_controls is not None and self._warm_valid is not None:
                 self._warm_controls.zero_()
+                assert self._warm_states is not None
+                self._warm_states.zero_()
                 self._warm_valid.zero_()
             return
         self._validate_mask(mask)
         self._last_action.masked_fill_(mask[:, None], 0.0)
         if self._warm_controls is not None and self._warm_valid is not None:
             self._warm_controls.masked_fill_(mask[:, None, None], 0.0)
+            assert self._warm_states is not None
+            self._warm_states.masked_fill_(mask[:, None, None], 0.0)
             self._warm_valid.masked_fill_(mask, False)
 
     @torch.no_grad()
@@ -134,7 +167,10 @@ class MPCController:
             type(problem) is type(old)
             and problem.batch_size == old.batch_size
             and problem.nu == old.nu
-            and (not isinstance(problem, DDPProblem) or problem.horizon == old.horizon)
+            and (
+                not isinstance(problem, DDPProblem)
+                or (problem.horizon == old.horizon and problem.nx == old.nx)
+            )
         )
         if not compatible:
             raise ValueError("Create a new MPCController after changing problem type or dimensions")

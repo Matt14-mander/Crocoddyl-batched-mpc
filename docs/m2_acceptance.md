@@ -1,4 +1,4 @@
-# M2.1 验收：跨周期状态与逐环境参数
+# M2.2 验收：跨周期状态、逐环境参数与 FDDP
 
 M2 的首个增量将 DDP 从无状态单次求解扩展为可用于向量化环境控制循环的逐环境状态机。
 `MPCController` 缓存每个可用解，将 `u[1:]` 左移并用最后一个控制补齐 horizon，作为
@@ -8,7 +8,7 @@ M2 的首个增量将 DDP 从无状态单次求解扩展为可用于向量化环
 python -m pytest -m m2_acceptance -q
 ```
 
-2026-09-14 本机结果：**11 passed**。
+2026-09-14 本机结果：**18 passed**。
 
 验收覆盖：
 
@@ -21,10 +21,15 @@ python -m pytest -m m2_acceptance -q
 - 不同物理参数与目标下，批量 DDP 和逐环境独立 DDP 的轨迹、控制及状态一致。
 - 参数 batch 与 problem batch 不一致时在构造阶段拒绝。
 - CPU/CUDA 上的参数化动力学和代价在 float64 容差内一致。
+- FDDP 从不连续线性轨迹闭合 gap，并与精确 LQR 解对齐。
+- 部分步允许目标代价上升，同时按规定比例收缩动态 gap。
+- 未闭合 gap 的预算耗尽结果标记为不可用，不会成为控制器动作。
+- FDDP 批量环境与独立求解一致，CPU/CUDA 对齐且 CUDA 热路径无 host sync。
+- 控制器同时 shift FDDP 的状态和控制轨迹，并用当前测量覆盖首状态。
 
 `MPCController.update_parameters(mask, dynamics=..., cost=...)` 是推荐更新入口。它调用模型的
 参数更新方法，并始终失效同一批环境的 warm start 和回退动作，即使更新因参数名或形状错误
 而抛出异常。直接原地修改参数 tensor 时，调用方仍必须在下一次 `compute` 前调用
 `reset(affected_mask)`。
 
-M2 的后续验收将覆盖长时非线性闭环以及 FDDP gap 处理。
+M2 的后续验收将覆盖长时非线性闭环和 Crocoddyl FDDP 外部 oracle。

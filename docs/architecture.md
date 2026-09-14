@@ -49,6 +49,7 @@ J = sum(t=0..T-1) [0.5 x[t]^T Q[t] x[t] + q[t]^T x[t]
 | `result.us` | `[B, T, nu]` |
 | `result.action` | `[B, nu]` |
 | `result.cost/status/iterations` | `[B]` |
+| `result.feasible` | 可选 bool `[B]`；FDDP 返回动态可行性 |
 
 - 支持 float32/float64；输入共享 device/dtype，status/iterations 为 int64。
 - 严格形状检查，不猜测 batch/time 维。`from_lti` 显式扩展二维共享矩阵。
@@ -81,9 +82,9 @@ Torch 后端沿时间维 backward Riccati + forward rollout，环境维使用 ba
 Torch `iterations=1` 表示一次精确递推，不能与 DDP 迭代计数作性能比较。
 
 DDP 的 `SUCCESS` 表示满足收敛条件，`MAX_ITERATIONS` 表示预算耗尽但仍保留有限的
-best-so-far 轨迹。`MPCResult.usable` 对这两种状态为真，控制器可以应用其首步动作；
-只有 `NUMERICAL_FAILURE` 触发上次动作回退。单 shooting DDP 总是从当前 `x0` 和
-`u_init` 重建可行状态轨迹；`x_init` 暂仅保留作接口兼容提示，不参与当前求解。
+best-so-far 轨迹。普通 DDP 的 `MPCResult.usable` 对这两种状态为真；FDDP 还要求
+`feasible=true` 才能应用动作。单 shooting DDP 总是从当前 `x0` 和 `u_init` 重建可行
+状态轨迹；FDDP 使用 `x_init` 提供的不连续轨迹，但始终以当前 `x0` 覆盖首状态。
 
 `MPCController` 对每个可用 DDP 解执行 horizon shift：下一次初值为 `u[1:]`，末端重复
 最后一个控制。数值失败的环境保留上一次有效 warm start。`reset(mask)` 只清除指定环境

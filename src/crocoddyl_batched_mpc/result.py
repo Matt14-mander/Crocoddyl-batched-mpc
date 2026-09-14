@@ -23,6 +23,7 @@ class MPCResult:
     cost: Tensor  # [batch]
     status: Tensor  # int64 [batch]
     iterations: Tensor  # int64 [batch]
+    feasible: Tensor | None = None  # bool [batch]; None means finite single-shooting output
 
     @property
     def success(self) -> Tensor:
@@ -33,9 +34,10 @@ class MPCResult:
         """A finite candidate remains usable when a fixed iteration budget expires."""
         import torch
 
-        return (self.status != SolveStatus.NUMERICAL_FAILURE) & torch.isfinite(self.us[:, 0]).all(
+        usable = (self.status != SolveStatus.NUMERICAL_FAILURE) & torch.isfinite(self.us[:, 0]).all(
             -1
         )
+        return usable if self.feasible is None else usable & self.feasible
 
     @property
     def action(self) -> Tensor:

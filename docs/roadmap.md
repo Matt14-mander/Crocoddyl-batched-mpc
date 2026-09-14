@@ -29,12 +29,13 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 
 ## M2：批量非线性求解
 
-当前状态：**M2.1 参数化批量模型**。
+当前状态：**M2.2 FDDP gap handling**。
 
 - [x] backward/forward、逐环境线搜索/自适应正则化、固定迭代预算、失败和冻结 mask。
 - [x] controller horizon-shift warm start；局部 reset 同时清除动作与轨迹缓存。
 - [x] 分离共享模型与逐环境参数；按 mask 更新物理参数、参考和权重并同步失效缓存。
-- [ ] 设计和实现 FDDP gap 处理。
+- [x] FDDP 动态 gap、modified Riccati sweep、逐环境 line search 和可行性语义。
+- [ ] 在 Crocoddyl 环境执行非线性 FDDP 轨迹、反馈增益和迭代行为对照。
 
 控制 box 约束需要独立 QP/Box-DDP，最终动作裁剪不等价于受约束最优解。
 

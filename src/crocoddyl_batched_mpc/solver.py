@@ -34,8 +34,18 @@ class BatchedMPC:
                 from .backends.crocoddyl_cpu import CrocoddylCPUBackend
 
                 self.backend = CrocoddylCPUBackend(regularization=regularization)
+            elif backend == "fddp":
+                if not isinstance(problem, DDPProblem):
+                    raise TypeError("backend='fddp' requires a DDPProblem")
+                if regularization != 0.0:
+                    raise ValueError("Configure FDDP regularization on DDPProblem")
+                from .backends.torch_ddp import TorchFDDPBackend
+
+                self.backend = TorchFDDPBackend()
             else:
-                raise ValueError(f"Unknown backend: {backend!r}; choose 'torch' or 'crocoddyl'")
+                raise ValueError(
+                    f"Unknown backend: {backend!r}; choose 'torch', 'fddp' or 'crocoddyl'"
+                )
         else:
             if regularization != 0.0:
                 raise ValueError("Configure regularization directly on a custom backend")
