@@ -35,7 +35,8 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 - [x] controller horizon-shift warm start；局部 reset 同时清除动作与轨迹缓存。
 - [x] 分离共享模型与逐环境参数；按 mask 更新物理参数、参考和权重并同步失效缓存。
 - [x] FDDP 动态 gap、modified Riccati sweep、逐环境 line search 和可行性语义。
-- [ ] 在 Crocoddyl 环境执行非线性 FDDP 轨迹、反馈增益和迭代行为对照。
+- [x] 建立非线性 FDDP 外部 oracle 测试：相同摆模型、反馈增益、轨迹与预算序列。
+- [ ] 在 Crocoddyl 环境执行 oracle 并记录版本、数值误差及迭代行为。
 
 控制 box 约束需要独立 QP/Box-DDP，最终动作裁剪不等价于受约束最优解。
 

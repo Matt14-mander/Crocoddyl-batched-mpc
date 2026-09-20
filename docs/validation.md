@@ -1,5 +1,16 @@
 # 初始框架验证记录
 
+## 2026-09-20 FDDP 外部 oracle 准备
+
+- 新增非线性 Crocoddyl `SolverFDDP` 对照：相同半隐式摆模型的运行/终端值与导数、
+  不连续初值首轮反馈增益、1/2/5/25 次预算的 gap 与代价、最终轨迹。
+- 本机完整测试：**60 passed, 5 skipped**；FDDP 专项为 **8 passed, 3 skipped**。
+  新增三个跳过项均为 Crocoddyl 外部 oracle；其余两个是原有 Crocoddyl 对照。
+- 本机 `base` 未安装 Crocoddyl；`croco_env` 亦未安装 Crocoddyl/Torch。
+  因此目前只有 oracle 模型公式自检通过，**尚无跨库误差或迭代数据**。
+- 外部执行命令：`python -m pytest -m fddp_oracle -q -s`。CI 的
+  `crocoddyl-reference` 任务运行 `-m crocoddyl`，会纳入新增三个测试。
+
 ## 2026-09-12 工程基线复核
 
 - 解决 `models.py` 与 `models/` 同名造成的导入冲突，线性模型现位于 `models/linear.py`。

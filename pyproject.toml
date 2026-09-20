@@ -26,6 +26,7 @@ markers = [
     "ddp_acceptance: executable DDP correctness acceptance gate",
     "m2_acceptance: M2 batched nonlinear MPC acceptance gate",
     "fddp_acceptance: feasibility-driven DDP and dynamic-gap acceptance gate",
+    "fddp_oracle: nonlinear Crocoddyl SolverFDDP external comparison",
 ]
 
 [tool.ruff]

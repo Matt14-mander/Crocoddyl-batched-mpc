@@ -68,8 +68,22 @@ Crocoddyl 基于 `dg`、`dq` 和 `dv` 的完整 expected-improvement 数值规�
 
 当前实现使用 dynamics 一阶导数和 cost 二阶导数，没有加入 dynamics 二阶项、控制盒约束、
 接触约束或 Crocoddyl action-model 适配。线性问题、批量隔离、部分 gap 收缩、状态缓存和
-CPU/CUDA 一致性已有本地验收；与 Crocoddyl 非线性 `SolverFDDP` 的轨迹、反馈增益和迭代
-行为对照，需要在安装 Crocoddyl bindings 的环境中完成。
+CPU/CUDA 一致性已有本地验收。外部 oracle 测试位于 `tests/test_fddp_oracle.py`：
+使用相同的半隐式摆动力学、代价和不连续初值，比较 action 的值与导数、首轮
+backward pass 的反馈增益、多个迭代预算下的 gap 收缩，以及最终轨迹和代价。
+Crocoddyl 的 `K` 约定在控制律中作减法，Torch 的 `K` 已带负号，因此测试比较
+`K_torch` 与 `-K_crocoddyl`。两者 line search 和正则化规则不同，不要求逐次步长
+或收敛迭代数完全相同。
+
+在安装 Crocoddyl 与 Torch 的 CPU 环境执行：
+
+```bash
+python -m pip install -e '.[dev,crocoddyl]'
+python -m pytest -m fddp_oracle -q -s
+```
+
+2026-09-20 本机 Anaconda `base` 和 `croco_env` 均未同时提供所需 bindings 与 Torch；
+外部对照仍待 CI 或兼容环境实际运行。没有将跳过项计为数值通过。
 
 参考：
 
