@@ -56,7 +56,7 @@ def _action_model_class(crocoddyl):
             error = x - self.reference
             data.cost = 0.5 * error @ self.Q @ error
             if u is not None and not self.terminal:
-                acceleration = self.gravity * np.sin(x[0]) - self.damping * x[1] + u[0]
+                acceleration = -self.gravity * np.sin(x[0]) - self.damping * x[1] + u[0]
                 velocity = x[1] + self.dt * acceleration
                 data.xnext[:] = [x[0] + self.dt * velocity, velocity]
                 data.cost += 0.5 * u @ self.R @ u
@@ -66,7 +66,7 @@ def _action_model_class(crocoddyl):
             data.Lxx[:, :] = self.Q
             if u is not None and not self.terminal:
                 dt = self.dt
-                velocity_theta = dt * self.gravity * np.cos(x[0])
+                velocity_theta = -dt * self.gravity * np.cos(x[0])
                 velocity_velocity = 1 - dt * self.damping
                 data.Fx[:, :] = [
                     [1 + dt * velocity_theta, dt * velocity_velocity],

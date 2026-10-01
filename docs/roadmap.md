@@ -18,8 +18,9 @@ M0 不等于通用 GPU Crocoddyl 完成；实际执行结果见 validation.md。
 - [x] 实现 Torch DDP 的 backward/forward pass 原型。
 - [x] 修正逐环境收敛、失败和线搜索状态机。
 - [x] 验证 DDP 在线性问题上与 LQR 后端一致。
-- [ ] 完成稳定的 Pendulum 闭环及 Crocoddyl 数值对照。
-- [ ] 分离全局模型参数与逐环境随机化参数。
+- [x] CPU Pendulum 持续闭环及局部扰动恢复（DDP/FDDP，独立物理 plant）。
+- [ ] Crocoddyl 非线性数值对照，以及修正重力符号后的 CUDA 闭环验收。
+- [x] 分离全局模型参数与逐环境随机化参数。
 
 当前状态：**M1 正确性基线已冻结**。DDP 数值验收见 `ddp_acceptance.md`；未安装
 Crocoddyl 的环境仍会明确跳过外部 oracle。

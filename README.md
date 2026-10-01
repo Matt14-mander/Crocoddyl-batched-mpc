@@ -19,6 +19,8 @@
 LQR 后端已经通过独立稠密解和 CPU/CUDA 测试。非线性 DDP 的导数、状态机、
 线性 LQR 对照和独立数值门禁已经通过；M2 已完成跨周期 warm start、逐环境物理参数、
 参考和代价权重更新，并实现了 FDDP 动态 gap 的 modified Riccati sweep 与逐环境收缩。
+摆模型已修正与向下角度约定一致的重力方向，新增 CPU DDP/FDDP 持续直立及扰动恢复验收；
+修正后的 CUDA 验收仍待执行。
 Crocoddyl 外部 FDDP 对照测试已建立，仍需在提供 bindings 的环境中执行并记录误差。
 通用 Crocoddyl action model 的 GPU 执行、完整 Crocoddyl FDDP 数值规则、接触动力学、控制约束、可微求解、
 原生 C++/CUDA 内核和 CUDA Graph 均在后续计划中。Isaac Sim 真实任务尚未联调。
@@ -33,6 +35,7 @@ python -m pip install -e .
 python examples/double_integrator.py --device cpu
 python examples/double_integrator.py --device cuda --batch-size 1024
 python examples/isaaclab_tensor_bridge.py --device cuda
+python examples/pendulum_swingup.py --device cpu --batch-size 3
 ```
 
 ```python

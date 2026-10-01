@@ -2,9 +2,10 @@
 
 State: x = [θ, θ̇] where θ is angle from downward vertical (θ=0 is down, θ=π is up)
 Control: u = [τ] torque
-Dynamics: θ̈ = (g/l)·sin(θ) - (b/(m·l²))·θ̇ + τ/(m·l²)
+Dynamics: θ̈ = -(g/l)·sin(θ) - (b/(m·l²))·θ̇ + τ/(m·l²)
 
-Default parameters correspond to a standard underactuated pendulum.
+Gravity restores the downward equilibrium and destabilizes the upright equilibrium.
+The torque input is unconstrained.
 """
 
 from dataclasses import dataclass, fields
@@ -277,7 +278,7 @@ class PendulumDynamics:
         theta, theta_dot = x[:, 0:1], x[:, 1:2]
         tau = u[:, 0:1]
 
-        # θ̈ = (g/l)·sin(θ) - (b/(m·l²))·θ̇ + τ/(m·l²)
+        # θ̈ = -(g/l)·sin(θ) - (b/(m·l²))·θ̇ + τ/(m·l²)
         if self.parameters is None:
             gravity_coeff = self.gravity_coeff
             damping_coeff = self.damping_coeff
@@ -290,7 +291,7 @@ class PendulumDynamics:
             damping_coeff = self.b[:, None] / inertia
             control_coeff = inertia.reciprocal()
         theta_ddot = (
-            gravity_coeff * torch.sin(theta) - damping_coeff * theta_dot + control_coeff * tau
+            -gravity_coeff * torch.sin(theta) - damping_coeff * theta_dot + control_coeff * tau
         )
 
         # Semi-implicit Euler: update velocity first, then position
@@ -322,7 +323,7 @@ class PendulumDynamics:
             gravity_coeff = self.g / self.l
             damping_coeff = self.b / inertia
             control_coeff = inertia.reciprocal()
-        velocity_theta = self.dt * gravity_coeff * torch.cos(x[:, 0])
+        velocity_theta = -self.dt * gravity_coeff * torch.cos(x[:, 0])
         velocity_velocity = 1.0 - self.dt * damping_coeff
         Fx = x.new_zeros(batch, 2, 2)
         Fx[:, 0, 0] = 1.0 + self.dt * velocity_theta

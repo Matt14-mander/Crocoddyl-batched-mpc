@@ -1,7 +1,7 @@
-"""Pendulum swing-up example using DDP.
+"""Unconstrained pendulum closed loop with sustained stabilization metrics.
 
 python examples/pendulum_swingup.py --device cpu --batch-size 16
-python examples/pendulum_swingup.py --device cuda --batch-size 512
+python examples/pendulum_swingup.py --device cuda --batch-size 512 --backend fddp
 """
 
 import argparse
@@ -9,114 +9,86 @@ import argparse
 import torch
 
 from crocoddyl_batched_mpc import BatchedMPC, DDPProblem, MPCController
-from crocoddyl_batched_mpc.manifolds import EuclideanManifold
 from crocoddyl_batched_mpc.models.pendulum import PendulumCost, PendulumDynamics
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--device", default="cpu", help="Device: cpu or cuda")
-    parser.add_argument(
-        "--batch-size", type=int, default=16, help="Number of parallel environments"
-    )
-    parser.add_argument("--horizon", type=int, default=50, help="MPC horizon")
-    parser.add_argument("--steps", type=int, default=100, help="Simulation steps")
-    parser.add_argument("--max-iters", type=int, default=50, help="Max DDP iterations per solve")
+    parser.add_argument("--device", default="cpu")
+    parser.add_argument("--backend", choices=["torch", "fddp"], default="torch")
+    parser.add_argument("--dtype", choices=["float32", "float64"], default="float32")
+    parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--horizon", type=int, default=30)
+    parser.add_argument("--steps", type=int, default=100)
+    parser.add_argument("--max-iters", type=int, default=6)
+    parser.add_argument("--threads", type=int, default=1)
+    parser.add_argument("--settle-window", type=int, default=20)
+    parser.add_argument("--angle-tolerance", type=float, default=0.1)
+    parser.add_argument("--velocity-tolerance", type=float, default=0.1)
     args = parser.parse_args()
-
-    device = args.device
-    dtype = torch.float32
-    batch_size = args.batch_size
-    horizon = args.horizon
-
-    # Create dynamics and cost
-    dynamics = PendulumDynamics(device=device, dtype=dtype, dt=0.05)
-    cost = PendulumCost(device=device, dtype=dtype)
-    manifold = EuclideanManifold(n=2)
-
-    # Initial guess: forward rollout with zero control
-    x_init_single = torch.zeros(horizon + 1, 2, device=device, dtype=dtype)
-    x_init_single[0] = torch.tensor([0.0, 0.0], device=device, dtype=dtype)  # Start at bottom
-    u_zero = torch.zeros(1, device=device, dtype=dtype)
-
-    for t in range(horizon):
-        x_init_single[t + 1] = dynamics.calc(x_init_single[t : t + 1], u_zero.unsqueeze(0)).squeeze(
-            0
-        )
-
-    x_init = x_init_single.unsqueeze(0).expand(batch_size, -1, -1).clone()
-    u_init = torch.zeros(batch_size, horizon, 1, device=device, dtype=dtype)
-
-    # Create DDP problem
-    problem = DDPProblem(
-        dynamics=dynamics,
-        cost=cost,
-        manifold=manifold,
-        batch_size=batch_size,
-        horizon=horizon,
-        x_init=x_init,
-        u_init=u_init,
+    for name in ("batch_size", "horizon", "steps", "max_iters", "threads", "settle_window"):
+        if getattr(args, name) < 1:
+            parser.error(f"{name} must be positive")
+    if args.settle_window > args.steps:
+        parser.error("settle-window must not exceed steps")
+    for name in ("angle_tolerance", "velocity_tolerance"):
+        value = getattr(args, name)
+        if not 0 < value < float("inf"):
+            parser.error(f"{name} must be finite and positive")
+    torch.set_num_threads(args.threads)
+    dtype = getattr(torch, args.dtype)
+    dynamics = PendulumDynamics(device=args.device, dtype=dtype, dt=0.05)
+    problem = DDPProblem.from_models(
+        dynamics,
+        PendulumCost(device=args.device, dtype=dtype),
+        batch_size=args.batch_size,
+        horizon=args.horizon,
         max_iterations=args.max_iters,
+        cost_tolerance=1e-6,
     )
+    controller = MPCController(BatchedMPC(problem, backend=args.backend))
 
-    # Create controller
-    solver = BatchedMPC(problem, backend="torch")
-    controller = MPCController(solver)
-
-    # Initial states: random angles near bottom
     torch.manual_seed(42)
-    state = torch.zeros(batch_size, 2, device=device, dtype=dtype)
-    state[:, 0] = torch.randn(batch_size, device=device, dtype=dtype) * 0.5  # Small random angles
-    state[:, 1] = torch.randn(batch_size, device=device, dtype=dtype) * 0.2  # Small velocities
+    state = torch.zeros(args.batch_size, 2, device=args.device, dtype=dtype)
+    state[:, 0] = torch.randn(args.batch_size, device=args.device, dtype=dtype) * 0.5
+    state[:, 1] = torch.randn(args.batch_size, device=args.device, dtype=dtype) * 0.2
+    stabilized = torch.ones(args.batch_size, device=args.device, dtype=torch.bool)
+    total_failures = state.new_zeros((), dtype=torch.int64)
+    total_iterations = state.new_zeros(())
 
-    print(f"Device: {device}, Batch: {batch_size}, Horizon: {horizon}")
-    print(f"Initial position RMS: {state[:, 0].square().mean().sqrt().item():.4f} rad")
-    print("Target: θ=π (upright)\n")
-
-    # Simulation loop
-    total_failures = 0
-    total_iterations = 0
-
+    print(f"Device: {args.device}, Batch: {args.batch_size}, Horizon: {args.horizon}")
+    print("Target: θ=π (upright); unconstrained torque")
     for step in range(args.steps):
         action, result = controller.compute(state)
-
-        failures = (~result.usable).sum().item()
-        total_failures += failures
-        total_iterations += result.iterations.float().mean().item()
-
-        if step % 20 == 0:
-            angle_error = ((state[:, 0] - torch.pi) % (2 * torch.pi)).abs()
-            angle_error = torch.minimum(angle_error, 2 * torch.pi - angle_error)
-            avg_angle_error = angle_error.mean().item()
-            avg_vel = state[:, 1].abs().mean().item()
-
+        total_failures += (~result.usable).sum()
+        total_iterations += result.iterations.to(dtype).mean()
+        state = dynamics.calc(state, action)
+        angle_error = (torch.remainder(state[:, 0], 2 * torch.pi) - torch.pi).abs()
+        velocity = state[:, 1].abs()
+        if step >= args.steps - args.settle_window:
+            stabilized &= (
+                result.usable
+                & torch.isfinite(state).all(-1)
+                & (angle_error < args.angle_tolerance)
+                & (velocity < args.velocity_tolerance)
+            )
+        if (step + 1) % 20 == 0:
             print(
-                f"Step {step:3d}: angle_err={avg_angle_error:.4f} rad, "
-                f"vel={avg_vel:.4f} rad/s, failures={failures}/{batch_size}, "
-                f"avg_iters={result.iterations.float().mean().item():.1f}"
+                f"Step {step + 1:3d}: angle_err={angle_error.mean().item():.4f} rad, "
+                f"vel={velocity.mean().item():.4f} rad/s, "
+                f"failures={(~result.usable).sum().item()}/{args.batch_size}"
             )
 
-        # Apply dynamics
-        state = dynamics.calc(state, action)
-
-    # Final statistics
-    final_angle = state[:, 0]
-    final_vel = state[:, 1]
-
-    # Compute angle error (wrap around)
-    angle_error = ((final_angle - torch.pi) % (2 * torch.pi)).abs()
-    angle_error = torch.minimum(angle_error, 2 * torch.pi - angle_error)
-
-    print("\n=== Final Results ===")
+    print(f"Final max angle error: {angle_error.max().item():.6f} rad")
+    print(f"Final max velocity: {velocity.max().item():.6f} rad/s")
     print(
-        f"Final angle error: {angle_error.mean().item():.4f} ± {angle_error.std().item():.4f} rad"
+        f"Sustained stabilization ({args.settle_window} steps): "
+        f"{stabilized.sum().item()}/{args.batch_size}"
     )
-    mean_velocity = final_vel.abs().mean().item()
-    std_velocity = final_vel.abs().std().item()
-    print(f"Final velocity: {mean_velocity:.4f} ± {std_velocity:.4f} rad/s")
-    print(f"Success rate: {(angle_error < 0.1).sum().item()}/{batch_size} envs stabilized")
-    print(f"Total failures: {total_failures}")
-    print(f"Avg iterations per solve: {total_iterations / args.steps:.1f}")
+    print(f"Total unusable solves: {total_failures.item()}")
+    print(f"Avg iterations per solve: {(total_iterations / args.steps).item():.1f}")
+    if not stabilized.all().item() or total_failures.item():
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

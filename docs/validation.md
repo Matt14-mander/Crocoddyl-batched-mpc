@@ -1,4 +1,44 @@
-# 初始框架验证记录
+# 项目验证记录
+
+## 2026-09-30 物理摆修正与持续闭环验收
+
+### 进度复核与本次开发
+
+- 当前阶段仍为 M2.2：LQR、DDP/FDDP、horizon-shift warm start、逐环境参数更新已实现。
+- 修正 Pendulum 的重力方向：角度从向下垂直测量时，重力项为 `-(g/l)*sin(theta)`。
+  同步修正解析 Jacobian 和 Crocoddyl oracle 的独立 action 公式。旧模型会使向上平衡点
+  自然稳定，旧数值与闭环记录不能用于证明物理倒立摆稳定性。
+- 新增 3 项物理门禁：共享/逐环境参数的平衡点恢复方向，以及非单位质量、长度、阻尼的
+  扭矩平衡。有限差分只能验证代码和导数一致，不能独立发现共同的物理符号错误。
+- 新增 2 项闭环门禁：CPU DDP 与 FDDP，各运行 B=3、100 周期，独立物理 plant、
+  horizon=30、每周期最多 6 次迭代。第 60 周期施加单环境状态扰动，验证新测量、warm start
+  和持续直立。详见 `ddp_acceptance.md`。
+- 摆示例新增 dtype/backend/线程数及持续稳定窗口选项，稳定判据同时检查角度、角速度、
+  有限性和动作可用性；未满足验收时返回非零退出码。
+
+### 实际执行结果
+
+环境：macOS x86_64，Python 3.11.4，Torch 2.2.2，NumPy 1.26.4；项目独立 `.venv`。
+本机没有 CUDA，该测试环境未安装 Crocoddyl。未更改已有 Anaconda 环境。
+
+- 新闭环测试加入前的完整回归（含新增 3 项物理测试）：**50 passed, 18 skipped**。
+- `python -m pytest tests/test_pendulum_closed_loop.py -q`：**2 passed**，耗时约 160 秒。
+  两次运行合计覆盖当前收集的全部 70 项：52 项通过，18 项因 CUDA/Crocoddyl 不可用跳过。
+- `ruff check .` 与 `git diff --check`：通过。
+- `PYTHONPATH=src .venv/bin/python examples/pendulum_swingup.py --batch-size 3`：
+  CPU float32，100 周期，最后 20 步持续稳定 **3/3**，不可用求解 **0**，
+  最终最大角度误差约 **1e-6 rad**、最大速度约 **4e-6 rad/s**。
+- 标准 T=40 的 float64 单次求解：零控制 cost=2419.973216，优化后 cost=509.286965，
+  独立 adjoint 最大控制残差=3.47e-5，终端状态=[3.125814, 0.026646]，5 次迭代收敛。
+
+### 下一阶段仍需完成
+
+- 在同时提供 Torch/Crocoddyl 的环境执行修正后的外部 FDDP oracle，记录版本和误差。
+- 在 CUDA 环境复验修正后的非线性模型、持续闭环和无 host sync 调用路径。
+- 本次闭环使用无约束扭矩及同参数 plant，尚未验收控制约束、模型失配和真实 Isaac Lab。
+- M3 尚需先进行非线性求解器 profiling，再决定原生内核与 CUDA Graph 的实现范围。
+
+以下为历史执行记录；本次没有重新验证其中的 GPU 与跨平台性能结论。
 
 ## 2026-09-20 FDDP 外部 oracle 准备
 
