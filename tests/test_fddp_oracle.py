@@ -72,10 +72,10 @@ def _action_model_class(crocoddyl):
                     [1 + dt * velocity_theta, dt * velocity_velocity],
                     [velocity_theta, velocity_velocity],
                 ]
-                data.Fu[:, :] = [[dt * dt], [dt]]
+                data.Fu.reshape(2, 1)[:, :] = [[dt * dt], [dt]]
                 data.Lu[:] = self.R @ u
                 data.Luu[:, :] = self.R
-                data.Lxu[:, :] = 0.0
+                data.Lxu[...] = 0.0
 
     return PendulumAction
 
@@ -117,6 +117,8 @@ def _assert_action_values(model):
         (data.Luu, luu[0]),
         (data.Lxu, lxu[0]),
     ):
+        # EigenPy may squeeze a single-column matrix (Fu/Lxu) to a vector.
+        actual = np.asarray(actual).reshape(expected.shape)
         np.testing.assert_allclose(actual, expected.numpy(), atol=1e-12)
 
 
@@ -184,7 +186,10 @@ def test_initial_infeasible_feedback_gains_match_crocoddyl():
         )
     assert ok.all() and finite.all()
     oracle = _solve_oracle(crocoddyl, x0[0].numpy(), xs[0].numpy(), us[0].numpy(), 1)
-    oracle_gains = np.asarray(oracle.K)
+    # EigenPy exposes each [1, nx] gain as [nx] on some builds.
+    oracle_gains = np.stack([
+        np.asarray(gain).reshape(problem.nu, problem.ndx) for gain in oracle.K
+    ])
     assert oracle_gains.shape == (problem.horizon, problem.nu, problem.nx)
     # Crocoddyl stores positive K and applies u -= K dx; Torch stores the signed update.
     np.testing.assert_allclose(gains[0].detach().numpy(), -oracle_gains, atol=3e-3, rtol=3e-3)

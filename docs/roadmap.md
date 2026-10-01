@@ -7,7 +7,7 @@
 - [x] 稠密最优解、闭环、CPU/CUDA 和 stream 测试。
 - [x] Crocoddyl CPU 参考适配器、对照测试及 CI 任务。
 - [x] Tensor bridge、Isaac Lab 接入说明、可复现基准入口。
-- [ ] 在安装 Crocoddyl 的环境执行参考对照并记录版本与误差。
+- [x] 在本机 croco_env 执行参考对照并记录版本与误差（Crocoddyl 3.0.1）。
 
 M0 不等于通用 GPU Crocoddyl 完成；实际执行结果见 validation.md。
 
@@ -19,7 +19,8 @@ M0 不等于通用 GPU Crocoddyl 完成；实际执行结果见 validation.md。
 - [x] 修正逐环境收敛、失败和线搜索状态机。
 - [x] 验证 DDP 在线性问题上与 LQR 后端一致。
 - [x] CPU Pendulum 持续闭环及局部扰动恢复（DDP/FDDP，独立物理 plant）。
-- [ ] Crocoddyl 非线性数值对照，以及修正重力符号后的 CUDA 闭环验收。
+- [x] Crocoddyl 非线性 FDDP 数值对照（摆 action、反馈增益、轨迹和迭代预算）。
+- [ ] 修正重力符号后的 CUDA 闭环验收。
 - [x] 分离全局模型参数与逐环境随机化参数。
 
 当前状态：**M1 正确性基线已冻结**。DDP 数值验收见 `ddp_acceptance.md`；未安装
@@ -37,7 +38,7 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 - [x] 分离共享模型与逐环境参数；按 mask 更新物理参数、参考和权重并同步失效缓存。
 - [x] FDDP 动态 gap、modified Riccati sweep、逐环境 line search 和可行性语义。
 - [x] 建立非线性 FDDP 外部 oracle 测试：相同摆模型、反馈增益、轨迹与预算序列。
-- [ ] 在 Crocoddyl 环境执行 oracle 并记录版本、数值误差及迭代行为。
+- [x] 在本机 croco_env 执行 oracle 并记录版本、数值误差及迭代行为（见 validation.md）。
 
 控制 box 约束需要独立 QP/Box-DDP，最终动作裁剪不等价于受约束最优解。
 

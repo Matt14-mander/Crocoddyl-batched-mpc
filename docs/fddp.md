@@ -82,8 +82,23 @@ python -m pip install -e '.[dev,crocoddyl]'
 python -m pytest -m fddp_oracle -q -s
 ```
 
-2026-09-20 本机 Anaconda `base` 和 `croco_env` 均未同时提供所需 bindings 与 Torch；
-外部对照仍待 CI 或兼容环境实际运行。没有将跳过项计为数值通过。
+2026-10-01 已在本机 `croco_env`（Python 3.10.18、Crocoddyl 3.0.1、Torch 2.2.2）
+执行外部对照，3 项 `fddp_oracle` 均通过；包含线性参考的全部 Crocoddyl 对照为 5 项通过。
+本机 EigenPy 会将单列 `Fu/Lxu/K` squeeze 为向量，测试适配层恢复其数学形状，
+没有放宽数值容差。首轮反馈增益最大绝对误差为 8.71e-5，最终状态、控制及代价
+最大绝对误差为 6.40e-6、7.05e-5、1.13e-9。初始最大 gap=0.08，双方第一轮均闭合。
+Torch 在 3 次有效迭代后冻结，Crocoddyl 返回 iteration_index=4；两者的停止规则不同。
+
+该 Intel macOS 环境原有 NumPy 2.2.6 与 Torch 2.2 的 NumPy 桥接不兼容。
+环境原有版本已保留，测试通过项目内独立 NumPy 1.26.4 路径执行：
+
+```bash
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pytest -m fddp_oracle -q -s
+```
+
+该路径在 `.gitignore` 内；重新准备方式见 `validation.md`。此配置只验证本机测试中的
+模型与预算序列，不代表完整复刻 Crocoddyl 的 line search 或正则化规则。
 
 参考：
 

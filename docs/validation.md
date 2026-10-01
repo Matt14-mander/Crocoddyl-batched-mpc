@@ -1,5 +1,61 @@
 # 项目验证记录
 
+## 2026-10-01 本机 croco_env 外部 oracle 验收
+
+### 环境与兼容处理
+
+使用 `/Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python`：Python 3.10.18，
+Crocoddyl 3.0.1，Torch 2.2.2，pytest 9.1.1，macOS x86_64，CPU 单线程。
+原环境缺少 Torch/pytest，本次已补齐。原有 NumPy 2.2.6 已恢复并保留；测试使用
+项目内 `.dev-tools/croco-numpy126` 的 NumPy 1.26.4。原因是该 Intel macOS 的 Torch 2.2
+与 NumPy 2.x 桥接不兼容，而环境中的 bezier/cmeel-boost 声明依赖 NumPy 2.x。
+恢复后在不加测试路径的环境运行 `python -m pip check`：**No broken requirements found**。
+
+本机 EigenPy 将单列 `Fu/Lxu/K` 作为一维数组暴露，导致首次运行的 3 项非线性测试
+在数组索引处失败。现已兼容其数学形状，fake action 自检与实际 bindings 均可使用。
+没有修改求解算法、接受规则或数值容差。
+
+复现（从项目根目录执行；独立 NumPy 路径被 Git 忽略）：
+
+```bash
+/Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pip install torch==2.2.2 'pytest>=8'
+/Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pip install \
+  --target .dev-tools/croco-numpy126 numpy==1.26.4
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pytest -m crocoddyl -q -s
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pytest -q -rs
+```
+
+### 外部对照结果
+
+`-m crocoddyl -q -s`：**5 passed, 65 deselected**，没有 Crocoddyl 跳过项。
+完整回归 `-q -rs`：**57 passed, 13 skipped**，耗时 151.45 秒；13 个跳过项全部为
+CUDA 不可用，DDP/FDDP 持续闭环、物理约定、fake action 自检与实际外部 oracle 均通过。
+`ruff check .` 和 `git diff --check` 通过。
+
+| 对照 | 状态最大绝对误差 | 控制最大绝对误差 | 代价绝对误差 |
+| --- | ---: | ---: | ---: |
+| Torch LQR vs Crocoddyl（B=2、T=5） | 5.55e-17 | 3.89e-16 | 0 |
+| Torch DDP vs Crocoddyl（同线性场景） | 5.55e-17 | 2.50e-16 | 2.22e-16 |
+| Torch FDDP vs Crocoddyl（摆、T=12、预算25） | 6.40e-6 | 7.05e-5 | 1.13e-9 |
+
+摆的 action 值与导数通过原有 `atol=1e-12` 门槛，首轮反馈增益
+`K_torch` 与 `-K_crocoddyl` 最大绝对误差 **8.71e-5**，通过原有 `atol/rtol=3e-3`。
+初态为 `[2.6, -0.3]`，不连续初值最大 gap=0.08，gap_penalty=100。
+
+| 迭代预算 | Torch cost | Crocoddyl cost | Torch gap | Crocoddyl gap | Torch 有效迭代数 | Crocoddyl iteration_index |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 41.837775499 | 41.837826962 | 0 | 1.11e-16 | 1 | 1 |
+| 2 | 38.440848675 | 38.440848673 | 0 | 0 | 2 | 2 |
+| 5 | 38.440820497 | 38.440820496 | 0 | 0 | 3 | 4 |
+| 25 | 38.440820497 | 38.440820496 | 0 | 0 | 3 | 4 |
+
+双方首轮闭合 gap，后续代价改善，最终轨迹通过原有数值门槛。
+上述有效迭代计数与 Crocoddyl 返回的 iteration_index 语义不同；接受与停止规则也不完全相同。
+结论限于这些模型与初值，不能据此声明完整 FDDP 数值规则已对齐。
+
+
 ## 2026-09-30 物理摆修正与持续闭环验收
 
 ### 进度复核与本次开发

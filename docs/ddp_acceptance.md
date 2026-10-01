@@ -34,7 +34,7 @@ python -m pytest -q
 | CPU/CUDA | float64 非线性解及状态码在 1e-8 内一致 | 通过 |
 | 异常语义 | 导数非有限、分解重试、线搜索拒绝、预算耗尽均返回规定状态 | 通过 |
 | CUDA 热路径 | profiler 不出现 host synchronization 或 tensor scalar extraction | 通过 |
-| Crocoddyl oracle | 线性问题直接与 Crocoddyl DDP/LQR 参考对齐，误差 ≤ 1e-6 | 待依赖 |
+| Crocoddyl oracle | 线性问题直接与 Crocoddyl DDP/LQR 参考对齐，误差 ≤ 1e-6 | CPU 通过（3.0.1） |
 
 2026-09-14 本机结果：**42 passed, 1 skipped**；跳过项为未安装的 Crocoddyl bindings。
 上述历史记录使用修正前的重力方向，不能作为物理摆的验收数据。
@@ -64,3 +64,9 @@ horizon=30，每周期预算 6 次迭代，float64，DDP 与 FDDP 各执行 100 
 扰动前和恢复后分别连续 20 步满足角度误差 <0.05 rad、速度 <0.1 rad/s，
 每周期动作可用；最终误差 <0.002 rad、速度 <0.01 rad/s。
 该场景使用无约束扭矩、同参数模型与 plant，尚不覆盖模型失配或扭矩限幅。
+
+2026-10-01 已在本机 `croco_env` 执行外部 oracle；全部 5 项 Crocoddyl 对照通过。
+线性 LQR/DDP 与 Crocoddyl 的最大误差 <4e-16；非线性 FDDP 的最终状态、
+控制与代价最大绝对误差分别为 6.40e-6、7.05e-5、1.13e-9。
+EigenPy 对单列矩阵的 squeeze 已在测试适配层兼容，数值阈值未修改。
+完整环境信息、NumPy 测试路径和预算序列见 `validation.md`。

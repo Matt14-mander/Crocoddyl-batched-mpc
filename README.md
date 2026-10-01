@@ -21,7 +21,8 @@ LQR 后端已经通过独立稠密解和 CPU/CUDA 测试。非线性 DDP 的导�
 参考和代价权重更新，并实现了 FDDP 动态 gap 的 modified Riccati sweep 与逐环境收缩。
 摆模型已修正与向下角度约定一致的重力方向，新增 CPU DDP/FDDP 持续直立及扰动恢复验收；
 修正后的 CUDA 验收仍待执行。
-Crocoddyl 外部 FDDP 对照测试已建立，仍需在提供 bindings 的环境中执行并记录误差。
+Crocoddyl 外部 FDDP 对照已在本机 croco_env（3.0.1）通过，覆盖 action 值/导数、
+首轮反馈增益和多个迭代预算下的轨迹、代价及 gap；实测误差见 validation.md。
 通用 Crocoddyl action model 的 GPU 执行、完整 Crocoddyl FDDP 数值规则、接触动力学、控制约束、可微求解、
 原生 C++/CUDA 内核和 CUDA Graph 均在后续计划中。Isaac Sim 真实任务尚未联调。
 
