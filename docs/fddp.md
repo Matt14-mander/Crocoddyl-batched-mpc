@@ -27,6 +27,8 @@ Qx = lx + Fx.T @ Vx_gap
 Qu = lu + Fu.T @ Vx_gap
 ```
 
+在 SO(3)/SE(3) 等非平坦流形上，先用 `diff_jacobian(predicted, nominal_next)`
+将动力学输出导数搬运到 gap 的差分 chart，再进行上述递推；细节见 `floating_base.md`。
 其余二阶项和正则化沿用批量 DDP 的 Gauss-Newton/iLQR 递推。Forward pass 对每个
 候选步长 `alpha` 使用：
 

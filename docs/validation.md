@@ -1,5 +1,52 @@
 # 项目验证记录
 
+## 2026-10-01 M2.3 浮基流形与切空间验收
+
+### 实现
+
+- 新增 `SO3Manifold`、`SE3Manifold`、`FloatingBaseManifold`，采用 xyzw 单位四元数、
+  右侧机体系增量与 SE(3) 指数映射，支持自由浮基和欧氏标量关节。
+- dynamics/cost 显式支持 `ndx`；旧欧氏模型保留缺省 `ndx=nx`。状态轨迹仍为 nx，
+  导数、gap、反馈增益使用 ndx，并检查返回导数的形状。
+- FDDP backward pass 在非平坦流形上用差分 Jacobian 将动力学输出导数转换到
+  下一名义状态的 residual chart，再注入 gap；欧氏热路径保持原有递推。
+- 新增局部 Torch JVP 导数辅助函数、manifold residual 二次代价及 Gauss-Newton Hessian。
+- 求解器使用有效 neutral 状态保护异常环境；零/非单位四元数属于逐环境数值失败。
+  horizon-shift warm start、reset 及初始化辅助函数支持状态/切空间维度不同。
+
+### 实际验证
+
+执行环境仍为本机 croco_env：Python 3.10.18、Torch 2.2.2、Pinocchio 3.6.0、
+Crocoddyl 3.0.1，测试路径中的 NumPy 1.26.4，CPU 单线程。
+
+```bash
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pytest -q -rs
+```
+
+- 完整回归：**75 passed, 19 skipped**，153.85 秒；全部跳过项为 CUDA 不可用。
+- 新增 24 项测试中 CPU/外部 oracle 的 18 项通过，6 项 CUDA 几何用例跳过。
+- Pinocchio/Crocoddyl 对照：0/2 关节浮基，多种初态和增量，integrate/diff 的
+  `atol` 门槛 2e-12、Jdiff 门槛 2e-11，全部通过；未放宽原有 oracle 容差。
+- SO(3)/SE(3)/浮基局部差分 Jacobian、动力学局部导数和代价梯度均通过独立有限差分。
+- 覆盖小角度、identity、接近 pi、四元数正负等价、float32/float64。
+- 验证 nx=4/ndx=3 的 DDP/FDDP，独立环境求解一致、不可行姿态初值、
+  非零 gap 下首轮反馈增益、浮基缓存/reset/异常四元数隔离。
+- 原有线性 LQR、摆闭环及 Crocoddyl FDDP 外部对照全部通过。
+- `ruff check .` 和 `git diff --check` 通过。
+- `PYTHONPATH=src .venv/bin/python examples/floating_base_state.py --joints 12`：
+  nq=19、nv=18、nx=37、ndx=36，B=4，float64 往返最大误差 **1.39e-17**。
+
+### 适用边界与下一步
+
+本轮交付浮基几何和求解接口，不含刚体接触动力学。合成测试直接命令切空间增量，
+不代表浮基可直接施加控制，也不代表机器人已能站立。
+新代价使用 Gauss-Newton Hessian；当前仍忽略二阶动力学/残差曲率，没有扭矩与摩擦约束。
+SE(3) 对数的主值切割、SE(3) Jacobian 级数和 JVP 基线的 GPU 性能尚未在本机验证。
+下一步为选定机器人模型，实现固定接触动力学，核对加速度、接触力和导数，之后验收站立闭环。
+接口、坐标约定及复现说明见 `floating_base.md`。
+
+
 ## 2026-10-01 本机 croco_env 外部 oracle 验收
 
 ### 环境与兼容处理

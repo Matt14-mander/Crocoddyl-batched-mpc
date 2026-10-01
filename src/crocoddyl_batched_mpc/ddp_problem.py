@@ -60,8 +60,11 @@ class DDPProblem:
         if self.manifold.nx != self.dynamics.nx:
             raise ValueError(f"Manifold nx={self.manifold.nx} != dynamics nx={self.dynamics.nx}")
 
-        if self.manifold.ndx != self.dynamics.nx:
-            raise ValueError("DDP currently requires manifold.ndx == dynamics.nx")
+        for name, model in (("dynamics", self.dynamics), ("cost", self.cost)):
+            # Legacy Euclidean models need not declare ndx; manifold models must.
+            ndx = getattr(model, "ndx", model.nx)
+            if ndx != self.manifold.ndx:
+                raise ValueError(f"{name} ndx={ndx} != manifold ndx={self.manifold.ndx}")
 
         inferred_device = self.device
         inferred_dtype = self.dtype

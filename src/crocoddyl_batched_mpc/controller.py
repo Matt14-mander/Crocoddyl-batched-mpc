@@ -169,7 +169,11 @@ class MPCController:
             and problem.nu == old.nu
             and (
                 not isinstance(problem, DDPProblem)
-                or (problem.horizon == old.horizon and problem.nx == old.nx)
+                or (
+                    problem.horizon == old.horizon
+                    and problem.nx == old.nx
+                    and problem.ndx == old.ndx
+                )
             )
         )
         if not compatible:

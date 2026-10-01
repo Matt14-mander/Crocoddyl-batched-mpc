@@ -29,7 +29,8 @@ J = sum(t=0..T-1) [0.5 x[t]^T Q[t] x[t] + q[t]^T x[t]
     + 0.5 x[T]^T Qf x[T] + qf^T x[T]
 ```
 
-`Q/Qf` 要求对称半正定，`R` 要求对称正定。不支持状态控制交叉项、上下界或流形。
+此 LQR 契约的 `Q/Qf` 要求对称半正定，`R` 要求对称正定，不支持状态控制交叉项、上下界或流形。
+非线性 DDP/FDDP 的浮基流形与切空间契约见 [floating_base.md](floating_base.md)。
 `regularization=λ` 在目标中加入 `0.5 λ ||u||²`，cost 包含该项；不是 DDP 自适应 damping。
 跟踪参考可设 `q=-Q*xref`、`qf=-Qf*xref_T`。忽略常数不影响动作，但上述 cost 可为负。
 

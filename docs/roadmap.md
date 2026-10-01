@@ -31,7 +31,7 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 
 ## M2：批量非线性求解
 
-当前状态：**M2.2 FDDP gap handling**。
+当前状态：**M2.3 浮基流形与切空间接口**。
 
 - [x] backward/forward、逐环境线搜索/自适应正则化、固定迭代预算、失败和冻结 mask。
 - [x] controller horizon-shift warm start；局部 reset 同时清除动作与轨迹缓存。
@@ -44,6 +44,20 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 
 验收：批量元素与独立求解一致，局部重置不污染其他环境；参考/模型更新不读取陈旧缓存；
 CPU/GPU 在明确容差内一致。
+
+## 浮基与足式接触推进
+
+- [x] 四元数 SO(3)、SE(3) 和浮基状态；分离 nx/ndx。
+- [x] 切空间 dynamics/cost 契约、自动局部导数基线和流形 residual 代价。
+- [x] FDDP 非零 gap 的输出 chart Jacobian；几何与 Pinocchio/Crocoddyl 对照。
+- [x] 非欧氏求解、warm start、reset、异常四元数隔离与旧欧氏模型回归。
+- [ ] 在 CUDA 环境执行浮基/切空间回归与性能测量。
+- [ ] 选定机器人模型，实现固定接触动力学及加速度/接触力/导数 oracle。
+- [ ] 固定支撑站立 MPC，覆盖扰动恢复与接触残差。
+- [ ] 扭矩、单边接触、摩擦约束，以及接触序列与切换。
+
+本轮仅支持自由浮基与欧氏标量关节的几何，不等于刚体或足式接触 MPC 已可运行。
+接口及验收边界见 `floating_base.md`。
 
 ## M3：原生 C++/CUDA 与性能
 

@@ -45,7 +45,7 @@ def initialize_trajectory_lqr_linearization(
 
 def _lqr_feedback_sweep(problem: DDPProblem, xs: Tensor, us: Tensor) -> Tensor:
     """Compute improved controls via LQR feedback around trajectory."""
-    batch, horizon, nx, nu = problem.batch_size, problem.horizon, problem.nx, problem.nu
+    batch, horizon, ndx, nu = problem.batch_size, problem.horizon, problem.ndx, problem.nu
     device, dtype = xs.device, xs.dtype
 
     # Backward pass: compute value function
@@ -53,7 +53,7 @@ def _lqr_feedback_sweep(problem: DDPProblem, xs: Tensor, us: Tensor) -> Tensor:
     Vx = lx_T
     Vxx = lxx_T
 
-    gains = torch.zeros(batch, horizon, nu, nx, device=device, dtype=dtype)
+    gains = torch.zeros(batch, horizon, nu, ndx, device=device, dtype=dtype)
     offsets = torch.zeros(batch, horizon, nu, device=device, dtype=dtype)
 
     eye_nu = torch.eye(nu, device=device, dtype=dtype)
@@ -79,8 +79,8 @@ def _lqr_feedback_sweep(problem: DDPProblem, xs: Tensor, us: Tensor) -> Tensor:
         intermediate = torch.linalg.solve_triangular(L, rhs, upper=False)
         solution = torch.linalg.solve_triangular(L.transpose(-1, -2), intermediate, upper=True)
 
-        gains[:, t] = solution[..., :nx]
-        offsets[:, t] = solution[..., nx]
+        gains[:, t] = solution[..., :ndx]
+        offsets[:, t] = solution[..., ndx]
 
         # Update value function
         Qxx = lxx + torch.matmul(torch.matmul(Fx.transpose(-1, -2), Vxx), Fx)

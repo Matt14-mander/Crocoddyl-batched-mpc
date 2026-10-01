@@ -37,12 +37,16 @@ class TorchDDPBackend:
         else:
             us = problem.u_init.clone()
 
-        initial_finite = torch.isfinite(x0).all(-1) & torch.isfinite(us).flatten(1).all(-1)
-        safe_x0 = torch.where(initial_finite[:, None], x0, 0.0)
+        initial_finite = problem.manifold.is_valid(x0) & torch.isfinite(us).flatten(1).all(-1)
+        safe_x0 = torch.where(initial_finite[:, None], x0, problem.manifold.neutral(x0))
         us = torch.where(initial_finite[:, None, None], us, 0.0)
         if self.feasibility_mode and problem.x_init is not None:
-            initial_finite &= torch.isfinite(problem.x_init).flatten(1).all(-1)
-            xs = torch.where(initial_finite[:, None, None], problem.x_init, 0.0).clone()
+            initial_finite &= problem.manifold.is_valid(problem.x_init).all(-1)
+            xs = torch.where(
+                initial_finite[:, None, None],
+                problem.x_init,
+                problem.manifold.neutral(problem.x_init),
+            ).clone()
             xs[:, 0] = safe_x0
         else:
             xs = self._rollout(problem, safe_x0, us)
@@ -56,7 +60,7 @@ class TorchDDPBackend:
         cost = self._compute_cost(problem, xs, us)
         merit = cost + problem.gap_penalty * gaps.abs().flatten(1).sum(-1)
         initial_finite &= (
-            torch.isfinite(xs).flatten(1).all(-1)
+            problem.manifold.is_valid(xs).all(-1)
             & torch.isfinite(gaps).flatten(1).all(-1)
             & torch.isfinite(cost)
             & torch.isfinite(merit)
@@ -129,7 +133,7 @@ class TorchDDPBackend:
             )
 
         finite_result = (
-            torch.isfinite(xs).flatten(1).all(-1)
+            problem.manifold.is_valid(xs).all(-1)
             & torch.isfinite(us).flatten(1).all(-1)
             & torch.isfinite(gaps).flatten(1).all(-1)
             & torch.isfinite(cost)
@@ -149,6 +153,11 @@ class TorchDDPBackend:
             iterations,
             torch.where(failed, False, feasible) if self.feasibility_mode else None,
         )
+
+    @staticmethod
+    def _check_derivative(name: str, value: Tensor, shape: tuple[int, ...]) -> None:
+        if not isinstance(value, Tensor) or tuple(value.shape) != shape:
+            raise ValueError(f"{name} must have tangent derivative shape {shape}")
 
     def _rollout(self, problem: DDPProblem, x0: Tensor, us: Tensor) -> Tensor:
         xs = torch.empty(
@@ -196,6 +205,8 @@ class TorchDDPBackend:
         eye_nu = torch.eye(nu, device=device, dtype=dtype)
 
         Vx, _, Vxx, _, _ = problem.cost.calc_diff(xs[:, horizon], None)
+        self._check_derivative("terminal lx", Vx, (batch, ndx))
+        self._check_derivative("terminal lxx", Vxx, (batch, ndx, ndx))
         derivatives_finite = torch.isfinite(Vx).all(-1) & torch.isfinite(Vxx).flatten(1).all(-1)
         factorization_ok = torch.ones(batch, dtype=torch.bool, device=device)
         expected = torch.zeros(batch, device=device, dtype=dtype)
@@ -204,11 +215,30 @@ class TorchDDPBackend:
             Fx, Fu = problem.dynamics.calc_diff(xs[:, t], us[:, t])
             lx, lu, lxx, luu, lxu = problem.cost.calc_diff(xs[:, t], us[:, t])
             assert lu is not None and luu is not None and lxu is not None
+            for name, value, shape in (
+                ("Fx", Fx, (batch, ndx, ndx)),
+                ("Fu", Fu, (batch, ndx, nu)),
+                ("lx", lx, (batch, ndx)),
+                ("lu", lu, (batch, nu)),
+                ("lxx", lxx, (batch, ndx, ndx)),
+                ("luu", luu, (batch, nu, nu)),
+                ("lxu", lxu, (batch, ndx, nu)),
+            ):
+                self._check_derivative(name, value, shape)
 
             stage_finite = torch.ones(batch, dtype=torch.bool, device=device)
             for value in (Fx, Fu, lx, lu, lxx, luu, lxu):
                 stage_finite &= torch.isfinite(value).flatten(1).all(-1)
             derivatives_finite &= stage_finite
+
+            if self.feasibility_mode and not problem.manifold.is_flat:
+                # Dynamics derivatives live at f(x,u); Vx/Vxx live at nominal x[t+1].
+                # Pull output derivatives into that residual chart before applying gap.
+                predicted = problem.dynamics.calc(xs[:, t], us[:, t])
+                transport = problem.manifold.diff_jacobian(predicted, xs[:, t + 1])
+                stage_finite &= torch.isfinite(transport).flatten(1).all(-1)
+                derivatives_finite &= stage_finite
+                Fx, Fu = transport @ Fx, transport @ Fu
 
             FxT, FuT = Fx.transpose(-1, -2), Fu.transpose(-1, -2)
             Vx_gap = Vx + _mv(Vxx, gaps[:, t])
@@ -291,7 +321,7 @@ class TorchDDPBackend:
                     xs_candidate[:, t + 1] = predicted
                 gaps_candidate[:, t] = problem.manifold.diff(predicted, xs_candidate[:, t + 1])
                 rollout_finite &= torch.isfinite(us_candidate[:, t]).all(-1)
-                rollout_finite &= torch.isfinite(xs_candidate[:, t + 1]).all(-1)
+                rollout_finite &= problem.manifold.is_valid(xs_candidate[:, t + 1])
 
             candidate_cost = self._compute_cost(problem, xs_candidate, us_candidate)
             candidate_merit = candidate_cost + problem.gap_penalty * gaps_candidate.abs().flatten(
