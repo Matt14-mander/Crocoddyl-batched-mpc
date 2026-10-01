@@ -12,10 +12,14 @@ dependencies = ["torch>=2.2"]
 
 [project.optional-dependencies]
 crocoddyl = ["crocoddyl>=2.1", "numpy>=1.24"]
+robotics = ["pin>=3.0", "numpy>=1.24"]
 dev = ["pytest>=8", "ruff>=0.6", "build>=1"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+crocoddyl_batched_mpc = ["assets/go2/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

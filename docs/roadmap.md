@@ -31,7 +31,7 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 
 ## M2：批量非线性求解
 
-当前状态：**M2.3 浮基流形与切空间接口**。
+当前状态：**M2.4 Go2 固定接触 CPU 参考**。
 
 - [x] backward/forward、逐环境线搜索/自适应正则化、固定迭代预算、失败和冻结 mask。
 - [x] controller horizon-shift warm start；局部 reset 同时清除动作与轨迹缓存。
@@ -52,12 +52,14 @@ CPU/GPU 在明确容差内一致。
 - [x] FDDP 非零 gap 的输出 chart Jacobian；几何与 Pinocchio/Crocoddyl 对照。
 - [x] 非欧氏求解、warm start、reset、异常四元数隔离与旧欧氏模型回归。
 - [ ] 在 CUDA 环境执行浮基/切空间回归与性能测量。
-- [ ] 选定机器人模型，实现固定接触动力学及加速度/接触力/导数 oracle。
+- [x] 选定宇树 Go2，固定官方 URDF、驱动顺序和足端 frame。
+- [x] Go2 CPU 固定接触 KKT 与 Crocoddyl 加速度/接触力/导数 oracle。
+- [ ] Go2 Torch 批量固定接触离散动力学，并核对积分和导数。
 - [ ] 固定支撑站立 MPC，覆盖扰动恢复与接触残差。
 - [ ] 扭矩、单边接触、摩擦约束，以及接触序列与切换。
 
-本轮仅支持自由浮基与欧氏标量关节的几何，不等于刚体或足式接触 MPC 已可运行。
-接口及验收边界见 `floating_base.md`。
+已提供 Go2 固定接触 CPU 参考；批量刚体动力学与足式接触 MPC 仍未完成。
+接口及验收边界见 `floating_base.md` 与 `go2.md`。
 
 ## M3：原生 C++/CUDA 与性能
 
@@ -78,5 +80,6 @@ CPU/GPU 在明确容差内一致。
 
 ## 近期决策
 
-使用 Python/Torch 建立正确性基线，Crocoddyl 保持可选参考依赖。M1/M4 前确定首个机器人/任务、
-Isaac Lab 版本和是否需要可微 MPC。安装优先兼容模拟器配套环境，不强行升级 Isaac Sim。
+使用 Python/Torch 建立正确性基线，Crocoddyl 保持可选参考依赖。首个机器人已选定宇树 Go2，
+先做固定支撑站立，再推进接触切换。仍需确定 Isaac Lab 版本、任务接口及是否需要可微 MPC。
+安装优先兼容模拟器配套环境，不强行升级 Isaac Sim。

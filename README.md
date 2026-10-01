@@ -3,7 +3,7 @@
 为批量 RL 训练构建统一 CPU/GPU MPC 后端，面向 Isaac Lab 的 Torch CUDA tensor 调用。
 这是独立的 downstream 包，不修改 Crocoddyl 源码。
 
-## 当前阶段：M2.3 浮基流形与切空间接口
+## 当前阶段：M2.4 Go2 固定接触 CPU 参考
 
 | 能力 | 当前实现 |
 | --- | --- |
@@ -11,6 +11,7 @@
 | Torch CPU/CUDA | 批量 Riccati 递推，环境维并行、时间维顺序 |
 | 数学问题 | 有限时域、时变仿射动力学、二次及线性代价、无约束 LQR |
 | 非线性求解 | 批量 dynamics/cost/manifold、逐环境参数、Torch DDP/FDDP |
+| Go2 模型 | 官方固定版本 URDF、12 关节映射、固定足端 CPU KKT/Crocoddyl 对照 |
 | 浮基几何 | SO(3)/SE(3)、四元数浮基状态、nx/ndx 分离、切空间导数及 FDDP chart 变换 |
 | Crocoddyl CPU | 可选 `ActionModelLQR` + `ShootingProblem` + `SolverDDP` 参考后端 |
 | RL 控制器 | 首步动作、DDP horizon-shift warm start、失败回退、按 mask 重置 |
@@ -26,7 +27,8 @@ Crocoddyl 外部 FDDP 对照已在本机 croco_env（3.0.1）通过，覆盖 act
 首轮反馈增益和多个迭代预算下的轨迹、代价及 gap；实测误差见 validation.md。
 通用 Crocoddyl action model 的 GPU 执行、完整 Crocoddyl FDDP 数值规则、接触动力学、控制约束、可微求解、
 原生 C++/CUDA 内核和 CUDA Graph 均在后续计划中。Isaac Sim 真实任务尚未联调。
-浮基几何已与 Pinocchio/Crocoddyl StateMultibody 对照；当前尚无浮基刚体接触动力学。
+浮基几何已与 Pinocchio/Crocoddyl StateMultibody 对照；Go2 固定接触 CPU 参考已通过
+加速度、力与导数验收。尚无 Go2 Torch/GPU 接触模型或站立 MPC 闭环。
 
 ## 安装与运行
 
@@ -96,6 +98,7 @@ CPU CI 不能替代 GPU 验证。基准记录求解耗时，不代表完整 RL �
 - [验证记录](docs/validation.md)：本机实际执行结果和未验证项。
 - [DDP 正确性验收](docs/ddp_acceptance.md)：数值门槛、运行命令和覆盖边界。
 - [M2 验收](docs/m2_acceptance.md)：warm start、逐环境参数和更新失效协议。
+- [Go2 模型与接触参考](docs/go2.md)：官方资产、关节顺序、固定接触 oracle 与适用边界。
 - [浮基状态与切空间](docs/floating_base.md)：坐标约定、导数契约和验证边界。
 - [FDDP gap 设计](docs/fddp.md)：gap 定义、modified Riccati sweep、merit 和返回语义。
 

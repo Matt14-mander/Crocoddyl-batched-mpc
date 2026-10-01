@@ -1,5 +1,65 @@
 # 项目验证记录
 
+## 2026-10-01 M2.4 Go2 固定接触 CPU 参考
+
+首个机器人模型已选定宇树 Go2，固定官方 `unitreerobotics/unitree_ros` commit
+`5994d4faef0a9cadd3287f8de0199a67eeb2a259` 的原始 URDF，并保存 BSD-3-Clause
+许可证及 SHA256 来源信息。详情见 `go2.md`。
+
+### 本轮实现与环境
+
+- Go2 加载器：自由浮基、12 个标量驱动关节，nq=19、nv=18、nx=37、ndx=36。
+  显式 FL/FR/RL/RR、hip/thigh/calf 映射，四个 foot frame，URDF 位置/effort 限制。
+- CPU 固定足端 KKT：Pinocchio M/h/J/drift，世界轴点接触力，位置/速度稳定化项。
+- 静态平衡扭矩初值、加速度/力中心差分导数及独立 Crocoddyl action 对照。
+- 模型资产随 wheel/sdist 分发；Pinocchio/NumPy 为延迟导入的可选 `robotics` extra。
+
+执行环境为此前 croco_env（Python 3.10.18、Torch 2.2.2、Pinocchio 3.6.0、Crocoddyl 3.0.1），
+继续通过项目内 NumPy 1.26.4 路径执行测试，没有新增修改原有环境依赖。
+
+### 实际执行
+
+```bash
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pytest tests/test_go2.py -q
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python -m pytest -q -rs
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python examples/go2_contact_reference.py
+```
+
+- Go2 专项：**8 passed**，2.71 秒。覆盖模型资产、驱动/足端顺序、浮基几何、静态平衡，
+  四足/两足（含逆序）支撑和零/非零稳定化的加速度、力及局部导数，错误输入和结果隔离。
+- 完整回归：**83 passed, 19 skipped**，259.20 秒；跳过项全部为 CUDA 不可用。
+- 新 Go2 action 加速度/力门槛为 atol/rtol=1e-9，中心差分导数门槛为 2e-5；均通过。
+- `ruff check .` 和 `git diff --check` 通过。
+- wheel 构建成功，验证包含 `go2.urdf/LICENSE/SOURCE.json` 与正确 SHA256；
+  从 wheel 解包路径实际加载 Go2 得到 nq=19、nv=18。
+- 基础 `.venv` 未安装 Pinocchio，仍可导入模型模块，实际调用加载器时给出可选依赖提示。
+
+四足静态示例：模型惯性总质量 16.087 kg，根部高度 0.296797 m，
+每个前足竖直力约 39.2713 N、后足约 39.6354 N，总计 157.81347 N；
+最大扭矩约 5.8653 Nm，低于该 URDF 的关节 effort 限制。
+最大加速度=5.09e-13，动力学残差=8.88e-16，接触加速度残差=6.49e-15。
+
+| 与 Crocoddyl 的对照（静态示例） | 最大绝对误差 |
+| --- | ---: |
+| 广义加速度 | 3.05e-13 |
+| 世界坐标接触力 | 1.42e-14 |
+| 加速度对状态导数 | 1.32e-7 |
+| 加速度对控制导数 | 4.90e-8 |
+| 接触力对状态导数 | 1.74e-8 |
+| 接触力对控制导数 | 1.27e-8 |
+
+### 当前边界
+
+该模型仅实现双边固定点接触 CPU oracle；尚无 Go2 Torch/GPU 接触动力学、
+离散积分及 DDP/FDDP 站立闭环。没有实现摩擦锥、单边力、扭矩约束、接触切换或硬件控制。
+静态示例的正竖直力与 effort 余量不能代替一般姿态下的不等式约束。
+KKT 与 Crocoddyl 复用 Pinocchio 的刚体量，对照并不验证实际 Go2 硬件惯性参数。
+下一步实现 Torch 批量固定接触模型并使用这些 oracle 门禁核对，之后验收 Go2 站立闭环。
+
+
 ## 2026-10-01 M2.3 浮基流形与切空间验收
 
 ### 实现

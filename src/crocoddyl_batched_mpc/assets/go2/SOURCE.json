@@ -1,0 +1,9 @@
+{
+  "repository": "https://github.com/unitreerobotics/unitree_ros",
+  "commit": "5994d4faef0a9cadd3287f8de0199a67eeb2a259",
+  "upstream_path": "robots/go2_description/urdf/go2_description.urdf",
+  "sha256": "7d19fe48e2e689ee1a032ab99f2a4a8b671d87e73de48d3e65811682a5b48b9e",
+  "license": "BSD-3-Clause",
+  "downloaded_on": "2026-10-01",
+  "modifications": "None. Mesh assets are not included; load only the kinematic/inertial model."
+}
