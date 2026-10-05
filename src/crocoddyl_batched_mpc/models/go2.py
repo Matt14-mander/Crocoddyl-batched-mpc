@@ -266,6 +266,17 @@ class Go2FixedContactReference:
         np, pin = _dependencies()
         import crocoddyl
 
+        # This wheel combination can segfault in the first native calc(), so
+        # reject it before creating an action rather than risking the process.
+        if crocoddyl.__version__ == "3.2.1" and tuple(
+            map(int, pin.__version__.split(".")[:2])
+        ) >= (4, 1):
+            raise ImportError(
+                "Go2 contact reference: Crocoddyl 3.2.1 is incompatible with "
+                f"Pinocchio {pin.__version__}; install crocoddyl==3.2.1 pin==4.0.0 "
+                "together in a fresh environment (or use the project's crocoddyl extra)"
+            )
+
         state = crocoddyl.StateMultibody(self.robot.model)
         actuation = crocoddyl.ActuationModelFloatingBase(state)
         contacts = crocoddyl.ContactModelMultiple(state, actuation.nu)

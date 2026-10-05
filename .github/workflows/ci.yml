@@ -28,7 +28,8 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install torch --index-url https://download.pytorch.org/whl/cpu
       - run: python -m pip install -e '.[dev,crocoddyl]'
+      - run: python -m pip check
       - name: Report reference dependencies
         run: |
           python -c "import sys, torch, numpy, pinocchio, crocoddyl; print(sys.version); print('torch', torch.__version__, 'numpy', numpy.__version__, 'pinocchio', pinocchio.__version__, 'crocoddyl', crocoddyl.__version__)"
-      - run: python -m pytest -m crocoddyl -q -s
+      - run: python -X faulthandler -m pytest -m crocoddyl -q -s

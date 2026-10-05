@@ -1,5 +1,37 @@
 # 项目验证记录
 
+## 2026-10-04 Crocoddyl CI 段错误修复
+
+用户提供的 Linux/Python 3.12 日志显示 Crocoddyl 3.2.1 在 Go2 接触 action 的
+首次 `model.calc()`（tests/test_go2.py）处退出码 139；此前 FDDP 对照正常运行。
+本机使用项目独立目录安装相同 Crocoddyl wheel 系列进行版本对比，未修改 croco_env。
+
+- Python 3.11.4 / macOS x86_64 / Crocoddyl 3.2.1 / Pinocchio 4.1.0：
+  在同一 `calc()` 位置复现原生段错误；`pip check` 无法检查二进制兼容性。
+- 保留 Crocoddyl 3.2.1，将 Pinocchio 改为 4.0.0：Go2 7 项原有对照全部通过。
+  这确认本机故障取决于原生依赖版本组合；具体 C++ 崩溃机制未用调试器确认。
+- `crocoddyl` extra 固定 Crocoddyl 3.2.1 / pin 4.0.0，pin 自身要求
+  libpinocchio 4.0.0。Go2 factory 在 3.2.1 搭配 Pinocchio >=4.1 时提前报错。
+- CI 增加 `pip check` 和 Python faulthandler；没有删减接触对照或放宽数值容差。
+
+实际验证（Torch 2.2.2，测试使用 Python 3.11 的 NumPy 1.26.4）：
+
+```bash
+PYTHONPATH=.dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages:src \
+  .venv/bin/python -X faulthandler -m pytest -m crocoddyl -q -s
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python \
+  -X faulthandler -m pytest -m crocoddyl -q -s
+```
+
+- 新组合：**15 passed, 88 deselected**，6.89 秒。
+- 原 croco_env（Crocoddyl 3.0.1 / Pinocchio 3.6.0）：**15 passed, 88 deselected**，7.05 秒。
+- 在实际 3.2.1 / 4.1.0 环境运行新增防崩溃测试：**1 passed, 8 deselected**。
+- 新组合安装目录的依赖元数据检查通过；`ruff check .`、`git diff --check` 通过。
+
+本机验证为 macOS/Python 3.11 与原有 Python 3.10；GitHub 的 Linux/Python 3.12
+结果仍须推送后重新运行确认。独立目录由 Git 忽略，干净安装使用 extra 中的版本固定。
+
 ## 2026-10-01 M2.4 Go2 固定接触 CPU 参考
 
 首个机器人模型已选定宇树 Go2，固定官方 `unitreerobotics/unitree_ros` commit

@@ -117,6 +117,18 @@ def test_go2_contact_acceleration_forces_and_derivatives_match_crocoddyl(robot, 
 
 
 @pytest.mark.crocoddyl
+def test_go2_reference_rejects_incompatible_native_versions(robot, monkeypatch):
+    crocoddyl = pytest.importorskip("crocoddyl")
+    import pinocchio as pin
+
+    reference = Go2FixedContactReference(robot)
+    monkeypatch.setattr(crocoddyl, "__version__", "3.2.1")
+    monkeypatch.setattr(pin, "__version__", "4.1.0")
+    with pytest.raises(ImportError, match=r"install crocoddyl==3\.2\.1 pin==4\.0\.0"):
+        reference.crocoddyl_model()
+
+
+@pytest.mark.crocoddyl
 def test_go2_reference_rejects_invalid_inputs(robot):
     q, v, u = robot.standing_configuration(), np.zeros(18), np.zeros(12)
     reference = Go2FixedContactReference(robot)

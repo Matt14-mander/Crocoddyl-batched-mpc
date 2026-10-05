@@ -67,6 +67,11 @@ PYTHONPATH=src python examples/go2_contact_reference.py
 python -m pytest tests/test_go2.py -q
 ```
 
+`crocoddyl` extra 固定安装 Crocoddyl 3.2.1 / Pinocchio 4.0.0。
+3.2.1 搭配 4.1.0 的 wheel 已在本机复现接触 `calc()` 段错误；Go2 factory 会在
+进入原生调用前拒绝该组合并提示重建环境。仅执行 `pip check` 无法检测这一兼容性问题。
+本机原有 Crocoddyl 3.0.1 / Pinocchio 3.6.0 的独立环境仍可按下述方式运行。
+
 本机 croco_env 继续使用项目内 NumPy 1.26.4 测试路径：
 
 ```bash
