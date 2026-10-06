@@ -58,6 +58,12 @@ class Go2ContactConstraints:
         self.force_bound = limits.new_tensor(
             [0.0, 0.0, 0.0, 0.0, -minimum_normal_force, maximum_normal_force]
         ).repeat(len(dynamics.feet))
+        mask = getattr(dynamics, "contact_mask", None)
+        if mask is not None:
+            if mask.ndim != 1:
+                raise ValueError("constraint setup requires a shared contact mask [4]")
+            # Inactive feet must have zero force, including zero normal load.
+            self.force_bound *= mask.repeat_interleave(6).to(dynamics.dtype)
 
     def violations(self, torques, forces):
         torque = (torques.abs() - self.torque_limits).clamp_min(0).amax(-1)

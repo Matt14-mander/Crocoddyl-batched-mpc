@@ -329,7 +329,20 @@ class Go2TorchDynamics:
 
     def foot_positions(self, q: Tensor) -> Tensor:
         """World foot-frame origins, ordered by feet, with shape [...,nf,3]."""
-        return self._kinematics(q, q.new_zeros(*q.shape[:-1], 18))[3]
+        # Geometry-only guards need no body Jacobians, velocities or drifts.
+        leading = q.shape[:-1]
+        rotation = quaternion_matrix(q[..., 3:7])[..., None, :, :].expand(*leading, 4, 3, 3)
+        position = q[..., :3][..., None, :].expand(*leading, 4, 3)
+        for indices in self.depth_indices:
+            A = skew(self.axes[indices])
+            angle = q[..., 7 + indices, None, None]
+            relative = self.rotations[indices] @ (
+                self.eye3 + angle.sin() * A + (1 - angle.cos()) * (A @ A)
+            )
+            position = position + _mv(rotation, self.translations[indices])
+            rotation = rotation @ relative
+        legs = self.foot_leg_indices
+        return position[..., legs, :] + _mv(rotation[..., legs, :, :], self.foot_offsets)
 
     def contact_dynamics(self, x: Tensor, u: Tensor) -> ContactDynamicsResult:
         """Batched continuous accelerations/forces and residuals; no host transfer."""

@@ -238,5 +238,67 @@ PYTHONPATH=.dev-tools/croco-numpy126:src OPENBLAS_NUM_THREADS=1 \
 `benchmarks/go2_50hz_cpu_2026-10-06.json` 和 `validation.md`。
 
 该结果仅对应记录的配置；Python/macOS 不是硬实时系统，不能据此保证任何运行的最坏延迟。
-更长 horizon/更多环境/CUDA 需分别测试。约束控制器尚无接触切换、离地互补、碰撞、
+更长 horizon/更多环境/CUDA 需分别测试。该固定模式控制器尚无离地互补、碰撞检测、
 真实状态估计或硬件联调；单边约束是固定支撑模式中的法向力约束，并不实现足端自动离地。
+
+## 显式接触事件与模式控制器
+
+`Go2HybridDynamics` 使用 FL/FR/RL/RR 四个固定力槽，`contact_mask` 为 bool `[4]`
+或 `[B,4]`。激活足保持世界锚点和点接触 KKT；非激活足移除约束，其力/力导数为零。
+全 False 支持无约束腾空动力学。位置门禁使用单独的几何递推，避免计算无关的刚体量。
+模式/锚点是模型初始化配置，不可在已冻结的 TorchScript 模型上原地修改。
+
+`transition(state, previous_mask)` 是纯接触事件函数，不修改输入或模型：
+
+- 释放保留 q/v，不施加虚构冲量；激活足的锚点不能被重新定位。
+- 新触地足必须接近平地及目标锚点（默认 2 mm），法向速度不能明显朝上。
+- 有新增接触时计算完全非弹性、粘着点接触冲量：
+  `M dv - J.T p = 0`、`J(v+dv)=0`；同时投影保留足和新触地足的速度。
+- 所有碰撞冲量必须满足 `pz>=0`、`|px|+|py|<=mu*pz`；检查接触速度残差和动能不增。
+  需要拉力或超摩擦的粘着碰撞被拒绝，不裁剪冲量，也不默默改为滑动/释放另一足。
+- q 不做触地位置吸附；拒绝的环境保持输入状态，冲量为零。
+
+`Go2ContactSwitchingMPC` 管理预构建的模式。每个环境独立记录模式索引。
+`prepare_mode()` 在控制循环外计算导数、约束矩阵并编译/预热图；当前局部站立 MPC
+要求支撑集能平衡参考，因此腾空仅有动力学，尚无腾空 MPC。
+参考姿态的激活足位置必须与准备的锚点一致，切换时保留足锚点必须完全一致。
+非支撑腿可以设置不同参考姿态，用于抬腿/下降；当前不是连续摆腿轨迹优化。
+
+```python
+import torch
+from crocoddyl_batched_mpc.models import Go2ContactSwitchingMPC
+
+torch.set_num_threads(1)
+controller = Go2ContactSwitchingMPC(
+    batch_size=2, horizon=2, minimum_normal_force=0.0, force_margin=1e-4
+)
+pose = controller.controllers[0].reference[:19].clone()
+pose[9] -= 0.05  # FL calf 姿态目标，抬足约毫米量级
+controller.prepare_mode("lift_fl", [False, True, True, True], reference_configuration=pose)
+state = controller.controllers[0].reference.expand(2, -1).clone()
+event = controller.switch("lift_fl", state, mask=torch.tensor([True, False]))
+# accepted=False 的环境保留原状态/模式。仿真器必须实际应用事件后的速度。
+state = event.state
+action, result = controller.compute(state)
+# 仅执行 result.usable 的动作，并使用当前模式推进 plant；下一周期读新测量。
+```
+
+切换还要求目标模式从碰撞后状态得到通过全部硬约束检查的 MPC 轨迹。
+接受切换时清除该环境所有模式的原变量、对偶和有效性缓存；未选中/被拒绝环境的缓存
+保持不变。被拒绝的触地请求需要停止/重新规划，不能继续用旧模式忽略已经接近的地面。
+`reset(mask)` 只清 warm start，不会把接触模式重置成四足支撑。
+当前 `compute()` 按模式调用各模式控制器；每次预测时域内仍为同一个支撑模式。
+尚未在预测节点间规划释放/触地，也没有自动接触检测、离地互补或步态规划。
+
+```bash
+PYTHONPATH=.dev-tools/croco-numpy126:src OPENBLAS_NUM_THREADS=1 \
+  VECLIB_MAXIMUM_THREADS=1 OMP_NUM_THREADS=1 \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python \
+  examples/go2_contact_switching.py --plant pinocchio
+```
+
+示例仅环境 0 切换，环境 1 保持站立；两轮抬 FL、下降、四足触地。
+触地周期显式注入向下速度扰动以验证非零碰撞冲量。独立 Pinocchio plant 按当前支撑集
+推进，约束门禁继续逐周期执行。记录实际抬足高度、零非支撑力、能量、约束与延迟。
+新增路径的计时包含接触事件和 compute，另行排除模型准备/plant/传感器/IO；
+上一节固定站立 50 Hz 的测量不能推广到混合模式或切换周期。详见 validation.md。

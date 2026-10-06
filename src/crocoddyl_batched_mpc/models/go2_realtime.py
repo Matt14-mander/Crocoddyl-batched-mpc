@@ -12,6 +12,7 @@ import torch
 from ..qp import solve_inequality_qp
 from ..result import MPCResult, SolveStatus
 from .go2_constraints import Go2ContactConstraints
+from .go2_hybrid import Go2HybridDynamics
 from .go2_torch import Go2StandingCost, Go2TorchDynamics
 
 
@@ -42,6 +43,9 @@ class Go2ConstrainedMPC:
         qp_iterations=12,
         force_margin=0.2,
         compile_physics=True,
+        contact_mask=None,
+        reference_configuration=None,
+        contact_positions=None,
     ):
         if batch_size < 1 or horizon < 1 or qp_iterations < 1:
             raise ValueError("batch_size, horizon and qp_iterations must be positive")
@@ -52,7 +56,30 @@ class Go2ConstrainedMPC:
         ):
             raise ValueError("force_margin must fit strictly inside the normal force interval")
         self.batch_size, self.horizon, self.qp_iterations = batch_size, horizon, qp_iterations
-        self.dynamics = Go2TorchDynamics(dt=dt, device=device, dtype=dtype)
+        settings = dict(
+            dt=dt, device=device, dtype=dtype, reference_configuration=reference_configuration
+        )
+        if contact_mask is None:
+            if contact_positions is not None:
+                raise ValueError("explicit anchors require contact_mask")
+            self.dynamics = Go2TorchDynamics(**settings)
+        else:
+            self.dynamics = Go2HybridDynamics(
+                contact_mask=contact_mask, contact_positions=contact_positions, **settings
+            )
+            if self.dynamics.contact_mask.ndim != 1:
+                raise ValueError("controller preparation requires shared contact_mask [4]")
+        if self.dynamics.standing_state.ndim != 1:
+            raise ValueError("controller preparation requires shared reference_configuration [19]")
+        if contact_mask is not None:
+            if self.dynamics.contact_positions.shape != (4, 3):
+                raise ValueError("controller preparation requires shared anchors [4,3]")
+            position = self.dynamics.foot_positions(self.dynamics.reference_configuration)
+            active = self.dynamics.contact_mask
+            if not torch.allclose(
+                position[active], self.dynamics.contact_positions[active], atol=1e-8, rtol=0
+            ):
+                raise ValueError("active anchors must match the prepared reference pose")
         self.cost = Go2StandingCost(self.dynamics)
         self.constraints = Go2ContactConstraints(
             self.dynamics,
@@ -81,6 +108,9 @@ class Go2ConstrainedMPC:
         H = torch.kron(torch.eye(horizon, device=self.device, dtype=dtype), self.cost.R)
         linear = x.new_zeros(n, 36)
         C, c = self.constraints.force_matrix, self.constraints.force_bound
+        if contact_mask is not None:
+            active_rows = self.dynamics.contact_mask.repeat_interleave(6)
+            C, c = C[active_rows], c[active_rows]
         matrices, bounds, state_offsets = [], [], []
         for t in range(horizon):
             select = eye[t * 12 : (t + 1) * 12]
@@ -231,6 +261,8 @@ class Go2ConstrainedMPC:
         states = safe[None].expand(count, -1, -1)
         trajectory = [states]
         feasible = valid[None].expand(count, -1).clone()
+        if isinstance(self.dynamics, Go2HybridDynamics):
+            feasible &= (self.dynamics.foot_positions(safe[..., :19])[..., 2] >= -0.002).all(-1)
         cost = safe.new_zeros(count, self.batch_size)
         for t in range(self.horizon):
             action = controls[:, :, t]
@@ -242,6 +274,10 @@ class Go2ConstrainedMPC:
             )
             states = output.reshape(count, self.batch_size, 37)
             feasible &= self.dynamics.manifold.is_valid(states)
+            if isinstance(self.dynamics, Go2HybridDynamics):
+                # No uncommanded landing/ground penetration during a stance segment.
+                positions = self.dynamics.foot_positions(states[..., :19])
+                feasible &= (positions[..., 2] >= -0.002).all(-1)
             trajectory.append(states)
         cost += self.cost.calc(states.reshape(-1, 37)).reshape(count, -1)
         return torch.stack(trajectory, 2), feasible & torch.isfinite(cost), cost
