@@ -288,7 +288,8 @@ action, result = controller.compute(state)
 保持不变。被拒绝的触地请求需要停止/重新规划，不能继续用旧模式忽略已经接近的地面。
 `reset(mask)` 只清 warm start，不会把接触模式重置成四足支撑。
 当前 `compute()` 按模式调用各模式控制器；每次预测时域内仍为同一个支撑模式。
-尚未在预测节点间规划释放/触地，也没有自动接触检测、离地互补或步态规划。
+这个模式控制器尚未在预测节点间规划释放/触地，也没有自动接触检测或离地互补。
+连续平地慢速 walk 已由独立的 `Go2SlowWalkController` 实现，见 [walk 文档](go2_walk.md)。
 
 ```bash
 PYTHONPATH=.dev-tools/croco-numpy126:src OPENBLAS_NUM_THREADS=1 \

@@ -1,0 +1,510 @@
+{
+  "plant": "pinocchio",
+  "python": "3.10.18",
+  "torch": "2.2.2",
+  "platform": "macOS-15.8.1-x86_64-i386-64bit",
+  "cpu_threads": 1,
+  "dtype": "torch.float64",
+  "batch_size": 2,
+  "dt_s": 0.02,
+  "horizon": 2,
+  "force_margin_N": 2.0,
+  "friction": 0.6,
+  "cycles": 2,
+  "order": [
+    "RL",
+    "FL",
+    "RR",
+    "FR"
+  ],
+  "step_length_m": 0.02,
+  "swing_height_m": 0.015,
+  "planned_duration_s": 21.6,
+  "simulated_duration_s": 28.12,
+  "prepare_seconds": 8.753597759001423,
+  "steps_completed": 1406,
+  "all_actions_usable": true,
+  "all_finished": true,
+  "releases": [
+    [
+      "RL",
+      "FL",
+      "RR",
+      "FR",
+      "RL",
+      "FL",
+      "RR",
+      "FR"
+    ],
+    [
+      "RL",
+      "FL",
+      "RR",
+      "FR",
+      "RL",
+      "FL",
+      "RR",
+      "FR"
+    ]
+  ],
+  "landings": [
+    [
+      "RL",
+      "FL",
+      "RR",
+      "FR",
+      "RL",
+      "FL",
+      "RR",
+      "FR"
+    ],
+    [
+      "RL",
+      "FL",
+      "RR",
+      "FR",
+      "RL",
+      "FL",
+      "RR",
+      "FR"
+    ]
+  ],
+  "events": [
+    {
+      "step": 51,
+      "frames": [
+        51,
+        51
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          false,
+          true
+        ],
+        [
+          true,
+          true,
+          false,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 136,
+      "frames": [
+        101,
+        101
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 206,
+      "frames": [
+        171,
+        171
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          false,
+          true,
+          true,
+          true
+        ],
+        [
+          false,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 303,
+      "frames": [
+        221,
+        221
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 373,
+      "frames": [
+        291,
+        291
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          false
+        ],
+        [
+          true,
+          true,
+          true,
+          false
+        ]
+      ]
+    },
+    {
+      "step": 447,
+      "frames": [
+        341,
+        341
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 517,
+      "frames": [
+        411,
+        411
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          true,
+          false,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 614,
+      "frames": [
+        461,
+        461
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 734,
+      "frames": [
+        581,
+        581
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          false,
+          true
+        ],
+        [
+          true,
+          true,
+          false,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 819,
+      "frames": [
+        631,
+        631
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 889,
+      "frames": [
+        701,
+        701
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          false,
+          true,
+          true,
+          true
+        ],
+        [
+          false,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 986,
+      "frames": [
+        751,
+        751
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 1056,
+      "frames": [
+        821,
+        821
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          false
+        ],
+        [
+          true,
+          true,
+          true,
+          false
+        ]
+      ]
+    },
+    {
+      "step": 1130,
+      "frames": [
+        871,
+        871
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 1200,
+      "frames": [
+        941,
+        941
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          true,
+          false,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "step": 1297,
+      "frames": [
+        991,
+        991
+      ],
+      "accepted": [
+        true,
+        true
+      ],
+      "contacts": [
+        [
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          true,
+          true,
+          true,
+          true
+        ]
+      ]
+    }
+  ],
+  "forward_displacement_m": [
+    0.039999361861206895,
+    0.03999936186120675
+  ],
+  "final_state_error": [
+    5.3070808958976885e-05,
+    5.3070808971427686e-05
+  ],
+  "peak_swing_height_m": [
+    [
+      0.01473180834420279,
+      0.014731470663392768,
+      0.014730780441291641,
+      0.014725584569114103
+    ],
+    [
+      0.014731808344202707,
+      0.014731470663392615,
+      0.014730780294240131,
+      0.014725584569114047
+    ]
+  ],
+  "min_three_foot_com_margin_m": 0.07595919766555265,
+  "min_normal_force_N": 9.331234423221561,
+  "max_inactive_force_N": 0.0,
+  "max_force_violation_N": 0.0,
+  "max_torque_violation_Nm": 0.0,
+  "max_impulse_violation_Ns": 9.771920549804254e-08,
+  "max_stance_anchor_error_m": 0.0006499422363417914,
+  "max_base_rotation_error_rad": 1.9752280192086214e-05,
+  "max_contact_wait_ticks": 47,
+  "cycle_median_ms": 17.104049,
+  "cycle_p99_ms": 52.13150075,
+  "cycle_max_ms": 346.368634,
+  "deadline_misses": 383,
+  "latency_scope": "scheduler/contact event/online QP/nonlinear horizon gate; excludes prepare/plant/sensors/IO"
+}

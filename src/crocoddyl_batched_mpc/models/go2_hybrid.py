@@ -74,7 +74,43 @@ class Go2HybridDynamics(Go2TorchDynamics):
             raise ValueError("contact_mask must be bool [4] or [B,4] on model device")
         return mask
 
-    def contact_dynamics(self, x, u):
+    def _contact_system(self, x, contact_mask=None, contact_positions=None):
+        if x.shape[-1] != 37 or x.device != self.device or x.dtype != self.dtype:
+            raise ValueError("state must match hybrid model shape/device/dtype")
+        mask = self.contact_mask if contact_mask is None else self._mask(contact_mask)
+        anchors = self.contact_positions if contact_positions is None else contact_positions
+        if (
+            anchors.shape[-2:] != (4, 3)
+            or anchors.ndim not in (2, 3)
+            or anchors.device != self.device
+            or anchors.dtype != self.dtype
+        ):
+            raise ValueError("anchors must match model [4,3] or [B,4,3], device and dtype")
+        if mask.ndim == 2 and (x.ndim < 2 or mask.shape[0] != x.shape[-2]):
+            raise ValueError("contact mask batch must match state")
+        if anchors.ndim == 3 and (x.ndim < 2 or anchors.shape[0] != x.shape[-2]):
+            raise ValueError("anchor batch must match state")
+        mass, h, J, drift = self.quantities(x[..., :19], x[..., 19:])
+        drift = drift + self.gains[0] * (self.contact_positions - anchors).flatten(-2)
+        rows = mask.repeat_interleave(3, -1).to(self.dtype)
+        J, drift = J * rows[..., None], drift * rows
+        inactive = torch.diag_embed(1 - rows).expand(*x.shape[:-1], 12, 12)
+        kkt = torch.cat(
+            (torch.cat((mass, -J.transpose(-1, -2)), -1), torch.cat((J, inactive), -1)), -2
+        )
+        return mass, h, J, drift, kkt
+
+    def control_affine_dynamics(self, x, *, contact_mask=None, contact_positions=None):
+        """Exact at fixed x: a=a0+Au*u, f=f0+Fu*u; one multi-RHS KKT solve."""
+        _, h, _, drift, kkt = self._contact_system(x, contact_mask, contact_positions)
+        offset = torch.cat((-h, -drift), -1)
+        control = torch.cat((self.actuation, x.new_zeros(12, 12)), -2)
+        rhs = torch.cat((offset[..., None], control.expand(*x.shape[:-1], 30, 12)), -1)
+        values, info = torch.linalg.solve_ex(kkt, rhs, check_errors=False)
+        values = torch.where((info == 0)[..., None, None], values, float("nan"))
+        return values[..., :18, 0], values[..., :18, 1:], values[..., 18:, 0], values[..., 18:, 1:]
+
+    def contact_dynamics(self, x, u, *, contact_mask=None, contact_positions=None):
         if (
             x.shape[-1] != 37
             or u.shape != (*x.shape[:-1], 12)
@@ -86,15 +122,7 @@ class Go2HybridDynamics(Go2TorchDynamics):
             raise ValueError("state/control must match hybrid Go2 shape, device and dtype")
         if self.parameter_batch_size is not None and x.shape[-2] != self.parameter_batch_size:
             raise ValueError("state batch must match hybrid parameters")
-        mass, h, J, drift = self.quantities(x[..., :19], x[..., 19:])
-        rows = self.contact_mask.repeat_interleave(3, -1).to(self.dtype)
-        J = J * rows[..., None]
-        drift = drift * rows
-        # Inactive multiplier equations are f_i=0. Active equations are J_i a=-drift_i.
-        inactive = torch.diag_embed(1 - rows).expand(*x.shape[:-1], 12, 12)
-        kkt = torch.cat(
-            (torch.cat((mass, -J.transpose(-1, -2)), -1), torch.cat((J, inactive), -1)), -2
-        )
+        mass, h, J, drift, kkt = self._contact_system(x, contact_mask, contact_positions)
         rhs = torch.cat((_mv(self.actuation, u) - h, -drift), -1)
         solution, info = torch.linalg.solve_ex(kkt, rhs[..., None], check_errors=False)
         solution = torch.where((info == 0)[..., None], solution.squeeze(-1), float("nan"))
@@ -109,6 +137,13 @@ class Go2HybridDynamics(Go2TorchDynamics):
             _mv(mass, a) + h - _mv(self.actuation, u) - _mv(J.transpose(-1, -2), f),
             _mv(J, a) + drift,
         )
+
+    def calc(self, x, u, *, contact_mask=None, contact_positions=None):
+        a = self.contact_dynamics(
+            x, u, contact_mask=contact_mask, contact_positions=contact_positions
+        ).acceleration
+        velocity = x[..., 19:] + self.dt * a
+        return self.manifold.integrate(x, torch.cat((self.dt * velocity, self.dt * a), -1))
 
     def quasi_static_torques(self):
         q = self.reference_configuration
@@ -132,6 +167,8 @@ class Go2HybridDynamics(Go2TorchDynamics):
         anchor_tolerance=0.002,
         ground_height=0.0,
         impulse_tolerance=1e-7,
+        contact_mask=None,
+        contact_positions=None,
     ):
         """Prepare a mode change without mutating model or input.
 
@@ -162,7 +199,8 @@ class Go2HybridDynamics(Go2TorchDynamics):
         ):
             raise ValueError("transition settings must be finite with nonnegative tolerances")
         old = self._mask(previous_mask).expand(state.shape[0], 4)
-        new = self.contact_mask.expand(state.shape[0], 4)
+        target_mask = self.contact_mask if contact_mask is None else self._mask(contact_mask)
+        new = target_mask.expand(state.shape[0], 4)
         added = new & ~old
         impact = added.any(-1)
         valid = self.manifold.is_valid(state)
@@ -171,7 +209,19 @@ class Go2HybridDynamics(Go2TorchDynamics):
         mass, _, J, _ = self.quantities(q, velocity)
         positions = self.foot_positions(q)
         foot_velocity = _mv(J, velocity).reshape(-1, 4, 3)
-        anchors = self.contact_positions.expand(state.shape[0], 4, 3)
+        target_positions = (
+            self.contact_positions if contact_positions is None else contact_positions
+        )
+        if (
+            target_positions.ndim not in (2, 3)
+            or target_positions.shape[-2:] != (4, 3)
+            or (target_positions.ndim == 3 and target_positions.shape[0] not in (1, state.shape[0]))
+            or target_positions.device != self.device
+            or target_positions.dtype != self.dtype
+        ):
+            raise ValueError("target anchors must match model shape/device/dtype")
+        anchors = target_positions.expand(state.shape[0], 4, 3)
+        valid &= torch.isfinite(anchors).flatten(1).all(-1)
         near_ground = (positions[..., 2] - ground_height).abs() <= height_tolerance
         on_ground = (anchors[..., 2] - ground_height).abs() <= height_tolerance
         near_anchor = (positions - anchors).norm(dim=-1) <= anchor_tolerance

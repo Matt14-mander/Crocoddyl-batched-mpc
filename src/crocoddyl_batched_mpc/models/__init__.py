@@ -6,6 +6,13 @@ from .go2_hybrid import ContactTransition, Go2HybridDynamics
 from .go2_realtime import Go2ConstrainedMPC
 from .go2_switching import Go2ContactSwitchingMPC
 from .go2_torch import Go2StandingCost, Go2TorchDynamics, go2_standing_problem
+from .go2_walk import (
+    Go2SlowWalkController,
+    Go2WalkControl,
+    Go2WalkMPC,
+    Go2WalkPlan,
+    go2_slow_walk_plan,
+)
 from .linear import double_integrator
 from .pendulum import (
     PendulumCost,
@@ -16,6 +23,11 @@ from .pendulum import (
 )
 
 __all__ = [
+    "Go2SlowWalkController",
+    "Go2WalkControl",
+    "Go2WalkMPC",
+    "Go2WalkPlan",
+    "go2_slow_walk_plan",
     "ContactTransition",
     "Go2HybridDynamics",
     "Go2ContactSwitchingMPC",
