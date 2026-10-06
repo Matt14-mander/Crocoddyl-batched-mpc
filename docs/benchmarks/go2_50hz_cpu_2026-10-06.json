@@ -1,0 +1,37 @@
+{
+  "batch_size": 2,
+  "horizon": 2,
+  "dt": 0.02,
+  "steps_requested": 200,
+  "steps_completed": 200,
+  "plant": "pinocchio",
+  "device": "cpu",
+  "dtype": "torch.float64",
+  "python": "3.11.4",
+  "torch": "2.2.2",
+  "platform": "macOS-10.16-x86_64-i386-64bit",
+  "cpu_threads": 1,
+  "prepare_seconds": 7.90043198200874,
+  "all_actions_usable": true,
+  "latency_scope": "compute/QP/nonlinear horizon gate; excludes plant/sensors/IO",
+  "median_ms": 9.500928,
+  "p95_ms": 11.18951,
+  "p99_ms": 14.848613889999998,
+  "max_ms": 15.876896,
+  "deadline_ms": 20.0,
+  "deadline_misses": 0,
+  "final_state_error": [
+    3.3232461723497255e-05,
+    3.3280696177053946e-05
+  ],
+  "last_five_error_max": [
+    3.873005136662669e-05,
+    3.878280340290613e-05
+  ],
+  "max_torque_violation_Nm": 0.0,
+  "max_force_violation_N": 0.0,
+  "min_normal_force_N": 32.898656266042664,
+  "max_diamond_ratio": 0.10323054648934776,
+  "max_torque_fraction": 0.1352111098371871,
+  "max_qp_iterations": 1
+}

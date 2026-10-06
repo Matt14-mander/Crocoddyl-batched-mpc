@@ -183,8 +183,10 @@ class Go2TorchDynamics:
         self.gains = tuple(stabilization)
         self.manifold = FloatingBaseManifold(12)
         inertia, joints, placements = _urdf_parameters()
+
         def convert(t):
             return t.to(device=self.device, dtype=dtype)
+
         self.inertias = convert(inertia)
         self.parents = tuple(joints[i][0] for i in range(1, 13))
         self.rotations = convert(torch.stack([joints[i][1] for i in range(1, 13)]))
@@ -210,6 +212,13 @@ class Go2TorchDynamics:
         )
         self.gravity = torch.tensor([0.0, 0.0, -9.81], device=self.device, dtype=dtype)
         self.actuation = torch.eye(18, device=self.device, dtype=dtype)[:, 6:]
+        self.depth_indices = tuple(
+            torch.tensor([d, d + 3, d + 6, d + 9], device=self.device) for d in range(3)
+        )
+        self.parallel_inertias = self.inertias[[0, 1, 4, 7, 10, 2, 5, 8, 11, 3, 6, 9, 12]]
+        self.foot_leg_indices = torch.tensor(
+            [GO2_LEGS.index(f) for f in self.feet], device=self.device
+        )
         if reference_configuration is None:
             q = torch.zeros(1, 19, device=self.device, dtype=dtype)
             q[:, 6] = 1
@@ -244,56 +253,71 @@ class Go2TorchDynamics:
         return torch.cat((q, q.new_zeros(*q.shape[:-1], 18)), -1)
 
     def _kinematics(self, q, v):
+        """Three tree-depth sweeps, all four leg chains evaluated in parallel."""
+        leading = q.shape[:-1]
         R0 = quaternion_matrix(q[..., 3:7])
-        rotations, positions = [R0], [q[..., :3]]
-        jacobians = [self.base_jacobian.expand(*q.shape[:-1], 6, 18)]
-        velocities, accelerations = [v[..., :6]], [torch.zeros_like(v[..., :6])]
-        for i, parent in enumerate(self.parents):
-            A = skew(self.axes[i])
-            angle = q[..., 7 + i, None, None]
-            R = self.rotations[i] @ (self.eye3 + angle.sin() * A + (1 - angle.cos()) * (A @ A))
-            p = self.translations[i].expand(*q.shape[:-1], 3)
+        J0 = self.base_jacobian.expand(*leading, 6, 18)
+        v0 = v[..., :6]
+        a0 = torch.zeros_like(v0)
+        rotations, jacobians = [R0[..., None, :, :]], [J0[..., None, :, :]]
+        velocities, accelerations = [v0[..., None, :]], [a0[..., None, :]]
+        Rp = R0[..., None, :, :].expand(*leading, 4, 3, 3)
+        pp = q[..., :3][..., None, :].expand(*leading, 4, 3)
+        Jp = J0[..., None, :, :].expand(*leading, 4, 6, 18)
+        vp = v0[..., None, :].expand(*leading, 4, 6)
+        ap = a0[..., None, :].expand(*leading, 4, 6)
+        for indices in self.depth_indices:
+            A = skew(self.axes[indices])
+            angle = q[..., 7 + indices, None, None]
+            R = self.rotations[indices] @ (
+                self.eye3 + angle.sin() * A + (1 - angle.cos()) * (A @ A)
+            )
+            p = self.translations[indices].expand(*leading, 4, 3)
             X = _spatial_transform(R, p)
-            J = X @ jacobians[parent] + self.joint_jacobians[i]
-            vj = self.joint_subspaces[i] * v[..., 6 + i, None]
-            vi = _mv(X, velocities[parent]) + vj
-            ai = _mv(X, accelerations[parent]) + _motion_cross(vi, vj)
-            rotations.append(rotations[parent] @ R)
-            positions.append(positions[parent] + _mv(rotations[parent], p))
-            jacobians.append(J)
+            Ji = X @ Jp + self.joint_jacobians[indices]
+            vj = self.joint_subspaces[indices] * v[..., 6 + indices, None]
+            vi = _mv(X, vp) + vj
+            ai = _mv(X, ap) + _motion_cross(vi, vj)
+            pp = pp + _mv(Rp, p)
+            Rp = Rp @ R
+            rotations.append(Rp)
+            jacobians.append(Ji)
             velocities.append(vi)
             accelerations.append(ai)
-        foot_positions, foot_jacobians, foot_drifts = [], [], []
-        for i, body in enumerate(self.foot_bodies):
-            offset, R = self.foot_offsets[i], rotations[body]
-            C = torch.cat((self.eye3, -skew(offset)), -1)
-            velocity = _mv(C, velocities[body])
-            acceleration = _mv(C, accelerations[body]) + torch.linalg.cross(
-                velocities[body][..., 3:], velocity
-            )
-            foot_positions.append(positions[body] + _mv(R, offset.expand(*q.shape[:-1], 3)))
-            foot_jacobians.append(R @ C @ jacobians[body])
-            foot_drifts.append(_mv(R, acceleration))
+            Jp, vp, ap = Ji, vi, ai
+        # All official foot frames belong to the distal calf bodies.
+        indices = self.foot_leg_indices
+        R = Rp[..., indices, :, :]
+        C = torch.cat((self.eye3.expand(len(self.feet), 3, 3), -skew(self.foot_offsets)), -1)
+        velocity = _mv(C, vp[..., indices, :])
+        acceleration = _mv(C, ap[..., indices, :]) + torch.linalg.cross(
+            vp[..., indices, 3:], velocity
+        )
+        position = pp[..., indices, :] + _mv(
+            R, self.foot_offsets.expand(*leading, len(self.feet), 3)
+        )
+        contact_J = (R @ C @ Jp[..., indices, :, :]).flatten(-3, -2)
+        drift = _mv(R, acceleration).flatten(-2)
         return (
-            torch.stack(rotations, -3),
-            torch.stack(jacobians, -3),
-            (torch.stack(velocities, -2), torch.stack(accelerations, -2)),
-            torch.stack(foot_positions, -2),
-            torch.cat(foot_jacobians, -2),
-            torch.cat(foot_drifts, -1),
+            torch.cat(rotations, -3),
+            torch.cat(jacobians, -3),
+            (torch.cat(velocities, -2), torch.cat(accelerations, -2)),
+            position,
+            contact_J,
+            drift,
         )
 
     def quantities(self, q: Tensor, v: Tensor):
         """Return M, h, world foot J, and stabilized Jdot*v."""
         rotations, J, (velocity, acceleration), positions, contact_J, drift = self._kinematics(q, v)
-        inertia_J = self.inertias @ J
+        inertia_J = self.parallel_inertias @ J
         mass = (J.transpose(-1, -2) @ inertia_J).sum(-3)
         gravity_local = _mv(
             rotations.transpose(-1, -2), self.gravity.expand(*rotations.shape[:-2], 3)
         )
         gravity_spatial = torch.cat((gravity_local, torch.zeros_like(gravity_local)), -1)
-        force = _mv(self.inertias, acceleration - gravity_spatial) + _force_cross(
-            velocity, _mv(self.inertias, velocity)
+        force = _mv(self.parallel_inertias, acceleration - gravity_spatial) + _force_cross(
+            velocity, _mv(self.parallel_inertias, velocity)
         )
         nonlinear = _mv(J.transpose(-1, -2), force).sum(-2)
         drift = (

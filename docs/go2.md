@@ -105,7 +105,7 @@ result = reference.calc(q, np.zeros(robot.nv), u)
 `Go2TorchDynamics` 从包内 URDF 一次性解析完整刚体惯性，将固定 link（含 rotor/foot）
 合并到运动父体，不依赖 Pinocchio 做初始化或在线计算。模型支持 float32/float64，
 所有在线运算留在指定 Torch device；没有 `.cpu()` / NumPy callback 或逐环境 Python 循环。
-固定机器人拓扑的 12 关节递推与时间维循环仍由 Python 调度。
+固定机器人拓扑按三层同时递推四腿，时间维循环仍由 Python 调度。
 
 - 质量矩阵：逐体局部运动 Jacobian 与完整空间惯性，`M=sum(J_body.T I_body J_body)`。
 - 偏置力：Newton–Euler 的速度叉乘、运动加速度和重力，保持 Pinocchio body 速度约定。
@@ -169,4 +169,74 @@ Pinocchio integrate 推进 CPU 状态；该模式允许 CPU 数据转换，仅�
 摩擦锥、扭矩 box、关节限位约束求解、接触切换或碰撞检测。测试轨迹中正法向力和
 扭矩余量是观测验收条件，不代表优化器对任意扰动保证这些约束。
 CUDA 测试已编写，但本机没有 CUDA，仍需实机验收；当前 CPU 延迟不满足实时控制。
-下一步优化导数/递推与内存调度，再加入约束和 Isaac Lab plant 联调。
+以下新增局部控制器已推进 CPU 性能与硬约束；上述完整 DDP/FDDP 仍保留为无约束基线。
+
+## 局部硬约束 MPC 与 50 Hz 目标
+
+`Go2ConstrainedMPC` 是另一个控制路径：启动时在固定站立工作点计算 A/B、力的局部导数，
+凝聚状态变量并缓存 QP Hessian/约束矩阵。在线只更新测量状态对应的梯度和约束边界。
+Newton predictor/corrector QP 使用原变量/对偶 warm start；CPU 可提前停止，CUDA 使用
+固定最大迭代预算，不检查 GPU host 标量。刚体递推按三层同时计算四腿，在线轨迹检查
+使用预热的 TorchScript 图；完整自动导数和 CPU oracle 仍保留作为正确性基线。
+
+默认 B=1、T=2、dt=0.02、float64、4 足平地固定支撑；2 节点对应 40 ms 预测时域。
+这是为 20 ms 周期选择的局部站立模式，不是把完整非线性 DDP 替换成等价算法。
+工作点不在线刷新；当前测量在参考的局部配置增量每分量 <=0.35、速度每分量 <=2
+时才尝试控制。该范围是使用域检查，不是收敛域/稳定性证明。
+
+### 硬约束与返回语义
+
+全部约束以 `G du <= b` 进入 QP，没有惩罚 slack、最终动作裁剪或力截断：
+
+- 关节扭矩：`-limit <= u <= limit`，默认官方 URDF effort，可配置更小的 12 维 limit。
+- 法向力：默认 `1 <= fz <= 200` N；minimum 可设为 0，禁止负法向力。
+- 内接摩擦棱锥：`|fx|+|fy| <= mu*fz`，默认 mu=0.6，严格位于圆形 Coulomb 锥内。
+  法向为世界 +z，仅适用于平地；这是保守内近似，会拒绝部分圆锥内的力。
+
+局部力模型存在误差，QP 默认将力边界再收紧 0.2 N、扭矩边界收紧 1e-5 Nm。
+求得候选后，从当前测量开始用完整非线性模型重新推进 **所有受控节点**，逐节点检查
+真实 KKT 接触力和扭矩，float64 容差为 1e-7（float32 为 2e-4）。收紧边界不是最终保证，
+只有通过这一检查的轨迹才标为 `result.feasible/usable=True`。
+CPU 先检查优化候选，必要时重新检查已缓存的控制序列；CUDA 并行检查两个候选。
+没有通过检查的轨迹不返回为可用，也不无条件沿用上一动作。
+
+```python
+import torch
+from crocoddyl_batched_mpc.models import Go2ConstrainedMPC
+
+# 在进入控制循环前构建/编译/预热。应用自行配置线程策略。
+controller = Go2ConstrainedMPC(batch_size=2, horizon=2, dt=0.02, friction=0.6)
+state = controller.reference.expand(2, -1).clone()
+action, result = controller.compute(state)
+# 只有 result.usable 的环境可执行动作；其他环境的 action 为 NaN，须停止/重新规划。
+controller.reset(torch.tensor([False, True]))
+```
+
+`SUCCESS` 表示收敛的 QP 候选通过非线性检查；`MAX_ITERATIONS` 表示有效有限预算候选
+或经过检查的旧序列。`NO_FEASIBLE_CANDIDATE` 表示本次没有找到通过检查的候选，
+不等价于数学不可行证书；`OUTSIDE_LOCAL_MODEL` 与异常观测分别明确报告。
+失败环境的轨迹/动作均为 NaN；不要使用通用 controller 的 hold-last 策略绕开检查。
+模型、限制、参考和地面设置是初始化配置；修改后重建控制器，不支持原地热修改这些张量。
+
+### 性能复现与边界
+
+```bash
+PYTHONPATH=src OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 OMP_NUM_THREADS=1 \
+  .venv/bin/python examples/go2_constrained_mpc.py --steps 200 --require-deadline
+# 独立 plant 在已配置的 croco_env 中运行
+PYTHONPATH=.dev-tools/croco-numpy126:src OPENBLAS_NUM_THREADS=1 \
+  VECLIB_MAXIMUM_THREADS=1 OMP_NUM_THREADS=1 \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python \
+  examples/go2_constrained_mpc.py --plant pinocchio --steps 200 --require-deadline
+```
+
+示例设置 Torch 单线程，并分别记录初始化/预热和控制周期。控制延迟包含 QP 与完整
+非线性可行性检查，不含传感器、plant/模拟器、执行器 IO；GPU 计时时同步仅在示例中。
+`--require-deadline` 在任何周期超过 20 ms 时退出失败，不会把平均延迟当成完整验收。
+本机 CPU B=2/T=2 的 200 周期独立 plant 测量：中位 9.50 ms、P99 14.85 ms、
+最大 15.88 ms、零超时，扭矩/力约束违反量均为零。完整数据见
+`benchmarks/go2_50hz_cpu_2026-10-06.json` 和 `validation.md`。
+
+该结果仅对应记录的配置；Python/macOS 不是硬实时系统，不能据此保证任何运行的最坏延迟。
+更长 horizon/更多环境/CUDA 需分别测试。约束控制器尚无接触切换、离地互补、碰撞、
+真实状态估计或硬件联调；单边约束是固定支撑模式中的法向力约束，并不实现足端自动离地。

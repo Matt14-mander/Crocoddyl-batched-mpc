@@ -1,5 +1,67 @@
 # 项目验证记录
 
+## 2026-10-06 M2.6 Go2 局部硬约束站立控制与 50 Hz
+
+- 新增批量 predictor/corrector 不等式 QP，与独立 NumPy 活跃集穷举的最优解对照。
+  可行性与 KKT 收敛分别报告；没有软约束或不可行性证明。
+- 新增 `Go2ContactConstraints`、`Go2ConstrainedMPC`：缓存站立工作点导数和凝聚矩阵，
+  在线约束扭矩、非负法向力及内接摩擦棱锥。完整非线性模型逐节点复核所有候选。
+  不可用动作返回 NaN，拒绝无条件保持旧扭矩；局部使用域越界有独立状态码。
+- 四腿运动学由 12 次串行递推改为 3 层并行递推，保留原有独立刚体量/导数 oracle 容差。
+  在线检查使用启动时编译和预热的 TorchScript；完整 DDP/FDDP 路径继续作为离线基线。
+
+### 实际测试
+
+用户指定的 croco_env（Python 3.10.18 / Torch 2.2.2 / Crocoddyl 3.0.1 /
+Pinocchio 3.6.0，独立 NumPy 1.26.4 路径）完整回归：
+**106 passed, 22 skipped**，437.59 秒；全部跳过项为 CUDA 不可用。
+新增用例覆盖活跃摩擦/法向力/扭矩边界、完整预测轨迹复核、无可行候选、异常观测、
+工作域越界、mask reset 与环境隔离，以及 120 周期独立 Pinocchio plant 闭环恢复。
+三层并行化后的 Torch Go2 专项在 Crocoddyl 3.2.1 / Pinocchio 4.0.0 下
+**8 passed, 2 skipped**，原 oracle 门槛不变。
+`ruff check .`、`git diff --check`、wheel/sdist 构建通过；从 wheel 解包路径
+实际导入并实例化局部控制器，平衡动作及其硬约束检查通过，无需 Pinocchio。
+
+```bash
+PYTHONPATH=.dev-tools/croco-numpy126:src \
+  OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 OMP_NUM_THREADS=1 \
+  /Users/zhengyuanhao/anaconda3/envs/croco_env/bin/python \
+  -X faulthandler -m pytest -q -ra
+```
+
+### 20 ms 周期实测
+
+独立 Pinocchio KKT/integrate plant，macOS Intel x86_64 / Python 3.11.4 /
+Torch 2.2.2 / Crocoddyl 3.2.1 / Pinocchio 4.0.0，Torch/BLAS 单线程。
+B=2、T=2、dt=0.02、float64，200 周期；初始 roll ±0.02 rad、关节位移
+0.015 rad、速度 0.02；第 32 周期注入角速度 `[0.08,-0.06,0.04]` rad/s。
+
+```bash
+PYTHONPATH=.dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages:src \
+  OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 OMP_NUM_THREADS=1 \
+  .venv/bin/python examples/go2_constrained_mpc.py \
+  --plant pinocchio --steps 200 --require-deadline
+```
+
+| 指标 | 实测 |
+| --- | ---: |
+| 在线延迟中位 / P95 / P99 | 9.50 / 11.19 / 14.85 ms |
+| 在线最大延迟 / 超过 20 ms 的周期数 | 15.88 ms / 0 of 200 |
+| 扭矩 / 接触不等式最大违反 | 0 Nm / 0 N |
+| 最小法向力 | 32.90 N |
+| 最大 `(|fx|+|fy|)/fz`（限制 0.6） | 0.10323 |
+| 最大扭矩 / URDF effort | 0.13521 |
+| 最终状态切空间误差（两个环境） | 3.323e-5 / 3.328e-5 |
+
+原始数据见 [CPU 50 Hz 测量](benchmarks/go2_50hz_cpu_2026-10-06.json)。
+计时包含 compute、QP 和全部预测节点的非线性约束检查；启动准备 7.90 秒、plant、
+传感器和通信/执行器 I/O 不计入。短测 T=3 曾通过，但延长到 200 周期出现超时，
+因此默认预测时域选为 T=2（40 ms），上述结论只限此实测配置。
+这不是操作系统最坏延迟或真实硬件控制链的硬实时保证。
+
+当前为平地四足固定支撑、缓存局部工作点，约束力采用圆形 Coulomb 锥的保守内近似。
+没有离地互补、接触切换、关节位置硬约束或硬件联调；CUDA/更大批量与预测时域仍需实测。
+
 ## 2026-10-05 M2.5 Go2 Torch 批量接触与站立 MPC
 
 ### 实现

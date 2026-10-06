@@ -8,6 +8,8 @@ class SolveStatus(IntEnum):
     SUCCESS = 0
     NUMERICAL_FAILURE = 1
     MAX_ITERATIONS = 2
+    NO_FEASIBLE_CANDIDATE = 3
+    OUTSIDE_LOCAL_MODEL = 4
 
 
 @dataclass(frozen=True)
@@ -34,9 +36,9 @@ class MPCResult:
         """A finite candidate remains usable when a fixed iteration budget expires."""
         import torch
 
-        usable = (self.status != SolveStatus.NUMERICAL_FAILURE) & torch.isfinite(self.us[:, 0]).all(
-            -1
-        )
+        usable = (
+            (self.status == SolveStatus.SUCCESS) | (self.status == SolveStatus.MAX_ITERATIONS)
+        ) & torch.isfinite(self.us[:, 0]).all(-1)
         return usable if self.feasible is None else usable & self.feasible
 
     @property
