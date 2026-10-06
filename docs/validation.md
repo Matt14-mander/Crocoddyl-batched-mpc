@@ -1,5 +1,74 @@
 # 项目验证记录
 
+## 2026-10-05 M2.5 Go2 Torch 批量接触与站立 MPC
+
+### 实现
+
+- 新增 `Go2TorchDynamics`：独立解析官方 URDF，包括固定 rotor/foot 的完整惯性合并。
+  在线仅使用 Torch 计算运动学、M/h/J/classical drift、双边接触 KKT 和自由浮基积分。
+  nx=37、ndx=36、nu=12；支持 shared/per-environment 世界锚点及足序/支撑子集。
+- 半隐式积分和 48 方向 `vmap(jvp)` 自动局部导数，直接接入 DDP/FDDP。
+  `solve_ex` 将奇异环境的解标为 NaN；求解器继续按环境报告数值失败。
+- `Go2StandingCost`、平衡扭矩初始化及 `go2_standing_problem`；
+  `examples/go2_standing_mpc.py` 提供 Torch/独立 Pinocchio plant、扰动和验收指标。
+- 新增 float32/float64 平衡与批量隔离、独立锚点、CPU 外部 oracle、离散导数、
+  DDP/FDDP warm start/reset/异常四元数隔离、站立扰动恢复与 CUDA stream 测试。
+
+### 外部对照与闭环
+
+Python 3.11.4 / Torch 2.2.2 / NumPy 1.26.4 / Crocoddyl 3.2.1 / Pinocchio 4.0.0，
+macOS x86_64，单线程 CPU。使用项目独立 cmeel 目录，原 croco_env 保持不变。
+
+```bash
+PYTHONPATH=.dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages:src \
+  .venv/bin/python -X faulthandler -m pytest -m crocoddyl -q -s
+PYTHONPATH=src .venv/bin/python examples/go2_standing_mpc.py --steps 65
+```
+
+- 新 Torch 专项：**8 passed, 2 skipped**；跳过项为 CUDA 不可用。
+- 全部 Crocoddyl marker：**21 passed, 96 deselected**，173.39 秒。
+  其中站立闭环使用独立 NumPy KKT 连续动力学与 Pinocchio integrate 推进 plant。
+- 在用户指定的 croco_env（Python 3.10.18 / Crocoddyl 3.0.1 / Pinocchio 3.6.0，
+  `PYTHONPATH=.dev-tools/croco-numpy126:src`）执行完整回归：
+  **96 passed, 21 skipped**，433.29 秒；21 项全部为 CUDA 不可用。
+- 四足/两足（RR、FL）与零/非零稳定化：M/h/J/drift/a/f 与 CPU KKT 的
+  atol/rtol 门槛 1e-9；连续 a/f 自动导数与 Crocoddyl 的门槛 2e-8；均通过。
+- 离散局部 Fx/Fu 与独立 Pinocchio plant 的 48 列中心差分对照：门槛 2e-7，通过。
+- 单次随机扰动观测误差：M=3.55e-15、h=2.84e-14、J=3.33e-16、drift=1.12e-15、
+  a=3.38e-14、f=3.55e-14。它们不代替测试中的明确容差。
+
+站立闭环：B=2、dt=0.02、T=8、每周期 1 次 DDP，65 周期；初始两环境 roll
+分别 ±0.02 rad、12 关节位移 0.015 rad、18 维速度 0.02；第 32 步注入
+base body 角速度 `[0.08,-0.06,0.04]` rad/s。没有执行最终动作裁剪。
+
+| 独立 plant 观测 | 环境 0 | 环境 1 |
+| --- | ---: | ---: |
+| 初始状态切空间误差范数 | 0.101489 | 0.101489 |
+| 最终状态误差范数 | 0.000801 | 0.000881 |
+| 最后 5 周期最大状态误差 | 0.001393 | 0.001507 |
+| 最终配置误差范数 | 0.000107 | 0.000122 |
+| 最终速度范数 | 0.000794 | 0.000872 |
+| 最大扭矩/URDF effort | 0.135744 | 0.135580 |
+| 最小法向力 (N) | 30.148577 | 30.766677 |
+| 最大切向力/法向力 | 0.078683 | 0.102579 |
+| 最大接触加速度残差 | 5.65e-15 | 7.47e-15 |
+| 最终最大足端位置误差 (m) | 3.05e-5 | 2.80e-5 |
+
+65 周期墙钟耗时 **166.65 秒**（同时有另一回归进程）；这是离线正确性演示，
+不代表 dt=0.02 的实时频率。另一次 Torch plant 演示为 155.92 秒，扰动在第 30 步。
+FDDP CLI smoke（B=2、T=2、4 周期）全部动作可用，3.19 秒；不作为长期恢复验收。
+
+### 打包与适用边界
+
+- `ruff check .`、`git diff --check`、wheel/sdist 构建通过。
+- 从 wheel 解包路径实际实例化 Torch Go2，无需 Pinocchio；平衡加速度最大 1.21e-12。
+  float32 Fx/Fu 对 float64 的平衡状态误差分别 1.49e-6 / 7.46e-8。
+- CUDA 用例已编写，本机无 CUDA，未执行 GPU/stream 或实时性能验收。
+- 模型是双边固定点接触。没有摩擦锥、单边力、扭矩/关节 box 约束求解、接触切换、
+  碰撞检测或 Isaac Lab/硬件联调。轨迹中的正法向力、摩擦比和扭矩余量仅为观测门禁。
+- Torch 刚体量与 Pinocchio 独立实现，但共享官方 URDF，不验证实际硬件惯性参数。
+  下一轮优化自动导数、刚体递推与分配开销，再推进受约束接触和模拟器闭环。
+
 ## 2026-10-04 Crocoddyl CI 段错误修复
 
 用户提供的 Linux/Python 3.12 日志显示 Crocoddyl 3.2.1 在 Go2 接触 action 的

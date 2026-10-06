@@ -31,7 +31,7 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 
 ## M2：批量非线性求解
 
-当前状态：**M2.4 Go2 固定接触 CPU 参考**。
+当前状态：**M2.5 Go2 Torch 固定接触与站立 MPC 正确性基线**。
 
 - [x] backward/forward、逐环境线搜索/自适应正则化、固定迭代预算、失败和冻结 mask。
 - [x] controller horizon-shift warm start；局部 reset 同时清除动作与轨迹缓存。
@@ -54,11 +54,13 @@ CPU/GPU 在明确容差内一致。
 - [ ] 在 CUDA 环境执行浮基/切空间回归与性能测量。
 - [x] 选定宇树 Go2，固定官方 URDF、驱动顺序和足端 frame。
 - [x] Go2 CPU 固定接触 KKT 与 Crocoddyl 加速度/接触力/导数 oracle。
-- [ ] Go2 Torch 批量固定接触离散动力学，并核对积分和导数。
-- [ ] 固定支撑站立 MPC，覆盖扰动恢复与接触残差。
+- [x] Go2 Torch 批量固定接触离散动力学，并核对积分和导数（CPU）。
+- [x] 固定支撑站立 MPC，覆盖扰动恢复与接触残差（独立 CPU plant）。
+- [ ] Go2 在 CUDA 实机执行接触/导数/闭环测试与性能测量。
 - [ ] 扭矩、单边接触、摩擦约束，以及接触序列与切换。
 
-已提供 Go2 固定接触 CPU 参考；批量刚体动力学与足式接触 MPC 仍未完成。
+已提供 Go2 Torch 批量刚体动力学和四足固定点接触站立 MPC 正确性基线。
+该基线不包含一般足式行走、硬接触不等式约束或实时性能保证。
 接口及验收边界见 `floating_base.md` 与 `go2.md`。
 
 ## M3：原生 C++/CUDA 与性能

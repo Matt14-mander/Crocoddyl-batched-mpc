@@ -3,7 +3,7 @@
 为批量 RL 训练构建统一 CPU/GPU MPC 后端，面向 Isaac Lab 的 Torch CUDA tensor 调用。
 这是独立的 downstream 包，不修改 Crocoddyl 源码。
 
-## 当前阶段：M2.4 Go2 固定接触 CPU 参考
+## 当前阶段：M2.5 Go2 Torch 固定接触与站立 MPC
 
 | 能力 | 当前实现 |
 | --- | --- |
@@ -11,7 +11,7 @@
 | Torch CPU/CUDA | 批量 Riccati 递推，环境维并行、时间维顺序 |
 | 数学问题 | 有限时域、时变仿射动力学、二次及线性代价、无约束 LQR |
 | 非线性求解 | 批量 dynamics/cost/manifold、逐环境参数、Torch DDP/FDDP |
-| Go2 模型 | 官方固定版本 URDF、12 关节映射、固定足端 CPU KKT/Crocoddyl 对照 |
+| Go2 模型 | 官方 URDF、Torch 批量浮基刚体动力学、固定足端接触、站立 MPC 与独立 CPU 对照 |
 | 浮基几何 | SO(3)/SE(3)、四元数浮基状态、nx/ndx 分离、切空间导数及 FDDP chart 变换 |
 | Crocoddyl CPU | 可选 `ActionModelLQR` + `ShootingProblem` + `SolverDDP` 参考后端 |
 | RL 控制器 | 首步动作、DDP horizon-shift warm start、失败回退、按 mask 重置 |
@@ -25,10 +25,11 @@ LQR 后端已经通过独立稠密解和 CPU/CUDA 测试。非线性 DDP 的导�
 修正后的 CUDA 验收仍待执行。
 Crocoddyl 外部 FDDP 对照已在本机 croco_env（3.0.1）通过，覆盖 action 值/导数、
 首轮反馈增益和多个迭代预算下的轨迹、代价及 gap；实测误差见 validation.md。
-通用 Crocoddyl action model 的 GPU 执行、完整 Crocoddyl FDDP 数值规则、接触动力学、控制约束、可微求解、
+通用 Crocoddyl action model 的 GPU 执行、完整 Crocoddyl FDDP 数值规则、接触切换、控制约束、可微求解、
 原生 C++/CUDA 内核和 CUDA Graph 均在后续计划中。Isaac Sim 真实任务尚未联调。
 浮基几何已与 Pinocchio/Crocoddyl StateMultibody 对照；Go2 固定接触 CPU 参考已通过
-加速度、力与导数验收。尚无 Go2 Torch/GPU 接触模型或站立 MPC 闭环。
+加速度、力与导数验收。Go2 Torch 模型与固定支撑站立闭环已建立 CPU 正确性基线；
+CUDA 实机执行、实时性能与 Isaac Lab 联调仍待验证。
 
 ## 安装与运行
 
@@ -77,6 +78,17 @@ python examples/double_integrator.py --device cpu --backend crocoddyl
 ```
 
 ## 开发与验证
+
+Go2 四足固定接触站立示例（基础 Torch 环境即可运行）：
+
+```bash
+python examples/go2_standing_mpc.py --batch-size 2 --steps 65
+# 独立 CPU plant 验证，需先安装可选 robotics/crocoddyl 依赖
+python examples/go2_standing_mpc.py --plant pinocchio
+```
+
+状态使用自由浮基 body 速度；动作是 12 关节扭矩。该示例没有接触切换或摩擦/扭矩硬约束，
+当前为离线正确性演示。详细用法与边界见 [Go2 文档](docs/go2.md)。
 
 ```bash
 python -m pip install -e '.[dev]'

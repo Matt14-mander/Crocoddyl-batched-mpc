@@ -1,4 +1,4 @@
-# 宇树 Go2：模型与固定接触 CPU 参考
+# 宇树 Go2：Torch 批量固定接触与站立 MPC
 
 ## 模型来源与资产
 
@@ -100,6 +100,73 @@ result = reference.calc(q, np.zeros(robot.nv), u)
 四足/两足（含非默认足序）与零/非零稳定化参数的加速度、接触力和局部导数，
 以及输入错误、返回结果隔离。
 
-下一步是实现可接入 DDP/FDDP 的 Go2 Torch 批量固定接触离散动力学，并以此 oracle 核对
-加速度、力、积分和导数，再加入姿态/足端代价、站立闭环及约束求解。
-本轮尚无 Go2 MPC 站立闭环、GPU 接触动力学或真实 Isaac Lab 联调。
+## Torch 批量刚体与接触动力学
+
+`Go2TorchDynamics` 从包内 URDF 一次性解析完整刚体惯性，将固定 link（含 rotor/foot）
+合并到运动父体，不依赖 Pinocchio 做初始化或在线计算。模型支持 float32/float64，
+所有在线运算留在指定 Torch device；没有 `.cpu()` / NumPy callback 或逐环境 Python 循环。
+固定机器人拓扑的 12 关节递推与时间维循环仍由 Python 调度。
+
+- 质量矩阵：逐体局部运动 Jacobian 与完整空间惯性，`M=sum(J_body.T I_body J_body)`。
+- 偏置力：Newton–Euler 的速度叉乘、运动加速度和重力，保持 Pinocchio body 速度约定。
+- 足端：世界坐标位置、点 Jacobian、classical `Jdot*v`，与前述 KKT 稳定化完全一致。
+- 接触解：`torch.linalg.solve_ex`，奇异解标成该环境 NaN，由求解器逐环境失败机制处理。
+- 离散积分：先 `v_next=v+dt*a`，再 `q_next=integrate(q,dt*v_next)`；不做事后足端投影。
+- 导数：48 个方向的 `vmap(jvp)`，连续加速度/力和离散局部状态导数均可调用。
+  自动微分基线没有有限差分近似；它尚不是优化的刚体导数内核。
+
+```python
+import torch
+from crocoddyl_batched_mpc.models import Go2TorchDynamics
+
+dynamics = Go2TorchDynamics(dt=0.02, dtype=torch.float64)
+state = dynamics.standing_state.expand(4, -1).clone()  # [4,37]
+torque = dynamics.quasi_static_torques().expand(4, -1)  # [4,12], Nm
+contact = dynamics.contact_dynamics(state, torque)
+next_state = dynamics.calc(state, torque)
+Fx, Fu = dynamics.calc_diff(state, torque)  # [4,36,36], [4,36,12]
+da_dx, da_du, df_dx, df_du = dynamics.contact_derivatives(state, torque)
+```
+
+默认四足固定接触，稳定化 `(kp,kd)=(100,20)`，默认 `dt=0.01` 秒；状态/动作不能
+在调用时自动改变 dtype/device。`feet` 支持足序与支撑子集，整个 batch 共享接触模式。
+`reference_configuration=[19]` 或 `[B,19]` 决定世界足端锚点，后者支持每个环境的独立
+世界站立位置。环境重置或更换锚点需重新建立模型/problem 并清除 controller 缓存。
+模型惯性固定为官方 URDF，本轮没有逐环境质量/摩擦参数随机化。
+
+## 站立 MPC 闭环
+
+`Go2StandingCost` 使用浮基切空间的姿态/位置、关节与速度 residual，以及
+`u-u_equilibrium` 控制代价。初始化轨迹使用平衡扭矩，之后由 MPCController 移动
+控制序列作为 warm start。`go2_standing_problem` 提供可接入 Torch DDP/FDDP 的问题。
+
+```python
+from crocoddyl_batched_mpc import BatchedMPC, MPCController
+from crocoddyl_batched_mpc.models import go2_standing_problem
+
+problem = go2_standing_problem(batch_size=2, horizon=8, dt=0.02, max_iterations=1)
+controller = MPCController(BatchedMPC(problem, backend="torch"))
+state = problem.dynamics.standing_state.expand(2, -1).clone()
+action, result = controller.compute(state)
+# 更新为下一周期测量状态。无约束可用候选并不自动满足机器人接触不等式。
+```
+
+```bash
+python examples/go2_standing_mpc.py --batch-size 2 --steps 65
+python examples/go2_standing_mpc.py --plant pinocchio
+python examples/go2_standing_mpc.py --backend fddp --steps 8
+python examples/go2_standing_mpc.py --device cuda
+python -m pytest tests/test_go2_torch.py tests/test_go2_standing.py -q -s
+```
+
+示例中两个环境的初始姿态/关节/速度扰动不同，第 32 步再注入角速度扰动。
+输出恢复后的状态误差、足端位置误差、最大扭矩占 effort 比例、最小竖直力、切向/法向
+比值、接触加速度残差与实测墙钟耗时。`--plant pinocchio` 用独立 NumPy KKT 和
+Pinocchio integrate 推进 CPU 状态；该模式允许 CPU 数据转换，仅用于验证。
+长时闭环验收使用 Torch DDP；FDDP 覆盖平衡、warm start/reset 与异常环境隔离。
+
+这是双边固定点接触下的离线正确性基线，不能作为实际机器人控制器：尚无单边力、
+摩擦锥、扭矩 box、关节限位约束求解、接触切换或碰撞检测。测试轨迹中正法向力和
+扭矩余量是观测验收条件，不代表优化器对任意扰动保证这些约束。
+CUDA 测试已编写，但本机没有 CUDA，仍需实机验收；当前 CPU 延迟不满足实时控制。
+下一步优化导数/递推与内存调度，再加入约束和 Isaac Lab plant 联调。
