@@ -1,0 +1,334 @@
+[
+  {
+    "gait": "walk",
+    "cycles": 2,
+    "batch_size": 2,
+    "plant": "pinocchio",
+    "python": "3.10.18",
+    "torch": "2.2.2",
+    "platform": "macOS-15.8.1-x86_64-i386-64bit",
+    "cpu_threads": 1,
+    "dt_s": 0.02,
+    "step_length_m": 0.04,
+    "step_height_m": 0.02,
+    "step_knots": 20,
+    "support_knots": 10,
+    "preparation_seconds": 57.00827360001858,
+    "optimizer_converged": [
+      false,
+      false
+    ],
+    "optimizer_iterations": [
+      150,
+      150
+    ],
+    "planned_nodes": 248,
+    "completed_nodes": 248,
+    "simulated_duration_s": 4.8,
+    "all_actions_usable": true,
+    "all_finished": true,
+    "failed_node": null,
+    "landing_groups": [
+      [
+        "RR"
+      ],
+      [
+        "FR"
+      ],
+      [
+        "RL"
+      ],
+      [
+        "FL"
+      ],
+      [
+        "RR"
+      ],
+      [
+        "FR"
+      ],
+      [
+        "RL"
+      ],
+      [
+        "FL"
+      ]
+    ],
+    "forward_displacement_m": [
+      0.07002827222847893,
+      0.07002827222908525
+    ],
+    "final_tracking_error": [
+      0.0,
+      8.024763513987293e-10
+    ],
+    "peak_swing_height_m": [
+      [
+        0.018249479207540886,
+        0.018818832818721265,
+        0.019974091369901165,
+        0.019385029931066555
+      ],
+      [
+        0.01824947920693648,
+        0.018818833069402713,
+        0.019974093135622567,
+        0.01938503019076815
+      ]
+    ],
+    "minimum_foot_height_m": -0.0005055820182209847,
+    "minimum_normal_force_N": 3.333230147452008,
+    "max_force_violation_N": 0.0,
+    "max_torque_violation_Nm": 0.0,
+    "max_impulse_violation_Ns": 0.0,
+    "max_native_dynamics_error": 6.497025140106416e-13,
+    "control_median_ms": 10.486604,
+    "control_p99_ms": 17.41299743,
+    "control_max_ms": 58.716408,
+    "deadline_misses": 1,
+    "latency_scope": "Torch feedback/constraint QP when required/physics gates; excludes offline planner/native plant/IO"
+  },
+  {
+    "gait": "trot",
+    "cycles": 2,
+    "batch_size": 2,
+    "plant": "pinocchio",
+    "python": "3.10.18",
+    "torch": "2.2.2",
+    "platform": "macOS-15.8.1-x86_64-i386-64bit",
+    "cpu_threads": 1,
+    "dt_s": 0.02,
+    "step_length_m": 0.04,
+    "step_height_m": 0.02,
+    "step_knots": 20,
+    "support_knots": 10,
+    "preparation_seconds": 31.325837846001377,
+    "optimizer_converged": [
+      false,
+      false
+    ],
+    "optimizer_iterations": [
+      150,
+      150
+    ],
+    "planned_nodes": 164,
+    "completed_nodes": 164,
+    "simulated_duration_s": 3.1999999999999993,
+    "all_actions_usable": true,
+    "all_finished": true,
+    "failed_node": null,
+    "landing_groups": [
+      [
+        "FR",
+        "RL"
+      ],
+      [
+        "FL",
+        "RR"
+      ],
+      [
+        "FR",
+        "RL"
+      ],
+      [
+        "FL",
+        "RR"
+      ]
+    ],
+    "forward_displacement_m": [
+      0.06998296165665299,
+      0.06998296165202736
+    ],
+    "final_tracking_error": [
+      0.0,
+      8.034264410550468e-09
+    ],
+    "peak_swing_height_m": [
+      [
+        0.018113925830798683,
+        0.018212022239695924,
+        0.01824625027317825,
+        0.018255675721233405
+      ],
+      [
+        0.01811392581579152,
+        0.01821202739057079,
+        0.018246253530929846,
+        0.018255675821470196
+      ]
+    ],
+    "minimum_foot_height_m": -0.00018707378624133186,
+    "minimum_normal_force_N": 3.3333306684715507,
+    "max_force_violation_N": 0.0,
+    "max_torque_violation_Nm": 0.0,
+    "max_impulse_violation_Ns": 0.0,
+    "max_native_dynamics_error": 1.4876988529977098e-13,
+    "control_median_ms": 11.368248,
+    "control_p99_ms": 20.87210621000001,
+    "control_max_ms": 28.201441,
+    "deadline_misses": 3,
+    "latency_scope": "Torch feedback/constraint QP when required/physics gates; excludes offline planner/native plant/IO"
+  },
+  {
+    "gait": "pace",
+    "cycles": 2,
+    "batch_size": 2,
+    "plant": "pinocchio",
+    "python": "3.10.18",
+    "torch": "2.2.2",
+    "platform": "macOS-15.8.1-x86_64-i386-64bit",
+    "cpu_threads": 1,
+    "dt_s": 0.02,
+    "step_length_m": 0.04,
+    "step_height_m": 0.02,
+    "step_knots": 20,
+    "support_knots": 10,
+    "preparation_seconds": 38.34646119500394,
+    "optimizer_converged": [
+      false,
+      false
+    ],
+    "optimizer_iterations": [
+      150,
+      150
+    ],
+    "planned_nodes": 164,
+    "completed_nodes": 164,
+    "simulated_duration_s": 3.1999999999999993,
+    "all_actions_usable": true,
+    "all_finished": true,
+    "failed_node": null,
+    "landing_groups": [
+      [
+        "FR",
+        "RR"
+      ],
+      [
+        "FL",
+        "RL"
+      ],
+      [
+        "FR",
+        "RR"
+      ],
+      [
+        "FL",
+        "RL"
+      ]
+    ],
+    "forward_displacement_m": [
+      0.06994712753016845,
+      0.06994712752736354
+    ],
+    "final_tracking_error": [
+      0.0,
+      5.555479027610348e-10
+    ],
+    "peak_swing_height_m": [
+      [
+        0.019305299039772378,
+        0.019251836401734196,
+        0.01939479119750992,
+        0.019257845058552187
+      ],
+      [
+        0.019305297708782893,
+        0.019251697379323612,
+        0.019394798753115866,
+        0.019258052062491426
+      ]
+    ],
+    "minimum_foot_height_m": -0.0012381587822235252,
+    "minimum_normal_force_N": 3.3333229221872758,
+    "max_force_violation_N": 0.0,
+    "max_torque_violation_Nm": 0.0,
+    "max_impulse_violation_Ns": 0.0,
+    "max_native_dynamics_error": 8.322231792590173e-13,
+    "control_median_ms": 10.423814,
+    "control_p99_ms": 33.21267537000005,
+    "control_max_ms": 46.301709,
+    "deadline_misses": 4,
+    "latency_scope": "Torch feedback/constraint QP when required/physics gates; excludes offline planner/native plant/IO"
+  },
+  {
+    "gait": "bound",
+    "cycles": 2,
+    "batch_size": 2,
+    "plant": "pinocchio",
+    "python": "3.10.18",
+    "torch": "2.2.2",
+    "platform": "macOS-15.8.1-x86_64-i386-64bit",
+    "cpu_threads": 1,
+    "dt_s": 0.02,
+    "step_length_m": 0.04,
+    "step_height_m": 0.02,
+    "step_knots": 20,
+    "support_knots": 10,
+    "preparation_seconds": 42.35036559801665,
+    "optimizer_converged": [
+      false,
+      false
+    ],
+    "optimizer_iterations": [
+      150,
+      150
+    ],
+    "planned_nodes": 164,
+    "completed_nodes": 164,
+    "simulated_duration_s": 3.1999999999999993,
+    "all_actions_usable": true,
+    "all_finished": true,
+    "failed_node": null,
+    "landing_groups": [
+      [
+        "FL",
+        "FR"
+      ],
+      [
+        "RL",
+        "RR"
+      ],
+      [
+        "FL",
+        "FR"
+      ],
+      [
+        "RL",
+        "RR"
+      ]
+    ],
+    "forward_displacement_m": [
+      0.07996649042063789,
+      0.07996652322675257
+    ],
+    "final_tracking_error": [
+      0.0,
+      1.8780408171745987e-06
+    ],
+    "peak_swing_height_m": [
+      [
+        0.024115745998921648,
+        0.024111776308947758,
+        0.021471828793297926,
+        0.021469487887659955
+      ],
+      [
+        0.02411578620359102,
+        0.024111818409407806,
+        0.021471815360108032,
+        0.021469474609588396
+      ]
+    ],
+    "minimum_foot_height_m": -0.0012554093743643718,
+    "minimum_normal_force_N": 3.3332842913619527,
+    "max_force_violation_N": 0.0,
+    "max_torque_violation_Nm": 0.0,
+    "max_impulse_violation_Ns": 0.0,
+    "max_native_dynamics_error": 1.2718714970105793e-12,
+    "control_median_ms": 11.437059,
+    "control_p99_ms": 29.865445300000022,
+    "control_max_ms": 52.337655,
+    "deadline_misses": 8,
+    "latency_scope": "Torch feedback/constraint QP when required/physics gates; excludes offline planner/native plant/IO"
+  }
+]

@@ -3,7 +3,7 @@
 为批量 RL 训练构建统一 CPU/GPU MPC 后端，面向 Isaac Lab 的 Torch CUDA tensor 调用。
 这是独立的 downstream 包，不修改 Crocoddyl 源码。
 
-## 当前阶段：M2.8 Go2 平地慢速 walk 闭环
+## 当前阶段：M2.9 Go2 四步态优化与 Torch 批量反馈执行
 
 | 能力 | 当前实现 |
 | --- | --- |
@@ -15,6 +15,7 @@
 | Go2 局部约束控制 | 缓存工作点模型、硬约束 QP、完整非线性轨迹可行性检查；CPU B=2/T=2 的 50 Hz 实测 |
 | Go2 接触切换 | 逐环境模式、零力非支撑足、触地碰撞与冲量门禁、模式缓存重置；独立 plant 闭环 |
 | Go2 慢速 walk | RL→FL→RR→FR 单腿摆动、COM 转移、移动落足锚点、在线动力学 QP；独立 CPU 扭矩闭环 |
+| Go2 四种示例步态 | walk/trot/pace/bound，Crocoddyl 离线 Box-FDDP、Torch 批量反馈、约束 QP 与碰撞门禁 |
 | 浮基几何 | SO(3)/SE(3)、四元数浮基状态、nx/ndx 分离、切空间导数及 FDDP chart 变换 |
 | Crocoddyl CPU | 可选 `ActionModelLQR` + `ShootingProblem` + `SolverDDP` 参考后端 |
 | RL 控制器 | 首步动作、DDP horizon-shift warm start、失败回退、按 mask 重置 |
@@ -98,6 +99,10 @@ python examples/go2_contact_switching.py --plant pinocchio
 # 平地慢速 walk：两轮，每足每轮前进 2 cm、抬足 15 mm
 python examples/go2_slow_walk.py --cycles 2
 python examples/go2_slow_walk.py --plant pinocchio --cycles 2
+# Crocoddyl 四种示例步态适配 Go2：离线优化 + Torch 双环境反馈，独立 native plant
+python examples/go2_quadrupedal_gaits.py --gait all --cycles 2
+# 保存纯 Tensor 轨迹与反馈增益；执行导出的文件不需要 Crocoddyl/Pinocchio
+python examples/go2_quadrupedal_gaits.py --gait trot --save-dir /tmp/go2-gaits
 ```
 
 状态使用自由浮基 body 速度；动作是 12 关节扭矩。`go2_standing_mpc.py` 是无约束 DDP 基线，
@@ -105,6 +110,7 @@ python examples/go2_slow_walk.py --plant pinocchio --cycles 2
 接触序列规划，超出局部模型/没有可行轨迹时返回失败。显式接触事件由新模式控制器处理，
 触地检查失败时保留原模式。详细用法与边界见 [Go2 文档](docs/go2.md)。
 慢速 walk 会等待可接受的触地条件，并逐周期重算动力学；用法见 [慢速 walk](docs/go2_walk.md)。
+四种示例步态的接触序列、离线依赖、导出接口和执行边界见 [四步态文档](docs/go2_gaits.md)。
 
 ```bash
 python -m pip install -e '.[dev]'
@@ -128,6 +134,7 @@ CPU CI 不能替代 GPU 验证。基准记录求解耗时，不代表完整 RL �
 - [M2 验收](docs/m2_acceptance.md)：warm start、逐环境参数和更新失效协议。
 - [Go2 模型与接触参考](docs/go2.md)：官方资产、关节顺序、固定接触 oracle 与适用边界。
 - [Go2 慢速 walk](docs/go2_walk.md)：步序、摆腿轨迹、在线约束控制和触地等待。
+- [Go2 四步态](docs/go2_gaits.md)：walk/trot/pace/bound 的离线规划与 Torch 批量反馈执行。
 - [浮基状态与切空间](docs/floating_base.md)：坐标约定、导数契约和验证边界。
 - [FDDP gap 设计](docs/fddp.md)：gap 定义、modified Riccati sweep、merit 和返回语义。
 

@@ -303,3 +303,11 @@ PYTHONPATH=.dev-tools/croco-numpy126:src OPENBLAS_NUM_THREADS=1 \
 推进，约束门禁继续逐周期执行。记录实际抬足高度、零非支撑力、能量、约束与延迟。
 新增路径的计时包含接触事件和 compute，另行排除模型准备/plant/传感器/IO；
 上一节固定站立 50 Hz 的测量不能推广到混合模式或切换周期。详见 validation.md。
+
+## 四种 Crocoddyl 示例步态
+
+已提供 Go2 的 walk/trot/pace/bound：Crocoddyl 离线 Box-FDDP 规划整段接触序列，
+输出状态、扭矩、反馈增益、逐阶段世界锚点和零时长碰撞节点。
+Torch 批量执行使用反馈与约束 QP，不调用 native planner；异常观测和不可行候选拒绝执行。
+碰撞使用全部目标支撑足，保留足也参与冲量检查。
+这是独立于上述慢速静态 walk MPC 的动态步态路径，详见 [四步态文档](go2_gaits.md)。

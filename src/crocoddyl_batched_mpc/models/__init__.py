@@ -2,6 +2,16 @@
 
 from .go2 import Go2FixedContactReference, Go2Robot, load_go2
 from .go2_constraints import Go2ContactConstraints
+from .go2_gaits import (
+    GO2_GAIT_SWINGS,
+    Go2GaitControl,
+    Go2GaitController,
+    Go2GaitDynamics,
+    Go2GaitPlan,
+    build_go2_gait_problem,
+    load_go2_gait_plan,
+    solve_go2_gait,
+)
 from .go2_hybrid import ContactTransition, Go2HybridDynamics
 from .go2_realtime import Go2ConstrainedMPC
 from .go2_switching import Go2ContactSwitchingMPC
@@ -23,6 +33,14 @@ from .pendulum import (
 )
 
 __all__ = [
+    "GO2_GAIT_SWINGS",
+    "Go2GaitControl",
+    "Go2GaitController",
+    "Go2GaitDynamics",
+    "Go2GaitPlan",
+    "build_go2_gait_problem",
+    "load_go2_gait_plan",
+    "solve_go2_gait",
     "Go2SlowWalkController",
     "Go2WalkControl",
     "Go2WalkMPC",
