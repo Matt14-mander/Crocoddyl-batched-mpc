@@ -5,6 +5,7 @@ import json
 import platform
 import sys
 import time
+from pathlib import Path
 
 import torch
 
@@ -25,6 +26,7 @@ def run_walk(
     step_length=0.02,
     swing_height=0.015,
     progress=False,
+    trace=None,
 ):
     if plant not in ("torch", "pinocchio"):
         raise ValueError("plant must be torch/pinocchio")
@@ -35,6 +37,8 @@ def run_walk(
     state = plan.reference[0].expand(batch_size, -1).clone()
     if batch_size > 1:
         state[1, 19:21] = state.new_tensor([0.002, -0.001])
+    if trace is not None:
+        trace.append(state, 0, controller.contact_mask)
     native, robot = {}, None
     if plant == "pinocchio":
         import numpy as np
@@ -137,6 +141,8 @@ def run_walk(
             outputs.append(output)
             forces.append(force)
         state = torch.stack(outputs)
+        if trace is not None:
+            trace.append(state, plan.dt, control.contact_mask)
         force = torch.stack(forces)
         torch.testing.assert_close(control.result.xs[:, 1], state, atol=1e-9, rtol=1e-9)
         bound = controller.mpc.constraints.force_bound[
@@ -236,11 +242,40 @@ def main():
     parser.add_argument("--swing-height", type=float, default=0.015)
     parser.add_argument("--progress", action="store_true")
     parser.add_argument("--require-deadline", action="store_true")
+    from crocoddyl_batched_mpc.go2_viewer import (
+        Go2Trace,
+        add_viewer_arguments,
+        export_go2_html,
+        take_viewer_arguments,
+    )
+
+    add_viewer_arguments(parser)
     args = vars(parser.parse_args())
+    viewer = take_viewer_arguments(args)
     require = args.pop("require_deadline")
     torch.set_num_threads(1)
-    report = run_walk(**args)
+    trace = (
+        Go2Trace("slow walk", viewer["display_env"])
+        if any(viewer[key] for key in ("display", "html", "trace"))
+        else None
+    )
+    report = run_walk(**args, trace=trace)
     print(json.dumps(report, indent=2))
+    if trace is not None:
+        trace.report = report
+        if viewer["trace"]:
+            trace.save(viewer["trace"])
+        if viewer["html"] or viewer["display"]:
+            path = export_go2_html(
+                trace,
+                viewer["html"] or Path("artifacts/go2-viewer/slow_walk.html"),
+                mesh_dir=viewer["mesh_dir"],
+            )
+            print(f"Meshcat playback: {path}", file=sys.stderr)
+            if viewer["display"]:
+                import webbrowser
+
+                webbrowser.open(path.as_uri())
     if not report["all_actions_usable"] or not report["all_finished"]:
         raise SystemExit("walk stopped: no feasible action or contact timeout")
     if require and report["deadline_misses"]:

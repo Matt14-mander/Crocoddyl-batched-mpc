@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-09",
+  "environment": "croco_env",
+  "purpose": "Playback correctness; concurrent workloads, not a latency benchmark",
+  "python": "3.10.18",
+  "torch": "2.2.2",
+  "results": [
+    {
+      "gait": "slow walk",
+      "plant": "pinocchio",
+      "batch_size": 2,
+      "recorded_environment": 0,
+      "recorded_samples": 724,
+      "simulated_duration_s": 14.45999999999978,
+      "zero_time_events": 0,
+      "all_actions_usable": true,
+      "all_finished": true,
+      "max_force_violation_N": 0.0,
+      "max_torque_violation_Nm": 0.0,
+      "max_impulse_violation_Ns": 9.771920370553053e-08,
+      "max_native_dynamics_error": null,
+      "optimizer_converged": null
+    },
+    {
+      "gait": "walk",
+      "plant": "pinocchio",
+      "batch_size": 2,
+      "recorded_environment": 0,
+      "recorded_samples": 125,
+      "simulated_duration_s": 2.4000000000000017,
+      "zero_time_events": 4,
+      "all_actions_usable": true,
+      "all_finished": true,
+      "max_force_violation_N": 0.0,
+      "max_torque_violation_Nm": 0.0,
+      "max_impulse_violation_Ns": 0.0,
+      "max_native_dynamics_error": 6.497025140106416e-13,
+      "optimizer_converged": [
+        false
+      ]
+    },
+    {
+      "gait": "trot",
+      "plant": "pinocchio",
+      "batch_size": 2,
+      "recorded_environment": 0,
+      "recorded_samples": 83,
+      "simulated_duration_s": 1.600000000000001,
+      "zero_time_events": 2,
+      "all_actions_usable": true,
+      "all_finished": true,
+      "max_force_violation_N": 0.0,
+      "max_torque_violation_Nm": 0.0,
+      "max_impulse_violation_Ns": 0.0,
+      "max_native_dynamics_error": 1.4055423491754482e-13,
+      "optimizer_converged": [
+        false
+      ]
+    },
+    {
+      "gait": "pace",
+      "plant": "pinocchio",
+      "batch_size": 2,
+      "recorded_environment": 0,
+      "recorded_samples": 83,
+      "simulated_duration_s": 1.600000000000001,
+      "zero_time_events": 2,
+      "all_actions_usable": true,
+      "all_finished": true,
+      "max_force_violation_N": 0.0,
+      "max_torque_violation_Nm": 0.0,
+      "max_impulse_violation_Ns": 0.0,
+      "max_native_dynamics_error": 8.322231792590173e-13,
+      "optimizer_converged": [
+        false
+      ]
+    },
+    {
+      "gait": "bound",
+      "plant": "pinocchio",
+      "batch_size": 2,
+      "recorded_environment": 0,
+      "recorded_samples": 83,
+      "simulated_duration_s": 1.600000000000001,
+      "zero_time_events": 2,
+      "all_actions_usable": true,
+      "all_finished": true,
+      "max_force_violation_N": 0.0,
+      "max_torque_violation_Nm": 0.0,
+      "max_impulse_violation_Ns": 0.0,
+      "max_native_dynamics_error": 1.2363443602225743e-12,
+      "optimizer_converged": [
+        false
+      ]
+    }
+  ]
+}

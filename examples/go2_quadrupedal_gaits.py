@@ -7,6 +7,7 @@ pose is applied to the plant. Zero-time impacts do not advance simulation time.
 import argparse
 import json
 import platform
+import sys
 import time
 from pathlib import Path
 
@@ -35,6 +36,7 @@ def run_gait(
     save_path=None,
     perturbation=1e-5,
     prepared_plan=None,
+    trace=None,
 ):
     if plant not in ("torch", "pinocchio"):
         raise ValueError("plant must be torch or pinocchio")
@@ -62,6 +64,8 @@ def run_gait(
     state = plan.states[0].expand(batch_size, -1).clone()
     if batch_size > 1:
         state[1, 19] += perturbation
+    if trace is not None:
+        trace.append(state, 0, plan.contacts[0].expand(batch_size, -1))
     initial = state.clone()
     model = controller.dynamics.model
     timings = []
@@ -113,6 +117,8 @@ def run_gait(
                     torque_violation, float((np.abs(u) - model.torque_limits.numpy()).clip(0).max())
                 )
         state = torch.stack(outputs)
+        if trace is not None:
+            trace.append(state, plan.durations[t], control.contacts)
         positions = model.foot_positions(state[:, :19])
         minimum_height = min(minimum_height, float(positions[..., 2].min()))
         if plan.durations[t] == 0:
@@ -183,19 +189,56 @@ def main():
     parser.add_argument("--step-knots", type=int, default=20)
     parser.add_argument("--support-knots", type=int, default=10)
     parser.add_argument("--save-dir", type=Path)
+    from crocoddyl_batched_mpc.go2_viewer import (
+        Go2Trace,
+        add_viewer_arguments,
+        export_gallery,
+        export_go2_html,
+        take_viewer_arguments,
+    )
+
+    add_viewer_arguments(parser)
     args = vars(parser.parse_args())
+    viewer = take_viewer_arguments(args)
     gait = args.pop("gait")
     output = args.pop("save_dir")
     if output is not None:
         output.mkdir(parents=True, exist_ok=True)
     torch.set_num_threads(1)
     reports = []
+    pages = {}
     for name in GO2_GAIT_SWINGS if gait == "all" else (gait,):
+        trace = (
+            Go2Trace(name, viewer["display_env"])
+            if any(viewer[key] for key in ("display", "html", "trace"))
+            else None
+        )
         report = run_gait(
-            name, save_path=output / f"{name}.pt" if output is not None else None, **args
+            name,
+            save_path=output / f"{name}.pt" if output is not None else None,
+            trace=trace,
+            **args,
         )
         reports.append(report)
         print(json.dumps(report, indent=2), flush=True)
+        if trace is not None:
+            trace.report = report
+            if viewer["trace"]:
+                trace.save(viewer["trace"] / f"{name}.json")
+            if viewer["html"] or viewer["display"]:
+                directory = viewer["html"] or Path("artifacts/go2-viewer")
+                pages[name] = export_go2_html(
+                    trace,
+                    directory / f"{name}.html",
+                    mesh_dir=viewer["mesh_dir"],
+                )
+    if pages:
+        path = export_gallery(pages, next(iter(pages.values())).parent / "index.html")
+        print(f"Meshcat gait gallery: {path}", file=sys.stderr)
+        if viewer["display"]:
+            import webbrowser
+
+            webbrowser.open(path.as_uri())
     if not all(r["all_actions_usable"] and r["all_finished"] for r in reports):
         raise SystemExit("gait execution rejected: constraints/contact/dynamics check failed")
 

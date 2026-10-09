@@ -112,6 +112,25 @@ python examples/go2_quadrupedal_gaits.py --gait trot --save-dir /tmp/go2-gaits
 慢速 walk 会等待可接受的触地条件，并逐周期重算动力学；用法见 [慢速 walk](docs/go2_walk.md)。
 四种示例步态的接触序列、离线依赖、导出接口和执行边界见 [四步态文档](docs/go2_gaits.md)。
 
+网页动画使用 Crocoddyl 同款 Meshcat：
+
+本机 `croco_env` 需先从项目根目录设置兼容 NumPy 与源码路径：
+
+```bash
+conda activate croco_env
+export PYTHONPATH="$PWD/.dev-tools/croco-numpy126:$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
+export OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 OMP_NUM_THREADS=1
+```
+
+```bash
+python examples/go2_slow_walk.py --cycles 1 --plant pinocchio --display
+python examples/go2_quadrupedal_gaits.py --gait all --cycles 1 --display
+```
+
+可切换四种步态、回放实际闭环轨迹，并导出独立 HTML；默认使用 Go2 URDF
+碰撞几何，支持加载完整外观网格。安装依赖、合并五个示例及控件说明见
+[Go2 网页展示](docs/go2_viewer.md)。
+
 ```bash
 python -m pip install -e '.[dev]'
 python -m pytest -q
