@@ -3,6 +3,11 @@
 核心包不导入 `isaaclab`，可在普通 Torch 环境测试。在任务的配套 Python 环境安装后，
 直接传 CUDA tensor。任务负责模型、状态提取和单位转换。
 
+Go2 站立/三足前腿跟踪使用 `Go2TrackingMPC` 统一入口，具体状态与扭矩映射、
+命令形状、失败锁定/reset 语义及 CUDA 验收命令见 [接口文档](go2_tracking.md)。
+该路径的失败输出为零扭矩并要求外部恢复/重置，不沿用下文通用控制器的保持动作策略。
+目前未提供完整 Isaac Lab Go2 环境，纯 Torch 闭环不代替 PhysX 验证。
+
 ## DirectRLEnv 接入片段
 
 以下不是完整环境。`problem` 必须对应机器人在 MPC 周期内的离散动力学，

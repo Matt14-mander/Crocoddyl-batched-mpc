@@ -1,5 +1,35 @@
 # 项目验证记录
 
+## 2026-10-26 Go2 站立与三足前腿跟踪接入准备
+
+新增纯 Torch `Go2TrackingMPC` 统一命令/输出接口，以及独立 Torch plant 积分的
+站立、重心转移、FL 抬腿与三足支撑跟踪示例。准备阶段使用 Torch IK，在线没有
+Crocoddyl/Pinocchio/NumPy 调用。异常输入按环境隔离，输出有限零扭矩与失败锁；
+episode reset 清除选中环境缓存并恢复四足模式，禁止隐式重新触地或移动支撑锚点。
+
+本机 `.venv`：Python 3.11.4、Torch 2.2.2、CPU 单线程、float64、B=2、T=2、dt=0.02。
+前腿示例编译路径完成 270 周期，动作全部可用；FL 最大位置误差约 0.160 mm，
+最终约 2.16e-8 m，支撑足最大锚点误差约 0.160 mm，扭矩/支撑力不等式违反为零，
+非支撑 FL 的支撑力为零。原始报告见
+[CPU 前腿跟踪记录](benchmarks/go2_front_leg_tracking_cpu_2026-10-26.json)。
+共享方程的 Torch plant 只验证数值闭环，不代表独立物理引擎或硬件表现。
+
+```bash
+PYTHONPATH=src .venv/bin/python -m pytest tests/test_go2_tracking.py \
+  tests/test_go2_torch.py tests/test_go2_switching.py \
+  tests/test_go2_walk.py tests/test_go2_constraints.py -q
+```
+
+结果：**29 passed, 19 skipped**；跳过项为 CUDA 或未安装的原生对照依赖。
+覆盖任务级闭环、编译/eager 对照、异常环境隔离、失败锁/reset、模式与锚点保护。
+可选依赖隔离测试主动阻止 NumPy/Pinocchio/Crocoddyl/Meshcat 导入后仍完成控制。
+
+新增 `examples/accept_go2_tracking_cuda.py`：目标机器执行 CUDA 动力学/导数、控制
+一致性、非默认 stream、异常隔离/reset 与同步调试测试，再报告 B=1/32/128 的
+站立/前腿闭环、控制延迟和吞吐/显存。无 CUDA 时已验证返回 2、JSON 状态为
+`unavailable`；**尚未执行新 Go2 CUDA 验收或 Isaac Lab 联调**。
+接口/边界见 [跟踪接口文档](go2_tracking.md)，不声称达到全链路 50 Hz。
+
 ## 2026-10-07 M2.9 Go2 四种 Crocoddyl 示例步态
 
 ### 实现

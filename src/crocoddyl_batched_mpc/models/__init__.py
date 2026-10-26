@@ -16,6 +16,13 @@ from .go2_hybrid import ContactTransition, Go2HybridDynamics
 from .go2_realtime import Go2ConstrainedMPC
 from .go2_switching import Go2ContactSwitchingMPC
 from .go2_torch import Go2StandingCost, Go2TorchDynamics, go2_standing_problem
+from .go2_tracking import (
+    Go2TrackingCommand,
+    Go2TrackingMPC,
+    Go2TrackingOutput,
+    Go2TrackingPlan,
+    go2_front_leg_tracking_plan,
+)
 from .go2_walk import (
     Go2SlowWalkController,
     Go2WalkControl,
@@ -33,6 +40,11 @@ from .pendulum import (
 )
 
 __all__ = [
+    "Go2TrackingCommand",
+    "Go2TrackingMPC",
+    "Go2TrackingOutput",
+    "Go2TrackingPlan",
+    "go2_front_leg_tracking_plan",
     "GO2_GAIT_SWINGS",
     "Go2GaitControl",
     "Go2GaitController",

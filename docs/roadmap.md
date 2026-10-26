@@ -78,6 +78,18 @@ CPU/GPU 在明确容差内一致。
 四步态接触序列离线优化和 Torch 反馈路径已提供；在线滚动非线性步态 MPC 尚待开发。
 接口及验收边界见 `floating_base.md`、`go2.md`、`go2_walk.md` 与 `go2_gaits.md`。
 
+## Isaac Lab 接入准备：站立与三足前腿跟踪
+
+- [x] `Go2TrackingMPC` 统一 measured-state/command → torque/result 接口，纯 Torch。
+- [x] 四足站立、重心转移、释放 FL、三足支撑空中前腿目标跟踪示例。
+- [x] 逐环境失败锁、有限零扭矩输出、显式 episode reset 与支撑锚点保护。
+- [x] CPU 任务级验收、可选原生依赖隔离与编译/eager 对照。
+- [x] CUDA 验收脚本：动力学/导数、控制、stream、reset、同步调试及 batch 计时。
+- [ ] 在目标 NVIDIA 机器运行新 CUDA 验收；本机无 CUDA。
+- [ ] 真实 Isaac Lab 状态/动作适配及物体反作用力、操作足接触控制。
+
+接口与运行命令见 [站立与三足前腿跟踪](go2_tracking.md)。
+
 ## M3：原生 C++/CUDA 与性能
 
 先 profile 模型导数、线性代数、Python 调度、分配和同步，再确定内核边界。

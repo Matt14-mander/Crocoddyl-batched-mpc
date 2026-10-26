@@ -27,7 +27,6 @@ python -m pip install -e ".[crocoddyl,viewer]"
 然后运行：
 
 ```bash
-
 # 慢速 crawl：在线 MPC + 独立 Pinocchio plant
 python examples/go2_slow_walk.py --cycles 1 --plant pinocchio --display
 

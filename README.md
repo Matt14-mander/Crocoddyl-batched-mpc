@@ -86,6 +86,18 @@ python examples/double_integrator.py --device cpu --backend crocoddyl
 
 ## 开发与验证
 
+Isaac Lab 接入前的纯 Torch 统一接口示例（不需要 robotics/viewer 依赖）：
+
+```bash
+PYTHONPATH=src python examples/go2_front_leg_tracking.py --task stance
+PYTHONPATH=src python examples/go2_front_leg_tracking.py --task front-leg
+# 在 NVIDIA GPU 机器验收；没有 CUDA 时明确返回 unavailable 和非零退出码
+PYTHONPATH=src python examples/accept_go2_tracking_cuda.py --batch-sizes 1 32 128
+```
+
+接口、坐标与关节顺序、失败/reset 约定及验收边界见
+[站立与三足前腿跟踪](docs/go2_tracking.md)。
+
 Go2 四足固定接触站立示例（基础 Torch 环境即可运行）：
 
 ```bash
