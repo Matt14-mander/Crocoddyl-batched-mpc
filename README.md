@@ -3,7 +3,7 @@
 为批量 RL 训练构建统一 CPU/GPU MPC 后端，面向 Isaac Lab 的 Torch CUDA tensor 调用。
 这是独立的 downstream 包，不修改 Crocoddyl 源码。
 
-## 当前阶段：M2.9 Go2 四步态优化与 Torch 批量反馈执行
+## 当前阶段：M2.10 Go2 Torch 模拟器张量用例
 
 | 能力 | 当前实现 |
 | --- | --- |
@@ -19,7 +19,7 @@
 | 浮基几何 | SO(3)/SE(3)、四元数浮基状态、nx/ndx 分离、切空间导数及 FDDP chart 变换 |
 | Crocoddyl CPU | 可选 `ActionModelLQR` + `ShootingProblem` + `SolverDDP` 参考后端 |
 | RL 控制器 | 首步动作、DDP horizon-shift warm start、失败回退、按 mask 重置 |
-| Isaac Lab | Tensor bridge 示例及 DirectRLEnv 接入说明 |
+| Isaac Lab | Go2 世界根状态/关节张量 adapter、扭矩回写、DirectRLEnv 接入说明 |
 | 验证 | 独立稠密解、闭环、批量隔离、CPU/CUDA 一致性、CUDA stream 测试 |
 
 LQR 后端已经通过独立稠密解和 CPU/CUDA 测试。非线性 DDP 的导数、状态机、
@@ -34,7 +34,8 @@ Crocoddyl 外部 FDDP 对照已在本机 croco_env（3.0.1）通过，覆盖 act
 浮基几何已与 Pinocchio/Crocoddyl StateMultibody 对照；Go2 固定接触 CPU 参考已通过
 加速度、力与导数验收。Go2 Torch 模型与固定支撑站立闭环已建立 CPU 正确性基线；
 新增局部约束控制器已在 CPU B=2/T=2 的 200 周期测试中通过 20 ms 审计；
-CUDA、更多环境/预测节点、真实机器人全链路频率和 Isaac Lab 联调仍待验证。
+Go2 adapter 已在 CPU/CUDA 完成世界速度、wxyz 四元数、多环境原点和关节重排闭环；
+更多环境/预测节点、真实机器人全链路频率和 Isaac Lab/PhysX 联调仍待验证。
 新增慢速 walk 已完成连续前进、三足支撑与移动落足的独立 plant 验证；
 walk 整段周期尚未通过 20 ms 验收，不能沿用固定站立的频率结论。
 
@@ -91,6 +92,8 @@ Isaac Lab 接入前的纯 Torch 统一接口示例（不需要 robotics/viewer �
 ```bash
 PYTHONPATH=src python examples/go2_front_leg_tracking.py --task stance
 PYTHONPATH=src python examples/go2_front_leg_tracking.py --task front-leg
+# 模拟器形状张量：世界根状态、wxyz、乱序关节输入，按模拟器顺序返回 effort
+PYTHONPATH=src python examples/go2_torch_tensor_adapter.py --task front-leg --device cuda
 # 在 NVIDIA GPU 机器验收；没有 CUDA 时明确返回 unavailable 和非零退出码
 PYTHONPATH=src python examples/accept_go2_tracking_cuda.py --batch-sizes 1 32 128
 ```

@@ -3,10 +3,46 @@
 核心包不导入 `isaaclab`，可在普通 Torch 环境测试。在任务的配套 Python 环境安装后，
 直接传 CUDA tensor。任务负责模型、状态提取和单位转换。
 
-Go2 站立/三足前腿跟踪使用 `Go2TrackingMPC` 统一入口，具体状态与扭矩映射、
+Go2 站立/三足前腿跟踪使用 `Go2TrackingMPC` 统一入口，`Go2TensorAdapter` 已实现状态与扭矩映射，
 命令形状、失败锁定/reset 语义及 CUDA 验收命令见 [接口文档](go2_tracking.md)。
 该路径的失败输出为零扭矩并要求外部恢复/重置，不沿用下文通用控制器的保持动作策略。
-目前未提供完整 Isaac Lab Go2 环境，纯 Torch 闭环不代替 PhysX 验证。
+目前未提供完整 Isaac Lab Go2 环境，adapter 的独立 Torch 闭环不代替 PhysX 验证。
+
+## Go2 articulation tensor adapter
+
+Adapter 不导入 Isaac Lab，可直接接收 articulation tensor。构造时传入模拟器实际关节名，
+内部按名称 gather 到 FL/FR/RL/RR 顺序，输出再 scatter 回模拟器顺序。额外的非驱动槽输出零 effort。
+
+```python
+from crocoddyl_batched_mpc.models import Go2TensorAdapter
+
+self.go2_mpc = Go2TensorAdapter(
+    sim_joint_names,
+    self.num_envs,
+    device=self.device,
+    quaternion_order="wxyz",  # 与任务实际 tensor 约定一致
+    velocity_frame="world",
+)
+
+# root_pose_w: [B,7] position + quaternion
+# root_velocity_w: [B,6] world linear/angular velocity
+# joint_pos/joint_vel: [B,N] simulator joint order
+output = self.go2_mpc.compute(
+    root_pose_w,
+    root_velocity_w,
+    joint_pos,
+    joint_vel,
+    command,
+    self.scene.env_origins,
+)
+self.robot.set_joint_effort_target(output.joint_effort)
+reset_mask = output.tracking.needs_reset
+```
+
+Adapter 完成环境原点扣除、wxyz/xyzw 转换、世界速度到 body velocity 的旋转、关节重排和
+逐环境失败隔离。输入必须与控制器位于同一设备且为 float64；不进行隐式搬运或精度转换。
+任务仍需从自身 observation/command 构造 `Go2TrackingCommand`，并在 episode reset 后用相同
+mask 调用 `self.go2_mpc.reset(mask)`。
 
 ## DirectRLEnv 接入片段
 
@@ -57,7 +93,7 @@ self.mpc.update_parameters(
 更新 tensor 可以是完整 `[B,...]`、被选环境数量 `[N,...]`，或不带 batch 维的共享值；
 tensor 必须与 problem 位于同一 device 且 dtype 相同。
 
-`pack_mpc_state`、`problem`、`robot`、`control_joint_ids` 由任务提供。
+通用非 Go2 路径的 `pack_mpc_state`、`problem`、`robot`、`control_joint_ids` 仍由任务提供。
 如果基类构造过程触发 reset，应确认控制器已初始化后再使用。
 
 ## 时序和 reset

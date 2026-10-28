@@ -15,6 +15,7 @@ from .go2_gaits import (
 from .go2_hybrid import ContactTransition, Go2HybridDynamics
 from .go2_realtime import Go2ConstrainedMPC
 from .go2_switching import Go2ContactSwitchingMPC
+from .go2_tensor_adapter import Go2TensorAdapter, Go2TensorOutput
 from .go2_torch import Go2StandingCost, Go2TorchDynamics, go2_standing_problem
 from .go2_tracking import (
     Go2TrackingCommand,
@@ -45,6 +46,8 @@ __all__ = [
     "Go2TrackingOutput",
     "Go2TrackingPlan",
     "go2_front_leg_tracking_plan",
+    "Go2TensorAdapter",
+    "Go2TensorOutput",
     "GO2_GAIT_SWINGS",
     "Go2GaitControl",
     "Go2GaitController",

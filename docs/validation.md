@@ -1,5 +1,28 @@
 # 项目验证记录
 
+## 2026-10-28 Go2 Torch 模拟器张量用例
+
+新增纯 Torch `Go2TensorAdapter`，将模拟器形状的世界根姿态/速度、环境原点与任意关节
+顺序转换为 Go2 MPC `[B,37]`，并将 12 维扭矩 scatter 回模拟器关节顺序。覆盖 wxyz/xyzw、
+world/body velocity、额外关节槽、逐环境异常隔离/reset 和 CUDA 非默认 stream。
+
+本机完整 270 周期三足 FL 跟踪在 CPU 与 CUDA、B=2 均通过：动作全部可用，
+FL 最大误差 **0.159878 mm**，最终误差约 **2.16e-8 m**。示例使用不同环境原点、
+wxyz 世界根状态和反向关节顺序。新增 adapter 测试 **4 passed**；既有 Go2 tracking/physics/
+switching 组合门禁 **22 passed, 9 skipped**。跳过项为缺失的可选原生条件。
+
+该用例的 plant 与控制器共享 Torch 方程，没有启动 Isaac Lab/PhysX，不能作为真实仿真或
+真机物理验收。完整运行命令：
+
+```bash
+python examples/go2_torch_tensor_adapter.py --task front-leg --batch-size 2 --device cuda
+```
+
+本机全量 `pytest` 仍被两个既有基线问题阻断：已提交 Go2 URDF 的 SHA 与 `SOURCE.json`
+记录不一致；`tests/test_qp.py` 及旧 constrained CUDA 编译路径在 Windows/Torch 2.7 进程内
+触发原生 abort。两项均可在不导入本次 adapter 时独立复现。新增 adapter 与既有 tracking
+组合门禁结果为 **15 passed, 1 skipped**。
+
 ## 2026-10-26 Go2 站立与三足前腿跟踪接入准备
 
 新增纯 Torch `Go2TrackingMPC` 统一命令/输出接口，以及独立 Torch plant 积分的

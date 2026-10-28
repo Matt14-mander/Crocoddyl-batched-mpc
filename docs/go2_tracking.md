@@ -41,9 +41,34 @@ PYTHONPATH=.dev-tools/croco-numpy126:src OPENBLAS_NUM_THREADS=1 \
 
 ## 在线调用契约
 
+若调用方已经提供 `[B,37]`，直接使用 `Go2TrackingMPC`。若输入来自模拟器 articulation，
+使用 `Go2TensorAdapter` 处理世界根状态、环境原点、四元数/速度坐标和关节重排：
+
+```python
+from crocoddyl_batched_mpc.models import Go2TensorAdapter
+
+adapter = Go2TensorAdapter(
+    sim_joint_names, num_envs, device="cuda", quaternion_order="wxyz", velocity_frame="world"
+)
+output = adapter.compute(root_pose_w, root_velocity_w, joint_pos, joint_vel, command, env_origins)
+sim_effort = output.joint_effort
+```
+
+可运行的完整张量用例：
+
+```bash
+PYTHONPATH=src python examples/go2_torch_tensor_adapter.py --task front-leg --device cpu
+PYTHONPATH=src python examples/go2_torch_tensor_adapter.py --task front-leg --device cuda
+```
+
+示例刻意使用 wxyz、世界速度、不同环境原点和反向关节顺序，并将返回 effort 交给另一
+Torch plant 积分。它验证 adapter 与闭环契约，仍不代表 PhysX 或真机验证。
+
 ```python
 from crocoddyl_batched_mpc.models import (
-    Go2TrackingCommand, Go2TrackingMPC, go2_front_leg_tracking_plan,
+    Go2TrackingCommand,
+    Go2TrackingMPC,
+    go2_front_leg_tracking_plan,
 )
 
 controller = Go2TrackingMPC(batch_size=32, horizon=2, dt=0.02, device="cuda")

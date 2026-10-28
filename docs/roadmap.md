@@ -31,7 +31,7 @@ Crocoddyl 的环境仍会明确跳过外部 oracle。
 
 ## M2：批量非线性求解
 
-当前状态：**M2.9 Go2 四步态优化与 Torch 批量反馈执行**。
+当前状态：**M2.10 Go2 Torch 模拟器张量用例**。
 
 - [x] backward/forward、逐环境线搜索/自适应正则化、固定迭代预算、失败和冻结 mask。
 - [x] controller horizon-shift warm start；局部 reset 同时清除动作与轨迹缓存。
@@ -85,7 +85,9 @@ CPU/GPU 在明确容差内一致。
 - [x] 逐环境失败锁、有限零扭矩输出、显式 episode reset 与支撑锚点保护。
 - [x] CPU 任务级验收、可选原生依赖隔离与编译/eager 对照。
 - [x] CUDA 验收脚本：动力学/导数、控制、stream、reset、同步调试及 batch 计时。
-- [ ] 在目标 NVIDIA 机器运行新 CUDA 验收；本机无 CUDA。
+- [x] 纯 Torch simulator adapter：世界根状态、wxyz/xyzw、body/world 速度、环境原点和关节重排。
+- [x] 本机 NVIDIA GPU 运行 adapter 非默认 stream 与 270 周期完整前腿闭环。
+- [ ] 在真实 Isaac Lab/PhysX Go2 环境运行张量 adapter 与 reset 生命周期验收。
 - [ ] 真实 Isaac Lab 状态/动作适配及物体反作用力、操作足接触控制。
 
 接口与运行命令见 [站立与三足前腿跟踪](go2_tracking.md)。
