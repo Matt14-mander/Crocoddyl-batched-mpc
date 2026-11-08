@@ -6,7 +6,15 @@
 Go2 站立/三足前腿跟踪使用 `Go2TrackingMPC` 统一入口，`Go2TensorAdapter` 已实现状态与扭矩映射，
 命令形状、失败锁定/reset 语义及 CUDA 验收命令见 [接口文档](go2_tracking.md)。
 该路径的失败输出为零扭矩并要求外部恢复/重置，不沿用下文通用控制器的保持动作策略。
-目前未提供完整 Isaac Lab Go2 环境，adapter 的独立 Torch 闭环不代替 PhysX 验证。
+Go2 PhysX 环境与验收脚本由 [RL_Bezier_MPC 集成分支](https://github.com/Matt14-mander/Deep-Reinforcement-Learning-for-Guiding-Model-Predictive-Control-in-Legged-Manipulation/tree/codex/go2-torch-integration) 直接提供。
+可复现的集成基线为本后端 `78dff8f` 与 [RL_Bezier_MPC `892649b`](https://github.com/Matt14-mander/Deep-Reinforcement-Learning-for-Guiding-Model-Predictive-Control-in-Legged-Manipulation/commit/892649b)。
+在 Isaac Lab 环境以 editable 模式安装本后端后，从 RL_Bezier_MPC 集成分支根目录运行：
+
+```bash
+python -u scripts/check_go2_endpoint_stop.py --device cuda:0
+```
+
+之前的 `go2-physx-*.patch` 是增量交付记录。使用集成分支时直接更新两个 Git 仓库即可。
 
 ## Go2 articulation tensor adapter
 
