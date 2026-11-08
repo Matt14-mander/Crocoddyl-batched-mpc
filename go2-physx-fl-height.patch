@@ -1,0 +1,42 @@
+--- a/scripts/check_go2_torch_fl.py
++++ b/scripts/check_go2_torch_fl.py
+@@ -27,5 +27,34 @@
+             target = self.plan.feet[min(self.tick, len(self.plan.feet) - 1)]
+             phase = self.plan.phases[k]
++            if args.height_trace:
++                data = self.robot.data
++                adapter = self.tracking
++                state = adapter.pack_state(
++                    data.root_link_pose_w.double(), data.root_link_vel_w.double(),
++                    data.joint_pos.double(), data.joint_vel.double(), self.scene.env_origins.double(),
++                )
++                ref = self.plan.reference[min(self.tick, len(self.plan.reference) - 1):][:1]
++                fk = adapter.controller.model.foot_positions
++                measured_z = fk(state[:, :19])[0, 0, 2]
++                # Hold measured base fixed and substitute planned joints to isolate posture error.
++                planned_joints_z = fk(torch.cat((state[:, :7], ref[:, 7:19]), dim=1))[0, 0, 2]
++                heights = torch.stack((target[0, 2], fk(ref[:, :19])[0, 0, 2],
++                                       planned_joints_z, measured_z, feet[0, 2]))
++                if self.tick == self.shift_start:
++                    self.stance_heights = heights.clone()
++                if self.tick >= self.shift_start:
++                    ids = adapter.mpc_to_sim[:3]
++                    requested = self._pending_joint_efforts[0, ids]
++                    applied = data.applied_torque[0, ids]
++                    print(json.dumps(dict(
++                        trace="FL", phase=phase, tick=k, time_s=self.tick * self.plan.dt,
++                        # Ordered as target, planned FK, measured base + planned joints,
++                        # measured FK, measured PhysX link. Each uses its own stance baseline.
++                        dz_mm=((heights - self.stance_heights) * 1000).tolist(),
++                        absolute_z_m=heights.tolist(),
++                        FL_joint_error_rad=(state[0, 7:10] - ref[0, 7:10]).tolist(),
++                        FL_requested_Nm=requested.tolist(), FL_applied_Nm=applied.tolist(),
++                    )), flush=True)
+             if self.tick == self.shift_start:
+                 self.offset = (feet - self.plan.anchors).clone()
+             delta = feet - target
+@@ -105,3 +135,4 @@
+     parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--height-trace", action="store_true", help="Emit FL height diagnostics each MPC tick after settling")
+     AppLauncher.add_app_launcher_args(parser)
+     args = parser.parse_args()
