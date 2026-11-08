@@ -1,0 +1,62 @@
+--- a/scripts/check_go2_torch_crawl.py
++++ b/scripts/check_go2_torch_crawl.py
+@@ -12,2 +12,3 @@
+     from crocoddyl_batched_mpc.models import go2_slow_walk_plan
++    from crocoddyl_batched_mpc.models.go2_walk import go2_leg_ik
+ 
+@@ -21,2 +22,33 @@
+     class CrawlEnv(QuadrupedMPCEnv):
++        def align_foot_reference(self, leg, xy):
++            # Retain the measured landing XY through stance. Blend the correction
++            # out over this leg's next swing so the planned destination stays fixed.
++            p, i = self.plan, self.index
++            next_swing = f"swing_{legs[leg]}"
++            start = next((j for j in range(i+1, len(p.reference))
++                          if p.phase_names[j] == next_swing), len(p.reference))
++            end = start
++            while end < len(p.reference) and p.phase_names[end] == next_swing:
++                end += 1
++            weight = xy.new_ones(end-i)
++            if end > start:
++                t = torch.arange(end-start, device=self.device, dtype=xy.dtype) / (end-start)
++                weight[start-i:] = 1 - t**3 * (10 + t*(-15 + 6*t))
++            target = p.foot_reference[i:end].clone()
++            error = xy - target[0, leg, :2]
++            target[:, leg, :2] += weight[:, None] * error
++            q = go2_leg_ik(self.tracking.controller.model, p.reference[i:end, :19], target)
++            joint = slice(7+3*leg, 10+3*leg)
++            vel = slice(25+3*leg, 28+3*leg)
++            acc = slice(6+3*leg, 9+3*leg)
++            self.ref[i:end, joint] = q[:, joint]
++            # The first landing reference is held during confirmation/recovery.
++            j = torch.arange(i, end, device=self.device)
++            prev = (j-1).clamp_min(i)
++            nxt = (j+1).clamp_max(len(p.reference)-1)
++            self.ref[j, vel] = (self.ref[nxt, joint] - self.ref[prev, joint]) / (2*p.dt)
++            self.acc[j, acc] = (self.ref[nxt, vel] - self.ref[prev, vel]) / (2*p.dt)
++            print(json.dumps(dict(tick=self.tick, aligned_leg=legs[leg],
++                                  anchor_offset_xy_mm=(1000*error).tolist())), flush=True)
++
+         def _reset_idx(self, env_ids):
+@@ -72,2 +104,3 @@
+                         self.anchors[0, leg, :2] = feet[leg, :2]
++                        self.align_foot_reference(leg, feet[leg, :2])
+                         self.segment[leg] = feet[leg]
+@@ -101,2 +134,4 @@
+                 if (self.max_drift > .010).any():
++                    print(json.dumps(dict(tick=self.tick, phase=phase, loads_N=loads.tolist(),
++                                          displacement_xyz_mm=((feet-self.segment)*1000).tolist())), flush=True)
+                     raise RuntimeError(f"Stance drift at {phase}: {self.max_drift.tolist()} m")
+@@ -105,5 +140,5 @@
+-            ref = p.reference[ids].clone()
++            ref = self.ref[ids].clone()
+             if freeze:
+                 ref[:, 19:] = 0.
+-            effort, result = m.compute(state, ref[None], p.acceleration[i:i+1] * int(not freeze),
++            effort, result = m.compute(state, ref[None], self.acc[i:i+1] * int(not freeze),
+                                        mask[None], self.anchors)
+@@ -149,2 +184,4 @@
+         env.anchors = env.plan.anchors[0:1].clone()
++        env.ref = env.plan.reference.clone()
++        env.acc = env.plan.acceleration.clone()
+         env.max_drift = env.anchors.new_zeros(4)
