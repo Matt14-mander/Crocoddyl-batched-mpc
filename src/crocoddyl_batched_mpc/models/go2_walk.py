@@ -110,12 +110,16 @@ def go2_slow_walk_plan(
     shift_time=1.0,
     swing_time=1.0,
     settle_time=0.4,
+    support_shift_fraction=1.0,
     dt=0.02,
     order=("RL", "FL", "RR", "FR"),
     device="cpu",
     dtype=torch.float64,
 ):
-    """Finite straight crawl: one swinging leg, COM at support-triangle centroid.
+    """Finite straight crawl with one swinging leg and an interior CoM target.
+
+    support_shift_fraction interpolates from the diagonal support edge's
+    midpoint toward the support triangle centroid (1.0, the original target).
 
     Quintic transfers/swing endpoints, fixed stance anchors, URDF-constrained
     leg IK. References are prepared outside the control loop, never applied
@@ -127,6 +131,8 @@ def go2_slow_walk_plan(
         raise ValueError("cycles must be a positive integer")
     if tuple(sorted(order)) != tuple(sorted(GO2_LEGS)):
         raise ValueError("order must contain each Go2 foot exactly once")
+    if not 0 < support_shift_fraction <= 1:
+        raise ValueError("support_shift_fraction must be in (0, 1]")
     values = (step_length, swing_height, shift_time, swing_time, settle_time, dt)
     if not all(math.isfinite(v) and v > 0 for v in values):
         raise ValueError("walk distances and times must be finite and positive")
@@ -158,13 +164,19 @@ def go2_slow_walk_plan(
             mask = stance.clone()
             mask[foot] = False
             centroid = anchors[mask, :2].mean(0)
+            com_target = centroid
+            if support_shift_fraction < 1:
+                # FL/FR/RL/RR order: the two legs adjacent to the swing leg
+                # form the diagonal support edge nearest the four-foot center.
+                edge_midpoint = (anchors[foot ^ 1, :2] + anchors[foot ^ 2, :2]) / 2
+                com_target = torch.lerp(edge_midpoint, centroid, support_shift_fraction)
             target = body.clone()
-            target[:2] = centroid
+            target[:2] = com_target
             for _ in range(3):
                 base = q0[None].clone()
                 base[0, :3] = target
                 pose = go2_leg_ik(model, base, anchors[None])
-                target[:2] += centroid - go2_center_of_mass(model, pose)[0, :2]
+                target[:2] += com_target - go2_center_of_mass(model, pose)[0, :2]
             shift_ticks = math.ceil(shift_time / dt)
             for tick in range(1, shift_ticks + 1):
                 append(
