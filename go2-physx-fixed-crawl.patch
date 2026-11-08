@@ -1,0 +1,190 @@
+--- /dev/null
++++ b/scripts/check_go2_torch_crawl.py
+@@ -0,0 +1,187 @@
++"""Two cycles of a fixed Go2 crawl in one PhysX episode."""
++import argparse
++import json
++import sys
++import traceback
++from pathlib import Path
++
++from isaaclab.app import AppLauncher
++
++
++def run(args):
++    import torch
++    from crocoddyl_batched_mpc.models import go2_slow_walk_plan
++
++    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "source/RL_Bezier_MPC"))
++    from RL_Bezier_MPC.envs import QuadrupedMPCEnv, QuadrupedMPCEnvCfg
++
++    legs = ("FL", "FR", "RL", "RR")
++
++    class CrawlEnv(QuadrupedMPCEnv):
++        def _reset_idx(self, env_ids):
++            if getattr(self, "walking", False):
++                raise RuntimeError(f"Episode reset during crawl at tick {self.tick}")
++            return super()._reset_idx(env_ids)
++
++        def _solve_mpc_control_step(self):
++            p, i = self.plan, self.index
++            phase = p.phase_names[i]
++            a, d = self.tracking, self.robot.data
++            m = a.controller.mpc
++            state = a.pack_state(d.root_link_pose_w.double(), d.root_link_vel_w.double(),
++                                 d.joint_pos.double(), d.joint_vel.double(), self.tracking_origins)
++            feet = d.body_link_pos_w[0, self._foot_body_indices.tolist()].double() - self.tracking_origins[0]
++            loads = self.foot_contact_sensor.data.net_forces_w[0, self._contact_sensor_foot_indices, 2]
++            if not (state.isfinite().all() and loads.isfinite().all() and feet.isfinite().all()):
++                raise RuntimeError(f"Nonfinite measurement at {phase}")
++            loaded = loads > self.cfg.foot_contact_force_threshold
++            mask = p.contact_masks[i].clone()
++            if phase != self.previous:
++                if self.previous == "center":
++                    self.check_progress(state)
++                if phase.startswith("swing_"):
++                    self.leg = legs.index(phase[6:])
++                    self.lift_origin = feet[self.leg].clone()
++                    self.airborne = False
++                    self.touch = self.settled = self.wait = 0
++                    self.confirmed = False
++                    m.reset()
++                print(json.dumps(dict(tick=self.tick, phase=phase)), flush=True)
++                self.previous = phase
++            if phase == "start" and self.tick == 20:
++                if not loaded.all():
++                    raise RuntimeError("Expected settled four-foot stance")
++                self.segment = feet.clone()
++                self.base_start = state[0, :3].clone()
++                self.last_center = self.base_start.clone()
++            if phase.startswith("swing_"):
++                self.airborne |= bool((feet[self.leg, 2] - self.lift_origin[2] >= .010)
++                                      & (~loaded[self.leg]) & loaded[mask].all())
++            freeze = phase == "start" and self.tick < 20
++            preload = 0.
++            if phase.startswith("land_"):
++                leg = self.leg
++                self.wait += 1
++                if self.wait > 180:
++                    raise RuntimeError(f"Landing timeout {phase}, loads={loads.tolist()}")
++                if not self.airborne:
++                    raise RuntimeError(f"No measured tripod clearance for {phase}")
++                if not self.confirmed:
++                    near = abs((feet[leg, 2] - self.lift_origin[2]).item()) <= .005
++                    self.touch = self.touch + 1 if near and loaded.all() else 0
++                    if self.touch >= 3:
++                        dx = (feet[leg, 0] - self.lift_origin[0]).item()
++                        if not .010 <= dx <= .030:
++                            raise RuntimeError(f"Foot placement {phase}: dx={dx:.5f} m")
++                        self.anchors[0, leg, :2] = feet[leg, :2]
++                        self.segment[leg] = feet[leg]
++                        self.confirmed = True
++                        m.reset()
++                    else:
++                        mask[leg] = False
++                        if near and loaded[mask].all():
++                            preload = min(5., self.wait * p.dt * 10.)
++                if self.confirmed:
++                    self.settled = self.settled + 1 if loaded.all() else 0
++                freeze = self.settled < 20
++                if self.settled == 20 and not self.reported:
++                    self.landings += 1
++                    self.reported = True
++                    print(json.dumps(dict(landing=self.landings, leg=legs[leg], recovery_ticks=20,
++                                          dx_m=(feet[leg, 0]-self.lift_origin[0]).item(),
++                                          loads_N=loads.tolist())), flush=True)
++                # Once recovered, run the nominal four-support phase without re-counting it.
++                if self.reported:
++                    freeze = False
++            else:
++                self.reported = False
++            if self.segment is not None:
++                drift = (feet - self.segment).norm(dim=-1)
++                self.max_drift = torch.maximum(self.max_drift, torch.where(mask, drift, 0.))
++                if (self.max_drift > .010).any():
++                    raise RuntimeError(f"Stance drift at {phase}: {self.max_drift.tolist()} m")
++            ids = torch.arange(m.horizon + 1, device=self.device)
++            ids = (ids * int(not freeze) + i).clamp_max(len(p.reference)-1)
++            ref = p.reference[ids].clone()
++            if freeze:
++                ref[:, 19:] = 0.
++            effort, result = m.compute(state, ref[None], p.acceleration[i:i+1] * int(not freeze),
++                                       mask[None], self.anchors)
++            if not result.usable.all():
++                raise RuntimeError(f"MPC rejected tick={self.tick} {phase}, status={result.status.tolist()}")
++            if preload:
++                leg = self.leg
++                jac = m.model._kinematics(state[:, :19], state[:, 19:])[4].reshape(1, 4, 3, 18)
++                effort = effort.clone()
++                effort[:, 3*leg:3*leg+3] -= preload * jac[:, leg, 2, 6+3*leg:9+3*leg]
++                effort = effort.clamp(-m.constraints.torque_limits, m.constraints.torque_limits)
++            self._pending_joint_efforts.copy_(a.scatter_action(effort).clamp(
++                -self.cfg.max_joint_torque, self.cfg.max_joint_torque))
++            self._last_mpc_costs = result.cost
++            self._last_mpc_converged = result.success
++            self._advance_reference_clocks()
++            if not freeze:
++                self.index = min(i+1, len(p.reference)-1)
++            self.tick += 1
++
++        def check_progress(self, state):
++            delta = state[0, :3] - self.last_center
++            if not .010 <= delta[0].item() <= .030:
++                raise RuntimeError(f"Cycle forward distance {delta[0].item():.5f} m")
++            self.last_center = state[0, :3].clone()
++            print(json.dumps(dict(cycle=self.landings//4, cycle_dx_m=delta[0].item())), flush=True)
++
++    cfg = QuadrupedMPCEnvCfg()
++    cfg.scene.num_envs = 1
++    cfg.episode_length_s = 90.
++    cfg.sim.device = args.device
++    cfg.mpc_backend = "torch_tracking"
++    cfg.torch_foot_plane_height = .022
++    cfg.use_mpc_cluster = False
++    env = None
++    try:
++        env = CrawlEnv(cfg=cfg)
++        env.reset()
++        if env._foot_body_indices is None:
++            raise RuntimeError("Foot mapping unavailable")
++        env.plan = go2_slow_walk_plan(cycles=2, step_length=.02, swing_height=.02,
++                                      dt=cfg.mpc_dt, device=env.device)
++        env.anchors = env.plan.anchors[0:1].clone()
++        env.max_drift = env.anchors.new_zeros(4)
++        env.index = env.tick = env.landings = 0
++        env.segment = env.previous = None
++        env.walking = True
++        action = torch.zeros((1,cfg.action_space), device=env.device)
++        while env.index < len(env.plan.reference)-1:
++            _, _, term, trunc, _ = env.step(action)
++            if (term | trunc).any():
++                raise RuntimeError(f"Episode ended at tick {env.tick}")
++        delta = env.robot.data.root_link_pos_w[0].double() - env.tracking_origins[0] - env.base_start
++        if env.landings != 8 or not .030 <= delta[0].item() <= .050 or abs(delta[1].item()) > .010:
++            raise RuntimeError(f"Final displacement {delta.tolist()} m; recovered landings={env.landings}")
++        print(json.dumps(dict(dx_m=delta[0].item(), dy_m=delta[1].item(), landings=env.landings,
++                              max_stance_drift_mm=(1000*env.max_drift).tolist())), flush=True)
++        print("PASS: single Go2 PhysX two-cycle fixed crawl", flush=True)
++    except BaseException:
++        traceback.print_exc()
++        raise
++    finally:
++        if env is not None:
++            env.close()
++
++
++if __name__ == "__main__":
++    parser = argparse.ArgumentParser(description=__doc__)
++    AppLauncher.add_app_launcher_args(parser)
++    args = parser.parse_args()
++    launcher = AppLauncher(args)
++    completed = False
++    try:
++        run(args)
++        completed = True
++    finally:
++        try:
++            launcher.app.close()
++        finally:
++            if not completed:
++                raise SystemExit(1)
