@@ -14,7 +14,7 @@ Go2 PhysX 环境与验收脚本由 [RL_Bezier_MPC 集成分支](https://github.c
 python -u scripts/check_go2_endpoint_stop.py --device cuda:0
 ```
 
-之前的 `go2-physx-*.patch` 是增量交付记录。使用集成分支时直接更新两个 Git 仓库即可。
+后续在本仓库的 `main` 分支和 RL_Bezier_MPC 的 `go2-torch-integration` 分支分别运行 `git pull --ff-only` 同步更新。
 
 ## Go2 articulation tensor adapter
 
