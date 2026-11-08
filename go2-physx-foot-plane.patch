@@ -1,0 +1,37 @@
+--- a/source/RL_Bezier_MPC/RL_Bezier_MPC/envs/quadruped_mpc_env_cfg.py
++++ b/source/RL_Bezier_MPC/RL_Bezier_MPC/envs/quadruped_mpc_env_cfg.py
+@@ -180,2 +180,4 @@
+     mpc_backend: str = "crocoddyl"  # or torch_tracking for fixed Go2 stance
++    # Flat-ground height of the stance foot-link origin above the ground (m).
++    torch_foot_plane_height: float = 0.0
+     use_mpc_cluster: bool = False
+--- a/source/RL_Bezier_MPC/RL_Bezier_MPC/envs/quadruped_mpc_env.py
++++ b/source/RL_Bezier_MPC/RL_Bezier_MPC/envs/quadruped_mpc_env.py
+@@ -110,3 +110,6 @@
+             from crocoddyl_batched_mpc.models import Go2TensorAdapter, go2_front_leg_tracking_plan
+ 
++            # Torch contact anchors use z=0 at the stance foot-link plane.
++            self.tracking_origins = self.scene.env_origins.double().clone()
++            self.tracking_origins[:, 2] += cfg.torch_foot_plane_height
+             self.tracking = Go2TensorAdapter(
+@@ -620,3 +623,3 @@
+                 data.joint_pos.double(), data.joint_vel.double(),
+-                self.stance_command, self.scene.env_origins.double(),
++                self.stance_command, self.tracking_origins,
+             )
+@@ -1476,3 +1479,3 @@
+             q = self.stance_command.reference[env_ids, 0, :19].to(random_pos)
+-            random_pos = self.scene.env_origins[env_ids] + q[:, :3]
++            random_pos = self.tracking_origins[env_ids].to(random_pos) + q[:, :3]
+             random_quat = q[:, [6, 3, 4, 5]]
+--- a/scripts/check_go2_torch_fl.py
++++ b/scripts/check_go2_torch_fl.py
+@@ -81,2 +81,3 @@
+     cfg.mpc_backend = "torch_tracking"
++    cfg.torch_foot_plane_height = args.foot_plane_height
+     cfg.use_mpc_cluster = False
+@@ -135,2 +136,4 @@
+     parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument("--foot-plane-height", type=float, default=0.022,
++                        help="stance foot-link plane above physical ground (m); 0 reproduces baseline")
+     parser.add_argument("--height-trace", action="store_true", help="Emit FL height diagnostics each MPC tick after settling")
