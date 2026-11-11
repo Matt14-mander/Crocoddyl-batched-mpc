@@ -1,5 +1,8 @@
 # 开发计划与验收条件
 
+Go2 接触显式 RL-MPC 的后续实施顺序、Crocoddyl 求解器对齐及实验验收见
+[AugMPC 核心方法对齐计划](augmpc_alignment_plan.md)（2026-11-11）。
+
 ## M0：契约与基线（本次）
 
 - [x] Python 包、统一 problem/result/backend/controller、可选依赖。
