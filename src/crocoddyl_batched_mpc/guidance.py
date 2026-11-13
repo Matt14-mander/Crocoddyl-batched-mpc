@@ -232,39 +232,67 @@ class GuidanceBuffer:
 
     Rejected packets never extend the old validity period. WBC failure handling
     remains with the execution loop, which must stop rather than apply zero torque.
+    Optional handoffs join the outgoing sample to the new packet at now + duration,
+    preserving C2 task derivatives and C0 forces, including interrupted handoffs.
+    The default zero duration retains the original direct replacement behavior.
     """
 
-    def __init__(self, standing, transition_duration=1.0):
+    def __init__(self, standing, transition_duration=1.0, *, handoff_duration=0.0):
         if not np.isfinite(transition_duration) or transition_duration <= 0:
             raise ValueError("transition_duration must be positive")
         self.standing = stationary(standing)
         self.transition_duration = transition_duration
+        if not np.isfinite(handoff_duration) or handoff_duration < 0:
+            raise ValueError("handoff_duration must be finite and nonnegative")
+        self.handoff_duration = handoff_duration
         self.reset()
 
     def reset(self):
         self.current = None
         self.transition = None
+        self.handoff = None
         self.last_time = -np.inf
         self.rejected_packets = 0
+        self.accepted_packets = 0
+        self.last_rejection = None
 
     def submit(self, packet, now):
         if not np.isfinite(now) or now < self.last_time:
             raise ValueError("time cannot move backwards without reset")
         self.last_time = now
         first = packet.samples[0]
-        accepted = (
-            packet.valid
-            and packet.issued_at <= now
-            and packet.times[0] <= now <= packet.valid_until
-            and first.model_id == self.standing.model_id
-            and np.array_equal(first.foot_anchors, self.standing.foot_anchors)
-            and (self.current is None or packet.sequence > self.current.sequence)
+        checks = (
+            (packet.valid, "invalid"),
+            (packet.issued_at <= now and packet.times[0] <= now, "future"),
+            (now <= packet.valid_until, "expired"),
+            (first.model_id == self.standing.model_id, "model"),
+            (np.array_equal(first.foot_anchors, self.standing.foot_anchors), "anchors"),
+            (self.current is None or packet.sequence > self.current.sequence, "sequence"),
+            (now + self.handoff_duration <= packet.valid_until, "handoff_coverage"),
         )
-        if accepted:
-            self.current, self.transition = packet, None
-        else:
+        reason = next((reason for passed, reason in checks if not passed), None)
+        bridge = None
+        if reason is None and self.handoff_duration > 0:
+            outgoing, _ = self.sample(now)
+            end = now + self.handoff_duration
+            try:
+                incoming = packet.sample(end)
+                bridge = Guidance(
+                    np.array([now, end]),
+                    (replace(outgoing, source="handoff"), replace(incoming, source="handoff")),
+                    now,
+                    end,
+                    packet.sequence,
+                )
+            except ValueError:
+                reason = "handoff_geometry"
+        self.last_rejection = reason
+        if reason is not None:
             self.rejected_packets += 1
-        return accepted
+            return False
+        self.current, self.transition, self.handoff = packet, None, bridge
+        self.accepted_packets += 1
+        return True
 
     def sample(self, now):
         if not np.isfinite(now) or now < self.last_time:
@@ -272,6 +300,8 @@ class GuidanceBuffer:
         self.last_time = now
         if self.current is None:
             return replace(self.standing, time=now), "standing"
+        if self.handoff is not None and now <= self.handoff.valid_until:
+            return self.handoff.sample(now), "handoff"
         if now <= self.current.valid_until:
             return self.current.sample(now), "active"
         if self.transition is None:

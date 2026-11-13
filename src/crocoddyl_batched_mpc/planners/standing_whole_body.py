@@ -389,7 +389,7 @@ class StandingWholeBodyPlanner:
         action.u_lb, action.u_ub = -self.torque_limits, self.torque_limits
         return TorqueMemoryAction(self.state, action, s.torque_change_weight, s.dt)
 
-    def build_problem(self, reference=None, previous_torque=None):
+    def build_problem(self, reference=None, previous_torque=None, *, initial_state=None):
         """Return native augmented shooting problem; previous_torque is canonical."""
         c, np, _ = _native()
         reference = (
@@ -406,7 +406,13 @@ class StandingWholeBodyPlanner:
             previous = self._native_control(values)
         running = [self._action(reference, i, False) for i in range(self.settings.nodes)]
         terminal = self._action(reference, self.settings.nodes, True)
-        return c.ShootingProblem(np.r_[self.x0_physical, previous], running, terminal)
+        initial = self.x0_physical
+        if initial_state is not None:
+            values = np.asarray(initial_state, dtype=float)
+            if values.shape != (49,) or not np.isfinite(values).all():
+                raise ValueError("initial_state must be finite canonical (q25,v24)")
+            initial = self._native_state(values)
+        return c.ShootingProblem(np.r_[initial, previous], running, terminal)
 
     def _independent_node(self, x, u):
         """Dense Pinocchio KKT oracle, independent of Crocoddyl contact data."""
@@ -594,11 +600,15 @@ class StandingWholeBodyPlanner:
             np.array(accelerations),
         )
 
-    def solve(self, reference=None, previous_torque=None, *, initial_guess=None):
+    def solve(
+        self, reference=None, previous_torque=None, *, initial_guess=None, initial_state=None
+    ):
         """Solve one offline horizon, optionally seeded by canonical (states, torques).
 
         The optional seed may have dynamics gaps; FDDP must close them and the
-        same independent acceptance gates apply. The legacy rollout seed is unchanged.
+        same independent acceptance gates apply. initial_state updates the measured
+        shooting initial condition, never the episode's fixed anchors or base bounds.
+        The legacy rollout seed is unchanged.
         """
         c, np, _ = _native()
         import torch
@@ -609,7 +619,7 @@ class StandingWholeBodyPlanner:
             if reference is None
             else reference
         )
-        problem = self.build_problem(reference, previous_torque)
+        problem = self.build_problem(reference, previous_torque, initial_state=initial_state)
         solver = c.SolverBoxFDDP(problem)
         solver.th_stop = self.settings.stopping_threshold
         seed_u = [self.static_control.copy() for _ in range(self.settings.nodes)]
@@ -625,8 +635,8 @@ class StandingWholeBodyPlanner:
                 or not np.isfinite(guessed_u).all()
             ):
                 raise ValueError("initial_guess has invalid dimensions or nonfinite values")
-            if not np.allclose(guessed_x[0], self.initial_state, atol=1e-9, rtol=0):
-                raise ValueError("initial_guess must start at the episode state")
+            if not np.allclose(guessed_x[0], self._canonical_state(problem.x0), atol=1e-9, rtol=0):
+                raise ValueError("initial_guess must start at the episode state or measured state")
             for x in guessed_x:
                 self.robot._q(x[:25])
             seed_u = [self._native_control(u) for u in guessed_u]

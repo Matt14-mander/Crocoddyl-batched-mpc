@@ -304,7 +304,9 @@ class StandingArmReferenceGenerator:
         )
 
 
-def guidance_from_whole_body(robot, plan, common, *, sequence=1, use_optimized_joints=False):
+def guidance_from_whole_body(
+    robot, plan, common, *, sequence=1, use_optimized_joints=False, initial_state=None
+):
     """Keep shared TCP and nominal joints; use W's COM/base/force predictions.
 
     W joint trajectories are an opt-in ablation, not extra supervision silently
@@ -324,7 +326,12 @@ def guidance_from_whole_body(robot, plan, common, *, sequence=1, use_optimized_j
     states = plan.mpc.xs[0].detach().cpu().numpy()
     if states.shape != (len(plan.times), 49) or not np.isfinite(states).all():
         raise ValueError("invalid W state trajectory")
-    if not np.allclose(states[0], common.nominal_states[0], atol=1e-9, rtol=0):
+    expected = (
+        common.nominal_states[0]
+        if initial_state is None
+        else _array(initial_state, (49,), "measured initial state")
+    )
+    if not np.allclose(states[0], expected, atol=1e-9, rtol=0):
         raise ValueError("W and common reference initial states differ")
     torques = _array(plan.mpc.us[0].detach().cpu().numpy(), (len(states) - 1, 18), "W torques")
     forces = _array(plan.forces_world, (len(states), 4, 3), "W forces")

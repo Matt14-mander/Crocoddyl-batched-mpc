@@ -1,0 +1,50 @@
+{
+  "warm": {
+    "passed": true,
+    "requests_checked": 20,
+    "accepted_plans_checked": 20,
+    "max_plan_initial_state_error": 0.0,
+    "max_previous_applied_torque_error": 0.0,
+    "executed_steps": 700
+  },
+  "cold": {
+    "passed": true,
+    "requests_checked": 20,
+    "accepted_plans_checked": 20,
+    "max_plan_initial_state_error": 0.0,
+    "max_previous_applied_torque_error": 0.0,
+    "executed_steps": 700
+  },
+  "transient": {
+    "passed": true,
+    "requests_checked": 20,
+    "accepted_plans_checked": 18,
+    "max_plan_initial_state_error": 0.0,
+    "max_previous_applied_torque_error": 0.0,
+    "executed_steps": 700
+  },
+  "outage": {
+    "passed": true,
+    "requests_checked": 40,
+    "accepted_plans_checked": 20,
+    "max_plan_initial_state_error": 0.0,
+    "max_previous_applied_torque_error": 0.0,
+    "executed_steps": 1100
+  },
+  "push": {
+    "passed": true,
+    "requests_checked": 20,
+    "accepted_plans_checked": 20,
+    "max_plan_initial_state_error": 0.0,
+    "max_previous_applied_torque_error": 0.0,
+    "executed_steps": 700
+  },
+  "high_low": {
+    "passed": true,
+    "requests_checked": 120,
+    "accepted_plans_checked": 120,
+    "max_plan_initial_state_error": 0.0,
+    "max_previous_applied_torque_error": 0.0,
+    "executed_steps": 2700
+  }
+}

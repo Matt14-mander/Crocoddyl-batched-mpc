@@ -18,12 +18,18 @@ def run_cpu_episode(
     extra_time=0.5,
     external_wrench=None,
     initial_state=None,
+    guidance_buffer=None,
+    packet_update=None,
 ):
     """Execute feedback using only measured state, returning actual samples.
 
     A rejected WBC result latches termination; no plant step or replacement
     torque is applied. Computation is offline at fixed simulation dt, with
     measured latency reported independently of nominal integration frequency.
+
+    A supplied guidance_buffer owns packet initialization. packet_update receives
+    (absolute time, measured state copy, previous applied torque copy, buffer)
+    before each control step; it never supplies the next plant state.
     """
     import pinocchio as pin
 
@@ -31,9 +37,11 @@ def run_cpu_episode(
     packet = common.guidance if packet is None else packet
     if not np.isfinite(extra_time) or extra_time < 0:
         raise ValueError("extra_time must be finite and nonnegative")
-    manager = GuidanceBuffer(common.guidance.samples[0])
+    manager = (
+        GuidanceBuffer(common.guidance.samples[0]) if guidance_buffer is None else guidance_buffer
+    )
     origin = float(common.guidance.times[0])
-    if not manager.submit(packet, origin):
+    if guidance_buffer is None and not manager.submit(packet, origin):
         raise ValueError("initial Guidance was rejected")
     controller = WholeBodyQP(robot, common.guidance.samples[0].foot_anchors, settings)
     plant = FixedSupportCPU(
@@ -76,6 +84,10 @@ def run_cpu_episode(
     for k in range(steps + 1):
         cycle_start = time.perf_counter()
         now = origin + k * settings.dt
+        if packet_update is not None and k < steps:
+            # The optional rolling path sees copies of measured state and applied
+            # torque. It cannot replace the plant state with predicted/IK states.
+            packet_update(now, np.r_[q, v], previous.copy(), manager)
         reference, mode = manager.sample(now)
         actual = robot.evaluate(q, v)
         error = float(np.linalg.norm(actual.tcp_pose[:3, 3] - reference.tcp_pose[:3, 3]))
