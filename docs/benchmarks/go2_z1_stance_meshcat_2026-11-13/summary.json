@@ -1,0 +1,621 @@
+{
+  "scope": "Fixed-foot W-Guidance-WBC CPU feedback execution; offline playback, not online MPC",
+  "paper": "https://arxiv.org/html/2511.19709v1#S6.SS2",
+  "paper_relationship": "Fig. 3 high/low whole-body reaching adapted to fixed Go2-Z1 support; not B2 trotting or its inverse-dynamics MPC algorithm",
+  "versions": {
+    "python": "3.11.4",
+    "numpy": "1.26.4",
+    "torch": "2.2.2",
+    "pinocchio": "4.0.0",
+    "crocoddyl": "3.2.1",
+    "platform": "macOS-10.16-x86_64-i386-64bit"
+  },
+  "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70",
+  "model_config": {
+    "schema_version": 1,
+    "name": "go2_z1_standing_sim_v1",
+    "authority": "Project simulation assumptions; not hardware calibration or collision certification",
+    "mount": {
+      "parent_frame": "base",
+      "child_frame": "z1_link00",
+      "xyz_m": [
+        0.05,
+        0.0,
+        0.1
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "bracket": {
+      "frame": "go2_z1_bracket",
+      "mass_kg": 0.3,
+      "box_size_m": [
+        0.16,
+        0.09,
+        0.04
+      ],
+      "com_xyz_in_base_m": [
+        0.05,
+        0.0,
+        0.08
+      ],
+      "inertia_model": "uniform_box_at_com_aligned_with_base",
+      "interpretation": "Equivalent rigid mount, including fasteners; not a specified material or fabricated part"
+    },
+    "tcp": {
+      "parent_frame": "z1_gripperStator",
+      "frame": "z1_tcp",
+      "xyz_m": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "interpretation": "Massless virtual task point; +x forward from the gripper mounting frame, not a measured grasp center"
+    },
+    "nominal_arm_configuration_rad": [
+      0.0,
+      1.2,
+      -1.8,
+      0.6,
+      0.0,
+      0.0
+    ],
+    "payload_mass_kg": 0.0,
+    "gravity_world_m_s2": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "passive_joint_dynamics": {
+      "damping": 0.0,
+      "friction": 0.0,
+      "interpretation": "Ideal rigid-body baseline; overwrite these tags only in the derived combined URDF and match this in the future simulator"
+    },
+    "limitations": [
+      "Fixed gripper at 0 rad, six actuated arm joints",
+      "No contact constraints or WBC are applied by this model",
+      "No payload other than the already modeled gripper",
+      "Mesh, self-collision, support feasibility and PhysX acceptance remain pending"
+    ]
+  },
+  "urdf_sha256": "1b989a15c5c5acc588fc63ac4f81e3cef07dad4c66e4eba861c779a0c6e18f3f",
+  "joint_names": [
+    "FL_hip_joint",
+    "FL_thigh_joint",
+    "FL_calf_joint",
+    "FR_hip_joint",
+    "FR_thigh_joint",
+    "FR_calf_joint",
+    "RL_hip_joint",
+    "RL_thigh_joint",
+    "RL_calf_joint",
+    "RR_hip_joint",
+    "RR_thigh_joint",
+    "RR_calf_joint",
+    "z1_joint1",
+    "z1_joint2",
+    "z1_joint3",
+    "z1_joint4",
+    "z1_joint5",
+    "z1_joint6"
+  ],
+  "reference_diagnostics": {
+    "max_kinematic_residual": 9.083190682934728e-08,
+    "generation_time_s": 0.7174553030054085,
+    "support_forces": "uniform gravity prior; not a feasibility certificate",
+    "derivatives": "analytic TCP; finite-difference C2 knot data for kinematic posture",
+    "allow_base_rotation": true,
+    "base_translation_bound": [
+      0.08,
+      0.06,
+      0.075
+    ],
+    "base_rotation_bound": 0.3,
+    "motion_weights": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "task": {
+    "key_times": [
+      0.0,
+      1.0,
+      3.5,
+      4.5,
+      7.5,
+      8.5,
+      11.0,
+      12.0
+    ],
+    "offsets_m": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.06,
+        0.0,
+        -0.2
+      ],
+      [
+        0.06,
+        0.0,
+        -0.2
+      ],
+      [
+        0.0,
+        0.0,
+        0.12
+      ],
+      [
+        0.0,
+        0.0,
+        0.12
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "initial_q": [
+      0.0,
+      0.0,
+      0.2967970581818924,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      1.1,
+      -1.1,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "planner": {
+    "settings": {
+      "nodes": 240,
+      "dt": 0.05,
+      "max_iterations": 150,
+      "stopping_threshold": 1e-07,
+      "friction": 0.6,
+      "normal_min": 2.0,
+      "normal_max": 200.0,
+      "contact_kp": 100.0,
+      "contact_kd": 20.0,
+      "tcp_position_weight": 20000.0,
+      "tcp_rotation_weight": 500.0,
+      "tcp_velocity_weight": 5.0,
+      "com_weight": 100.0,
+      "base_weight": 200.0,
+      "posture_weight": 1.0,
+      "torque_weight": 0.0001,
+      "torque_change_weight": 0.01,
+      "barrier_weight": 100000.0,
+      "base_translation_bound": [
+        0.09,
+        0.07,
+        0.085
+      ],
+      "base_rotation_bound": 0.35,
+      "base_linear_velocity_bound": 0.5,
+      "base_angular_velocity_bound": 1.0,
+      "gap_tolerance": 1e-06,
+      "dynamics_tolerance": 1e-07,
+      "bound_tolerance": 1e-06,
+      "foot_position_tolerance": 0.001,
+      "foot_velocity_tolerance": 0.01,
+      "tcp_position_tolerance": 0.005,
+      "tcp_rotation_tolerance": 0.02
+    },
+    "converged": true,
+    "solve_time_s": 0.4020811929949559,
+    "diagnostics": {
+      "finite": true,
+      "feasible": true,
+      "failures": [],
+      "tracking_passed": true,
+      "accepted_for_task": true,
+      "max_violations": {
+        "torque": 0.0,
+        "friction": 0.0,
+        "normal": 0.0,
+        "joint_position": 0.0,
+        "velocity": 0.0,
+        "base_translation": 0.0,
+        "base_rotation": 0.0
+      },
+      "initial_gap": 0.0,
+      "max_dynamics_gap": 9.381384558082573e-14,
+      "max_dynamics_residual": 5.684341886080802e-14,
+      "max_contact_residual": 7.240932300370956e-15,
+      "max_unstabilized_contact_acceleration": 0.00033648932469105587,
+      "max_foot_position_error_m": 4.131354547193136e-05,
+      "max_foot_velocity_m_s": 0.0001929916321035242,
+      "tcp_position_rmse_m": 2.1759581155545374e-06,
+      "tcp_position_peak_m": 7.915250840106195e-06,
+      "tcp_rotation_peak_rad": 1.9975862947557786e-05,
+      "min_normal_force_N": 38.16259134258111,
+      "max_normal_force_N": 68.39084182974034,
+      "max_torque_fraction": 0.2761706331382168,
+      "solver_error": null,
+      "initial_guess": "canonical_trajectory",
+      "static_seed": {
+        "max_acceleration": 7.783389109361667e-13,
+        "forces_world": [
+          [
+            -0.1462137915485694,
+            -1.2734284624814065,
+            60.15909693479772
+          ],
+          [
+            -0.1456534825912291,
+            1.2730172364569676,
+            60.11718697422429
+          ],
+          [
+            0.1456537132871818,
+            -0.9007914859238516,
+            45.86989374755115
+          ],
+          [
+            0.14621356085268794,
+            0.901202711948245,
+            45.8280063757268
+          ]
+        ],
+        "torques": [
+          -4.29181709410361,
+          0.3515862787474837,
+          8.980067091102988,
+          4.28793674354315,
+          0.3517525767976952,
+          8.973746530279424,
+          -3.0377957481336395,
+          0.43821169556162415,
+          6.840034601189479,
+          3.033673453450127,
+          0.4383778566720965,
+          6.833717423385691,
+          -3.735116668104052e-16,
+          -2.9753926183803423,
+          -8.03406730414873,
+          -2.7882468654581243,
+          -3.753536710374217e-16,
+          0.010577088716873757
+        ],
+        "violations": {
+          "torque": 0.0,
+          "friction": 0.0,
+          "normal": 0.0,
+          "joint_position": 0.0,
+          "velocity": 0.0,
+          "base_translation": 0.0,
+          "base_rotation": 0.0
+        }
+      },
+      "problem_build_time_s": 0.49543026398168877,
+      "validation_time_s": 0.30058022402226925,
+      "total_time_s": 1.2171408139984123
+    }
+  },
+  "passed": true,
+  "execution": {
+    "passed": true,
+    "failures": [],
+    "limits": {
+      "tcp_peak": 0.005,
+      "rotation_peak": 0.02,
+      "foot_position": 0.001,
+      "foot_velocity": 0.01,
+      "torque_violation": 1e-06,
+      "joint_position_violation": 1e-06,
+      "joint_velocity_violation": 1e-06,
+      "force_violation": 1e-05,
+      "dynamics_residual": 1e-07,
+      "contact_residual": 1e-07,
+      "quaternion_error": 1e-10,
+      "nominal_acceleration_mismatch": 1e-06,
+      "qp_equality_residual": 1e-06,
+      "qp_inequality_violation": 1e-06,
+      "terminal_speed": 0.05
+    },
+    "metrics": {
+      "tcp_peak": 9.639395101812891e-05,
+      "rotation_peak": 5.628637567182057e-07,
+      "foot_position": 4.157471648091323e-06,
+      "foot_velocity": 1.9856939996771712e-05,
+      "torque_violation": 0.0,
+      "joint_position_violation": 0.0,
+      "joint_velocity_violation": 0.0,
+      "force_violation": 0.0,
+      "dynamics_residual": 8.526512829121202e-14,
+      "contact_residual": 9.087348928904504e-15,
+      "quaternion_error": 2.220446049250313e-16,
+      "nominal_acceleration_mismatch": 2.5142772758045064e-11,
+      "qp_equality_residual": 4.831690603168681e-13,
+      "qp_inequality_violation": 0.0,
+      "tcp_rmse": 4.819761142659682e-05,
+      "terminal_speed": 2.451157486945981e-06,
+      "executed_steps": 2700,
+      "base_height_min_m": 0.25431333090824626,
+      "base_height_max_m": 0.31932379538040667,
+      "pitch_min_deg": -0.960434974533714,
+      "pitch_max_deg": 7.385095759881835,
+      "tcp_height_min_m": 0.6692189796254683,
+      "tcp_height_max_m": 0.9892194012048497,
+      "max_torque_fraction": 0.27618444119790897
+    },
+    "termination": null,
+    "solver_timing": {
+      "first_s": 0.06677475699689239,
+      "p50_s": 0.006942709966097027,
+      "p95_s": 0.01553251277655363,
+      "p99_s": 0.10224670338793657,
+      "max_s": 1.5193138429895043,
+      "deadline_misses": 2700,
+      "samples": 2700
+    },
+    "cycle_timing": {
+      "first_s": 0.0699621940148063,
+      "p50_s": 0.010025252006016672,
+      "p95_s": 0.022038170666201038,
+      "p99_s": 0.14286629397771317,
+      "max_s": 1.5226411000476219,
+      "deadline_misses": 2700,
+      "samples": 2700
+    },
+    "modes": {
+      "active": 2401,
+      "return_to_standing": 200,
+      "standing": 100
+    },
+    "rejected_packets": 0,
+    "integration_frequency_hz": 200.0,
+    "realtime_accepted": false,
+    "realtime_note": "Fixed simulation step; measured latency is not real-time certification"
+  },
+  "wbc_settings": {
+    "dt": 0.005,
+    "friction": 0.6,
+    "normal_min": 2.0,
+    "normal_max": 200.0,
+    "contact_kp": 100.0,
+    "contact_kd": 20.0,
+    "task_kp": 100.0,
+    "task_kd": 20.0,
+    "joint_kp": 40.0,
+    "joint_kd": 12.0,
+    "tcp_weight": 200.0,
+    "com_weight": 30.0,
+    "base_position_weight": 5.0,
+    "base_rotation_weight": 30.0,
+    "posture_weight": 0.1,
+    "force_weight": 0.0001,
+    "torque_change_weight": 0.001,
+    "regularization": 1e-05,
+    "qp_iterations": 40,
+    "qp_tolerance": 1e-09,
+    "constraint_tolerance": 1e-06
+  },
+  "trace_sha256": "0c933218625e671d1c2e492e19adb5879a1a2bc160be1c0b1a2657e6f552784d",
+  "source_sha256": {
+    "examples/go2_z1_stance_demo.py": "f0ff756e5b17aaef350fe9e10ceca532520de1aa5579e43997a5ce9d23fb0b0d",
+    "src/crocoddyl_batched_mpc/references/standing_arm.py": "79dadaea93e3928cf5f3d511e3e1be706f5844ecf971509a5e84261d46a77b32",
+    "src/crocoddyl_batched_mpc/guidance.py": "44c49c0ff0394fc0dd01f5f31691153f12dbcd820dadbdf65fe517fa66617441",
+    "src/crocoddyl_batched_mpc/controllers/standing_arm_cpu.py": "3d6ae5db85477101939b701ae4ad7412fa903ac5118f99a7cffb57b8654733f4",
+    "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py": "406f6ef5798f2a757ecf77462c0e7f7b97f720dc455e5bec520428e93ea1746a",
+    "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py": "1903c6686ee4d5ed30a834850a5254d1d839f92d9da9760b36292912c7415a88",
+    "src/crocoddyl_batched_mpc/models/go2_arm.py": "1e4e8e197be9e42e890b815584625c90d1025c9fc93fc759ce0f3ff75105f9e1",
+    "src/crocoddyl_batched_mpc/planners/standing_whole_body.py": "93c623c15c5795580bcd975796c23e2e396179a4527de591fc74be262c4859d9",
+    "src/crocoddyl_batched_mpc/planners/_whole_body_native.py": "012f2365878e3c5770fef0db3d2ef903739d0ab5c0ad36f2a69b9e68edca24b2",
+    "src/crocoddyl_batched_mpc/qp.py": "5cef7aca290061ac1d5d5e426ee19f93d3420e98427b9bdd51d114156ae96b9a"
+  },
+  "tests": {
+    "passed": 84,
+    "skipped": 1,
+    "failed": 0,
+    "new_tests": 8,
+    "skip_reason": "CUDA unavailable"
+  },
+  "preservation": {
+    "unchanged_existing_files": 122,
+    "intentional_arm_only_changes": [
+      "src/crocoddyl_batched_mpc/planners/standing_whole_body.py",
+      "src/crocoddyl_batched_mpc/references/standing_arm.py"
+    ],
+    "unchanged_dependency_metadata": 88,
+    "report": "preservation.json"
+  },
+  "scope_limits": [
+    "same-model CPU fixed contact dynamics",
+    "offline W full-horizon plan",
+    "no real-time acceptance; timing collected with desktop/browser active",
+    "no PhysX/collision/payload/walking-WBC acceptance"
+  ],
+  "raw_report_sha256": "1848bf3849aaa9f8f788d66f291aef399041f587815bdaeb5ae96f8eeba6f5e3",
+  "viewer": {
+    "assets": {
+      "repository": "unitreerobotics/unitree_ros",
+      "commit": "5994d4faef0a9cadd3287f8de0199a67eeb2a259",
+      "license": "BSD-3-Clause",
+      "visual_meshes": 16,
+      "files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "6dfdadaa90baa4f7bea7400d3c4e8b9c784ae37f",
+          "size_bytes": 1558,
+          "sha256": "84aac59fd3246e3ddc49d1387644e8fcf43b0def4f0b9fe687f372e90446df2d"
+        },
+        {
+          "path": "robots/go2_description/dae/base.dae",
+          "git_blob_sha1": "4e47b5bec4a3c91ae4a1d49d73080d697a917cf1",
+          "size_bytes": 10727399,
+          "sha256": "e52bebbb5c7ff1f6aedee620c9b5b349f6e965360ecc63a9bb743eeff2d0be64"
+        },
+        {
+          "path": "robots/go2_description/dae/calf.dae",
+          "git_blob_sha1": "83221779392a5d19af59561d0ea4eea48ef6102a",
+          "size_bytes": 1125517,
+          "sha256": "29872fa1a435b92bc2b395fdfa7f0aee26101db3c494681896bd4ef24ee7883c"
+        },
+        {
+          "path": "robots/go2_description/dae/calf_mirror.dae",
+          "git_blob_sha1": "413fd75d8b173b4597a35cc71e618a7d025069bd",
+          "size_bytes": 1125457,
+          "sha256": "79c66be7ed06760bd5001c067a1fb0ac517f639d8b1a5f89be471903b3f359e1"
+        },
+        {
+          "path": "robots/go2_description/dae/foot.dae",
+          "git_blob_sha1": "22bfcf49d7b6d07015c88f55e4ca153463bd5d0e",
+          "size_bytes": 506988,
+          "sha256": "ffbd95fd641866ce9bd277aa249b92dafc9148d70131fa2c52709a35ce5b710b"
+        },
+        {
+          "path": "robots/go2_description/dae/hip.dae",
+          "git_blob_sha1": "1bec1a72feb8a5d941ad6767341bc1d79d7eff0d",
+          "size_bytes": 4666421,
+          "sha256": "8735e10617afe252cef0844c1d139d15bc6d4c653660d742fea9fe05c2704d8f"
+        },
+        {
+          "path": "robots/go2_description/dae/thigh.dae",
+          "git_blob_sha1": "a17c0482f296f2e19849f2544bf309866adfb801",
+          "size_bytes": 3884136,
+          "sha256": "a622381ae308897ff143b8bbf02f075457c342b22984205040424a5a983246fa"
+        },
+        {
+          "path": "robots/go2_description/dae/thigh_mirror.dae",
+          "git_blob_sha1": "fb424112d623ad912f75248bedb1f62c6c28d3b6",
+          "size_bytes": 3896575,
+          "sha256": "c7bae0b0565c2aa4b7cc15a538d795e9153e0f10c821cc18429e92693172bdc6"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_GripperMover.dae",
+          "git_blob_sha1": "b0a5082210b10e728d5627911cdc3b712376956e",
+          "size_bytes": 1946416,
+          "sha256": "22070433a988290de089b572483e0e080bd48aed42ed978ed3d0e17a0a90b12d"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_GripperStator.dae",
+          "git_blob_sha1": "9e81d24f2449cbfa2721f2f6471c90abe087cfaf",
+          "size_bytes": 3636421,
+          "sha256": "86bea214534cc45b432198f6b1db90713563406cc2f7545fac74f64edcdac0fc"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_Link00.dae",
+          "git_blob_sha1": "41d0ea6ad0aebcc46dc3d098c40f66ff2624b8e3",
+          "size_bytes": 1356348,
+          "sha256": "df276eb556db351f8136d25a023347021fe5e1ff61ecde87f84d18da440073ff"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_Link01.dae",
+          "git_blob_sha1": "2c5fb339fbd0f2a699ebe69fd405e938e5afb295",
+          "size_bytes": 4719004,
+          "sha256": "c3838b573d4881a046b56b561bb0bcead15e28eddcec891f4df7d2dabe5fc7dc"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_Link02.dae",
+          "git_blob_sha1": "e579fec6b6aa915ea6d3eee623e39ac7121b11d4",
+          "size_bytes": 2220491,
+          "sha256": "fcc86e640824d447f393b60751fc4d5391490d76074c2feffc7cce02d7dcce12"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_Link03.dae",
+          "git_blob_sha1": "dc70c99e82bd72a391582333b71b7c6e30ad7f47",
+          "size_bytes": 2858050,
+          "sha256": "d28522a8eb04cf19dcd997e3c06e8d1f490bb61416a5609fb4ec8ec0e98de5b8"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_Link04.dae",
+          "git_blob_sha1": "3b14f695f57aaa21520deb2d0e7e165973f32e9b",
+          "size_bytes": 2142272,
+          "sha256": "b785d8dcb7e618b70c92356189c355143152e7cf3ccfdb21cdc055ab55693ba7"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_Link05.dae",
+          "git_blob_sha1": "1f110f8dde5a47a5edc9ed17beff1fecccb67ab0",
+          "size_bytes": 1526000,
+          "sha256": "23174b5a0cb554a8d18248fda1064f2ae7fbcab03af03d70f6d7edb221a423b1"
+        },
+        {
+          "path": "robots/z1_description/meshes/visual/z1_Link06.dae",
+          "git_blob_sha1": "34b80d17dfc16a5a06538df2716984f124e2b4c4",
+          "size_bytes": 236046,
+          "sha256": "a71e4bb0a1e85dbc0f712e3581333f49526a9e3e30dc272b1839a0a696aa4cf0"
+        }
+      ]
+    },
+    "meshcat_version": "0.3.2",
+    "robot_visual_objects": 27,
+    "source": "executed CPU states",
+    "physics_hz": 200,
+    "display_hz": 40,
+    "trace_sha256": "0c933218625e671d1c2e492e19adb5879a1a2bc160be1c0b1a2657e6f552784d",
+    "html_sha256": "8b5e4b7df620e4721c9dfcbd7399d342ece2d4589ee6efddea3498a67c0cd619",
+    "source_sha256": {
+      "go2_z1_stance_meshcat.py": "640f0beeadf0a24dd4f9827cdb88b568b7aaed7d8746eef4d9994383a863e684",
+      "go2_z1_stance_shell.html": "d1aca1812522c8c207e4698db907d53716e7274887319fa96115600f05a49e1a",
+      "go2_z1_meshcat.py": "37147252c7e566fc3f2ae9be81f92387e4425700ffe678641e34cba3596bd14f"
+    },
+    "initial_playback": "paused"
+  },
+  "screenshots": {
+    "high-pose.jpg": "28542526c7e86d731b98e2874646048d1966abf446f25e41cfeba44873a9b054",
+    "low-pose.jpg": "a77da0d6d86743ef1abf71b12de8445848fb4519fcc5eeda997387359a9a6eb5"
+  }
+}

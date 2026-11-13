@@ -1,8 +1,8 @@
 """Shared fixed-support kinematic references and the W-to-Guidance adapter.
 
 The common generator has no Crocoddyl dependency. It preserves four world foot
-anchors and base orientation, allows base translation and all 18 joints, and
-rejects unreachable targets. Kinematic validity is not an equilibrium certificate.
+anchors, optionally permits bounded base rotation, and rejects failed IK targets.
+Kinematic validity is not an equilibrium certificate.
 """
 
 import hashlib
@@ -12,7 +12,15 @@ from dataclasses import dataclass, replace
 
 import numpy as np
 
-from ..guidance import Guidance, GuidanceSample, _array, _pose, quintic
+from ..guidance import (
+    Guidance,
+    GuidanceSample,
+    _array,
+    _jacobian_derivative,
+    _left_jacobian,
+    _pose,
+    quintic,
+)
 
 
 def model_identity(robot):
@@ -92,11 +100,36 @@ class CommonReference:
 
 
 class StandingArmReferenceGenerator:
-    def __init__(self, robot, *, max_iterations=100, tolerance=1e-7):
+    def __init__(
+        self,
+        robot,
+        *,
+        max_iterations=100,
+        tolerance=1e-7,
+        allow_base_rotation=False,
+        base_translation_bound=(0.06, 0.06, 0.04),
+        base_rotation_bound=0.25,
+        motion_weights=None,
+    ):
         if type(max_iterations) is not int or max_iterations < 1 or not 0 < tolerance < 1e-3:
             raise ValueError("invalid IK budget/tolerance")
         self.robot = robot
         self.max_iterations, self.tolerance = max_iterations, tolerance
+        if type(allow_base_rotation) is not bool:
+            raise ValueError("allow_base_rotation must be boolean")
+        self.allow_base_rotation = allow_base_rotation
+        self.translation_bound = _array(base_translation_bound, (3,), "base translation bound")
+        self.motion_weights = _array(
+            np.ones(24) if motion_weights is None else motion_weights, (24,), "motion weights"
+        )
+        if (
+            np.any(self.translation_bound <= 0)
+            or np.any(self.motion_weights <= 0)
+            or not np.isfinite(base_rotation_bound)
+            or not 0 < base_rotation_bound < np.pi / 2
+        ):
+            raise ValueError("motion weights and base bounds must be positive and bounded")
+        self.rotation_bound = base_rotation_bound
 
     def generate(
         self,
@@ -146,7 +179,11 @@ class StandingArmReferenceGenerator:
         lower, upper = self.robot.position_limits
         if np.any(q0[7:] < lower) or np.any(q0[7:] > upper):
             raise ValueError("initial configuration exceeds joint limits")
-        columns = np.r_[np.arange(3), np.arange(6, 24)]
+        columns = (
+            np.arange(24) if self.allow_base_rotation else np.r_[np.arange(3), np.arange(6, 24)]
+        )
+        metric = self.motion_weights[columns]
+        initial_rotation = self.robot.frame_pose(q0, "base")[:3, :3]
         q, configurations, residuals = q0.copy(), [], []
         for target in tcp_poses:
             previous = q.copy()
@@ -176,15 +213,23 @@ class StandingArmReferenceGenerator:
                     )
                 )
                 dq = np.linalg.solve(
-                    jac.T @ jac + 1e-7 * np.eye(21),
-                    jac.T @ error + 1e-8 * (0.8 * toward[columns] + 0.2 * home[columns]),
+                    jac.T @ jac + 1e-7 * np.diag(metric),
+                    jac.T @ error + 1e-8 * metric * (0.8 * toward[columns] + 0.2 * home[columns]),
                 )
                 dq *= min(1.0, 0.1 / max(np.max(np.abs(dq)), 1e-12))
                 full = np.zeros(24)
                 full[columns] = dq
                 q = self.robot.integrate(q, full)
                 q[7:] = np.clip(q[7:], lower + 1e-7, upper - 1e-7)
-                q[:3] = np.clip(q[:3], q0[:3] - [0.06, 0.06, 0.04], q0[:3] + [0.06, 0.06, 0.04])
+                q[:3] = np.clip(
+                    q[:3], q0[:3] - self.translation_bound, q0[:3] + self.translation_bound
+                )
+                if self.allow_base_rotation:
+                    rotation = pin.Quaternion(q[3:7]).toRotationMatrix()
+                    delta = pin.log3(rotation @ initial_rotation.T)
+                    if np.linalg.norm(delta) > self.rotation_bound:
+                        delta *= self.rotation_bound / np.linalg.norm(delta)
+                        q[3:7] = pin.Quaternion(pin.exp3(delta) @ initial_rotation).coeffs()
             actual = self.robot.evaluate(q)
             residual = max(
                 np.max(np.abs(actual.foot_positions - anchors)),
@@ -203,11 +248,17 @@ class StandingArmReferenceGenerator:
         com_v, com_a = _derivatives(com, times)
         joint_v, joint_a = _derivatives(configurations[:, 7:], times)
         base_v, base_a = _derivatives(configurations[:, :3], times)
+        bases = [self.robot.frame_pose(q, "base") for q in configurations]
+        rotvecs = np.stack([pin.log3(base[:3, :3] @ initial_rotation.T) for base in bases])
+        rot_v, rot_a = _derivatives(rotvecs, times)
         force = np.tile(-self.robot.total_mass * self.robot.model.gravity.linear / 4, (4, 1))
         samples, states = [], []
         identity = model_identity(self.robot)
         for k, q in enumerate(configurations):
-            base = self.robot.frame_pose(q, "base")
+            base = bases[k]
+            jac = _left_jacobian(rotvecs[k])
+            omega = jac @ rot_v[k]
+            alpha = jac @ rot_a[k] + _jacobian_derivative(rotvecs[k], rot_v[k]) @ rot_v[k]
             samples.append(
                 GuidanceSample(
                     float(times[k]),
@@ -221,15 +272,15 @@ class StandingArmReferenceGenerator:
                     com_v[k],
                     com_a[k],
                     base,
-                    np.r_[base_v[k], np.zeros(3)],
-                    np.r_[base_a[k], np.zeros(3)],
+                    np.r_[base_v[k], omega],
+                    np.r_[base_a[k], alpha],
                     q[7:],
                     joint_v[k],
                     joint_a[k],
                     force,
                 )
             )
-            states.append(np.r_[q, base[:3, :3].T @ base_v[k], np.zeros(3), joint_v[k]])
+            states.append(np.r_[q, base[:3, :3].T @ base_v[k], base[:3, :3].T @ omega, joint_v[k]])
         packet = Guidance(
             times,
             tuple(samples),
@@ -245,6 +296,10 @@ class StandingArmReferenceGenerator:
                 "generation_time_s": time.perf_counter() - started,
                 "support_forces": "uniform gravity prior; not a feasibility certificate",
                 "derivatives": "analytic TCP; finite-difference C2 knot data for kinematic posture",
+                "allow_base_rotation": self.allow_base_rotation,
+                "base_translation_bound": self.translation_bound.tolist(),
+                "base_rotation_bound": self.rotation_bound,
+                "motion_weights": self.motion_weights.tolist(),
             },
         )
 

@@ -594,8 +594,12 @@ class StandingWholeBodyPlanner:
             np.array(accelerations),
         )
 
-    def solve(self, reference=None, previous_torque=None):
-        """Solve a single offline horizon; input errors raise, failed solves are gated."""
+    def solve(self, reference=None, previous_torque=None, *, initial_guess=None):
+        """Solve one offline horizon, optionally seeded by canonical (states, torques).
+
+        The optional seed may have dynamics gaps; FDDP must close them and the
+        same independent acceptance gates apply. The legacy rollout seed is unchanged.
+        """
         c, np, _ = _native()
         import torch
 
@@ -609,11 +613,35 @@ class StandingWholeBodyPlanner:
         solver = c.SolverBoxFDDP(problem)
         solver.th_stop = self.settings.stopping_threshold
         seed_u = [self.static_control.copy() for _ in range(self.settings.nodes)]
+        seed_x = None
+        if initial_guess is not None:
+            if not isinstance(initial_guess, (tuple, list)) or len(initial_guess) != 2:
+                raise ValueError("initial_guess requires canonical states and torques")
+            guessed_x, guessed_u = (np.asarray(value, dtype=float) for value in initial_guess)
+            if (
+                guessed_x.shape != (self.settings.nodes + 1, 49)
+                or guessed_u.shape != (self.settings.nodes, 18)
+                or not np.isfinite(guessed_x).all()
+                or not np.isfinite(guessed_u).all()
+            ):
+                raise ValueError("initial_guess has invalid dimensions or nonfinite values")
+            if not np.allclose(guessed_x[0], self.initial_state, atol=1e-9, rtol=0):
+                raise ValueError("initial_guess must start at the episode state")
+            for x in guessed_x:
+                self.robot._q(x[:25])
+            seed_u = [self._native_control(u) for u in guessed_u]
+            seed_x = [
+                np.r_[self._native_state(x), problem.x0[49:] if k == 0 else seed_u[k - 1]]
+                for k, x in enumerate(guessed_x)
+            ]
         started = time.perf_counter()
         error = None
         try:
-            seed_x = problem.rollout(seed_u)
-            converged = bool(solver.solve(seed_x, seed_u, self.settings.max_iterations, True))
+            if seed_x is None:
+                seed_x = problem.rollout(seed_u)
+            converged = bool(
+                solver.solve(seed_x, seed_u, self.settings.max_iterations, initial_guess is None)
+            )
             xs, us = np.array(solver.xs), np.array(solver.us)
             cost = float(solver.cost)
             iterations = min(int(solver.iter) + 1, self.settings.max_iterations)
@@ -631,6 +659,9 @@ class StandingWholeBodyPlanner:
         else:
             status = SolveStatus.SUCCESS if converged else SolveStatus.MAX_ITERATIONS
         diagnostics["solver_error"] = error
+        diagnostics["initial_guess"] = (
+            "canonical_trajectory" if initial_guess is not None else "static_control_rollout"
+        )
         diagnostics["static_seed"] = self.static_diagnostics
         diagnostics["problem_build_time_s"] = started - total_started
         diagnostics["validation_time_s"] = time.perf_counter() - started - elapsed
