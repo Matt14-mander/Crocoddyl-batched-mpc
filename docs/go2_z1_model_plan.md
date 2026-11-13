@@ -2,7 +2,8 @@
 
 2026-11-13 按用户选型，阶段 A 使用 **Go2 + Unitree Z1 六自由度机械臂 + 固定 Unitree 夹爪**。
 已完成资产冻结、仿真安装/TCP 假设、组合控制 URDF 和独立 Pinocchio CPU 模型核查；
-固定支撑力分配、WBC 和 PhysX 验收仍待实现。模型实现与参数见下文。
+后续已完成 W 参考规划及固定支撑 WBC CPU 闭环，PhysX 验收仍待实现。
+控制进展见 [共同参考与 WBC](go2_z1_wbc.md)，模型实现与参数见下文。
 此前单 Go2 库级基线见 [验证记录](validation.md#2026-11-13-go2-本机库级基线adapter-与站立回归)。
 
 ## 权威来源与版本
@@ -198,7 +199,8 @@ loader 校验两个源 URDF 的 SHA-256，在内存中组合模型，不覆盖�
 [CPU 模型结果](benchmarks/go2_z1_cpu_2026-11-13/summary.json)。
 
 后续已完成名义姿态固定四足支撑力/力矩检查和四个小幅任务的
-[W CPU 参考规划验收](go2_z1_whole_body.md)。统一 WBC、非零载荷模型、碰撞检查、
+[W CPU 参考规划验收](go2_z1_whole_body.md)，以及五类小幅空载场景的
+[统一 WBC CPU 闭环](go2_z1_wbc.md)。非零载荷模型、碰撞检查、
 完整模拟器 18 关节状态/力矩与 reset、URDF/USD 一致性和 PhysX 仍待验收。
 
 ## 对现有训练的隔离

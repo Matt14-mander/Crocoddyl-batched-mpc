@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0
+rootdir: /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc
+configfile: pyproject.toml
+collected 90 items
+
+tests/test_guidance.py .................                                 [ 18%]
+tests/test_whole_body_qp.py ...............                              [ 35%]
+tests/test_qp.py ...                                                     [ 38%]
+tests/test_standing_whole_body.py ..............................         [ 72%]
+tests/test_walking_whole_body_demo.py ...........                        [ 84%]
+tests/test_go2_arm.py ..........                                         [ 95%]
+tests/test_go2_tensor_adapter.py ...s                                    [100%]
+
+- generated xml file: /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/docs/benchmarks/go2_z1_wbc_2026-11-13/tests.xml -
+======================== 89 passed, 1 skipped in 19.90s ========================

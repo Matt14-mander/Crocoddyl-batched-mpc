@@ -1,0 +1,1215 @@
+{
+  "scope": "Fixed four-foot CPU feedback control, not PhysX or receding-horizon MPC",
+  "versions": {
+    "python": "3.11.4",
+    "numpy": "1.26.4",
+    "pinocchio": "4.0.0",
+    "torch": "2.2.2",
+    "platform": "macOS-10.16-x86_64-i386-64bit",
+    "crocoddyl": "3.2.1"
+  },
+  "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70",
+  "model_config": {
+    "schema_version": 1,
+    "name": "go2_z1_standing_sim_v1",
+    "authority": "Project simulation assumptions; not hardware calibration or collision certification",
+    "mount": {
+      "parent_frame": "base",
+      "child_frame": "z1_link00",
+      "xyz_m": [
+        0.05,
+        0.0,
+        0.1
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "bracket": {
+      "frame": "go2_z1_bracket",
+      "mass_kg": 0.3,
+      "box_size_m": [
+        0.16,
+        0.09,
+        0.04
+      ],
+      "com_xyz_in_base_m": [
+        0.05,
+        0.0,
+        0.08
+      ],
+      "inertia_model": "uniform_box_at_com_aligned_with_base",
+      "interpretation": "Equivalent rigid mount, including fasteners; not a specified material or fabricated part"
+    },
+    "tcp": {
+      "parent_frame": "z1_gripperStator",
+      "frame": "z1_tcp",
+      "xyz_m": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "interpretation": "Massless virtual task point; +x forward from the gripper mounting frame, not a measured grasp center"
+    },
+    "nominal_arm_configuration_rad": [
+      0.0,
+      1.2,
+      -1.8,
+      0.6,
+      0.0,
+      0.0
+    ],
+    "payload_mass_kg": 0.0,
+    "gravity_world_m_s2": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "passive_joint_dynamics": {
+      "damping": 0.0,
+      "friction": 0.0,
+      "interpretation": "Ideal rigid-body baseline; overwrite these tags only in the derived combined URDF and match this in the future simulator"
+    },
+    "limitations": [
+      "Fixed gripper at 0 rad, six actuated arm joints",
+      "No contact constraints or WBC are applied by this model",
+      "No payload other than the already modeled gripper",
+      "Mesh, self-collision, support feasibility and PhysX acceptance remain pending"
+    ]
+  },
+  "wbc_settings": {
+    "dt": 0.005,
+    "friction": 0.6,
+    "normal_min": 2.0,
+    "normal_max": 200.0,
+    "contact_kp": 100.0,
+    "contact_kd": 20.0,
+    "task_kp": 100.0,
+    "task_kd": 20.0,
+    "joint_kp": 40.0,
+    "joint_kd": 12.0,
+    "tcp_weight": 200.0,
+    "com_weight": 30.0,
+    "base_position_weight": 5.0,
+    "base_rotation_weight": 30.0,
+    "posture_weight": 0.1,
+    "force_weight": 0.0001,
+    "torque_change_weight": 0.001,
+    "regularization": 1e-05,
+    "qp_iterations": 40,
+    "qp_tolerance": 1e-09,
+    "constraint_tolerance": 1e-06
+  },
+  "reference_diagnostics": {
+    "max_kinematic_residual": 2.7904204672607458e-08,
+    "generation_time_s": 0.12470040703192353,
+    "support_forces": "uniform gravity prior; not a feasibility certificate",
+    "derivatives": "analytic TCP; finite-difference C2 knot data for kinematic posture"
+  },
+  "source_sha256": {
+    "src/crocoddyl_batched_mpc/guidance.py": "44c49c0ff0394fc0dd01f5f31691153f12dbcd820dadbdf65fe517fa66617441",
+    "src/crocoddyl_batched_mpc/references/standing_arm.py": "e9f688665a3442c279abbb99913124dd05ccca10855aa84d46250a207a34b4bf",
+    "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py": "406f6ef5798f2a757ecf77462c0e7f7b97f720dc455e5bec520428e93ea1746a",
+    "src/crocoddyl_batched_mpc/controllers/standing_arm_cpu.py": "3d6ae5db85477101939b701ae4ad7412fa903ac5118f99a7cffb57b8654733f4",
+    "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py": "1903c6686ee4d5ed30a834850a5254d1d839f92d9da9760b36292912c7415a88",
+    "src/crocoddyl_batched_mpc/models/go2_arm.py": "1e4e8e197be9e42e890b815584625c90d1025c9fc93fc759ce0f3ff75105f9e1",
+    "src/crocoddyl_batched_mpc/qp.py": "5cef7aca290061ac1d5d5e426ee19f93d3420e98427b9bdd51d114156ae96b9a",
+    "examples/go2_z1_wbc.py": "09748c9e22496396ddd6e0b358717c230b15a5b1dba206e9cdae2df3b7f56369"
+  },
+  "joint_names": [
+    "FL_hip_joint",
+    "FL_thigh_joint",
+    "FL_calf_joint",
+    "FR_hip_joint",
+    "FR_thigh_joint",
+    "FR_calf_joint",
+    "RL_hip_joint",
+    "RL_thigh_joint",
+    "RL_calf_joint",
+    "RR_hip_joint",
+    "RR_thigh_joint",
+    "RR_calf_joint",
+    "z1_joint1",
+    "z1_joint2",
+    "z1_joint3",
+    "z1_joint4",
+    "z1_joint5",
+    "z1_joint6"
+  ],
+  "cases": {
+    "hold": {
+      "passed": true,
+      "failures": [],
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "nominal_acceleration_mismatch": 1e-06,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "metrics": {
+        "tcp_peak": 4.1669894903124246e-07,
+        "rotation_peak": 1.4207573290255321e-08,
+        "foot_position": 7.691907723108239e-13,
+        "foot_velocity": 6.416467046432089e-12,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 7.080078605425481e-15,
+        "quaternion_error": 1.1102230246251565e-16,
+        "nominal_acceleration_mismatch": 2.492010498098865e-11,
+        "qp_equality_residual": 3.979039320256561e-13,
+        "qp_inequality_violation": 0.0,
+        "tcp_rmse": 3.943909881476455e-07,
+        "terminal_speed": 1.5693590349828942e-12,
+        "executed_steps": 500
+      },
+      "termination": null,
+      "solver_timing": {
+        "first_s": 0.009025815990753472,
+        "p50_s": 0.00694608804769814,
+        "p95_s": 0.008837867912370711,
+        "p99_s": 0.01012864074669778,
+        "max_s": 0.01084288302809,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "cycle_timing": {
+        "first_s": 0.01349351298995316,
+        "p50_s": 0.009978330985177308,
+        "p95_s": 0.012372647406300528,
+        "p99_s": 0.013532297442434355,
+        "max_s": 0.015042560989968479,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "modes": {
+        "active": 401,
+        "return_to_standing": 100
+      },
+      "rejected_packets": 0,
+      "integration_frequency_hz": 200.0,
+      "realtime_accepted": false,
+      "realtime_note": "Fixed simulation step; measured latency is not real-time certification",
+      "planner": null,
+      "trace_sha256": "e5895b96ebc4fd2b702fbfce0c460f1514b806c8b47be06a781d49a800cbd8a2",
+      "qp_summary": {
+        "samples": 500,
+        "all_converged": true,
+        "max_iterations": 6,
+        "max_reduced_dual_residual": 1.7354264389501068e-11,
+        "task_residual_norm_max": {
+          "tcp": 0.00010067495233509517,
+          "com": 0.000631542144815341,
+          "base_position": 0.0007652020239159348,
+          "base_rotation": 0.00010917797789667438,
+          "posture": 0.01120079621719482,
+          "force": 17.45511740053058,
+          "torque_change": 18.065751064326047
+        }
+      }
+    },
+    "reference": {
+      "passed": true,
+      "failures": [],
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "nominal_acceleration_mismatch": 1e-06,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "metrics": {
+        "tcp_peak": 5.209364131173037e-05,
+        "rotation_peak": 1.3137560435458622e-07,
+        "foot_position": 1.2933807728546987e-06,
+        "foot_velocity": 3.975068084560157e-06,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 9.084746843690539e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "nominal_acceleration_mismatch": 3.073069316378296e-11,
+        "qp_equality_residual": 4.831690603168681e-13,
+        "qp_inequality_violation": 0.0,
+        "tcp_rmse": 3.3363713795126385e-05,
+        "terminal_speed": 0.0006777288844228788,
+        "executed_steps": 500
+      },
+      "termination": null,
+      "solver_timing": {
+        "first_s": 0.00944195402553305,
+        "p50_s": 0.006788764032535255,
+        "p95_s": 0.009136178967310116,
+        "p99_s": 0.010712112423498175,
+        "max_s": 0.013478790991939604,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "cycle_timing": {
+        "first_s": 0.012215847964398563,
+        "p50_s": 0.009733593033161014,
+        "p95_s": 0.012520453007891773,
+        "p99_s": 0.014251078880624839,
+        "max_s": 0.01625963900005445,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "modes": {
+        "active": 401,
+        "return_to_standing": 100
+      },
+      "rejected_packets": 0,
+      "integration_frequency_hz": 200.0,
+      "realtime_accepted": false,
+      "realtime_note": "Fixed simulation step; measured latency is not real-time certification",
+      "planner": null,
+      "trace_sha256": "0b9296bb96375624eed7150a7a9ecd14b3e5e3169a41bec57575966a20bca38c",
+      "qp_summary": {
+        "samples": 500,
+        "all_converged": true,
+        "max_iterations": 6,
+        "max_reduced_dual_residual": 1.7354264389501068e-11,
+        "task_residual_norm_max": {
+          "tcp": 0.0023714353939197582,
+          "com": 0.012398989643089582,
+          "base_position": 0.0109280032976531,
+          "base_rotation": 0.009562983569264195,
+          "posture": 0.30031043963645204,
+          "force": 19.635937255214703,
+          "torque_change": 18.065751064326047
+        }
+      }
+    },
+    "w_guidance": {
+      "passed": true,
+      "failures": [],
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "nominal_acceleration_mismatch": 1e-06,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "metrics": {
+        "tcp_peak": 5.507485069596208e-05,
+        "rotation_peak": 8.64523333824421e-06,
+        "foot_position": 1.2149147802417756e-06,
+        "foot_velocity": 4.266491321033231e-06,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 8.407120485887098e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "nominal_acceleration_mismatch": 3.5223921429096677e-11,
+        "qp_equality_residual": 4.263256414560601e-13,
+        "qp_inequality_violation": 0.0,
+        "tcp_rmse": 3.756241168162839e-05,
+        "terminal_speed": 0.006945561064982161,
+        "executed_steps": 500
+      },
+      "termination": null,
+      "solver_timing": {
+        "first_s": 0.008184397011063993,
+        "p50_s": 0.006832576007582247,
+        "p95_s": 0.008227670710766686,
+        "p99_s": 0.009519551442936062,
+        "max_s": 0.01260341500164941,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "cycle_timing": {
+        "first_s": 0.011227939976379275,
+        "p50_s": 0.009940234012901783,
+        "p95_s": 0.011529212375171483,
+        "p99_s": 0.012675676755607124,
+        "max_s": 0.015699368028435856,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "modes": {
+        "active": 401,
+        "return_to_standing": 100
+      },
+      "rejected_packets": 0,
+      "integration_frequency_hz": 200.0,
+      "realtime_accepted": false,
+      "realtime_note": "Fixed simulation step; measured latency is not real-time certification",
+      "planner": {
+        "converged": true,
+        "diagnostics": {
+          "finite": true,
+          "feasible": true,
+          "failures": [],
+          "tracking_passed": true,
+          "accepted_for_task": true,
+          "max_violations": {
+            "torque": 0.0,
+            "friction": 0.0,
+            "normal": 0.0,
+            "joint_position": 0.0,
+            "velocity": 0.0,
+            "base_translation": 0.0,
+            "base_rotation": 0.0
+          },
+          "per_node_violations": [
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            },
+            {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            }
+          ],
+          "initial_gap": 0.0,
+          "max_dynamics_gap": 8.843620280529763e-14,
+          "node_gaps": [
+            6.061644242105757e-14,
+            2.5522986502046763e-14,
+            5.255518242819335e-14,
+            3.544040061420617e-14,
+            6.037878530484875e-14,
+            2.2322421688869554e-14,
+            2.1246893133763933e-14,
+            4.493627692170321e-14,
+            2.8831104170734534e-14,
+            8.843620280529763e-14,
+            4.1848469134464494e-14,
+            3.76296216408889e-14,
+            2.8005375796169574e-14,
+            3.0885016766291074e-14,
+            5.204170427930421e-14,
+            3.639102907904146e-14,
+            3.048949981376836e-14,
+            5.3719181880573785e-14,
+            2.927172393363264e-14,
+            7.083483105629895e-14,
+            3.084425076460562e-14,
+            6.42342082302072e-14,
+            2.9662036715727425e-14,
+            1.7465195956134494e-14,
+            5.417888360170764e-14,
+            5.698913563279007e-14,
+            3.672756543338096e-14,
+            3.447242491461111e-14,
+            2.410571742217371e-14,
+            5.044575868140555e-14,
+            4.4596271120411757e-14,
+            4.6226911187829955e-14,
+            4.683753385137379e-14,
+            3.710920459809586e-14,
+            2.2766510898719616e-14,
+            5.1861293037802625e-14,
+            2.8314156574893445e-14,
+            6.593336987492648e-14,
+            2.129720011456726e-14,
+            6.022005810679687e-14
+          ],
+          "max_dynamics_residual": 5.684341886080802e-14,
+          "max_contact_residual": 6.51020036490646e-15,
+          "max_unstabilized_contact_acceleration": 0.000536147752914738,
+          "max_foot_position_error_m": 1.1934885372002712e-05,
+          "max_foot_velocity_m_s": 3.760776937582627e-05,
+          "tcp_position_rmse_m": 6.3659615442063905e-06,
+          "tcp_position_peak_m": 1.9874140008220766e-05,
+          "tcp_position_errors_m": [
+            0.0,
+            2.7541486665072886e-06,
+            1.671265533991457e-06,
+            3.2588359952357075e-06,
+            4.627181051999944e-06,
+            5.427447061032854e-06,
+            5.876767062546316e-06,
+            6.049752094807144e-06,
+            5.980046962426946e-06,
+            5.672790189180738e-06,
+            5.091787365447392e-06,
+            4.173509544106696e-06,
+            2.868052812411255e-06,
+            1.2899015175687356e-06,
+            1.4832053180474627e-06,
+            3.633088631222096e-06,
+            6.030773060950875e-06,
+            8.564602861329582e-06,
+            8.82077615151886e-06,
+            1.6644054238326304e-06,
+            1.9874140008220766e-05,
+            1.0318537935486747e-05,
+            1.969140776367453e-06,
+            4.001973957218453e-06,
+            5.06813530094812e-06,
+            5.8021868083779975e-06,
+            6.227241581278574e-06,
+            6.394316186625202e-06,
+            6.336299312516411e-06,
+            6.0415981626722034e-06,
+            5.446482442950224e-06,
+            4.463433559408419e-06,
+            3.0454940733412517e-06,
+            1.350484980750941e-06,
+            1.5274787255826757e-06,
+            3.771650210906888e-06,
+            6.3065260327432435e-06,
+            7.529170686783582e-06,
+            1.3997188089166302e-06,
+            1.6669867544589534e-05,
+            1.0516952638274594e-06
+          ],
+          "tcp_rotation_peak_rad": 2.9446598762537563e-05,
+          "min_normal_force_N": 40.646160993122855,
+          "max_normal_force_N": 67.55097054614343,
+          "max_torque_fraction": 0.21955349304604488,
+          "solver_error": null,
+          "static_seed": {
+            "max_acceleration": 6.726383579358971e-13,
+            "forces_world": [
+              [
+                -0.1276840012608084,
+                -1.2497969501187838,
+                59.25191838956062
+              ],
+              [
+                -0.12712369230346846,
+                1.249385724094324,
+                59.21000842898716
+              ],
+              [
+                0.1271239229994188,
+                -0.9244229982864931,
+                46.77707229278826
+              ],
+              [
+                0.12768377056492394,
+                0.9248342243108855,
+                46.73518492096392
+              ]
+            ],
+            "torques": [
+              -4.212195306383085,
+              0.3570858659936185,
+              8.844202863019742,
+              4.208314955822625,
+              0.35725216404383003,
+              8.837882302196178,
+              -3.1174175358541643,
+              0.4327121083154883,
+              6.975898829272722,
+              3.113295241170652,
+              0.43287826942596064,
+              6.969581651468935,
+              -4.278560076628155e-16,
+              -2.2735992957849116,
+              -6.310678449615626,
+              -2.7882468654581243,
+              -3.3127436759972933e-16,
+              0.01057708871687368
+            ],
+            "violations": {
+              "torque": 0.0,
+              "friction": 0.0,
+              "normal": 0.0,
+              "joint_position": 0.0,
+              "velocity": 0.0,
+              "base_translation": 0.0,
+              "base_rotation": 0.0
+            }
+          },
+          "problem_build_time_s": 0.10570178501075134,
+          "validation_time_s": 0.05930370802525431,
+          "total_time_s": 0.27738698601024225
+        },
+        "solve_time_s": 0.1107939810026437
+      },
+      "trace_sha256": "a821cc9c3227a99bc1ba6c506fbe9af165ffd022f2e5e68b32ec1ff26147ffd3",
+      "qp_summary": {
+        "samples": 500,
+        "all_converged": true,
+        "max_iterations": 6,
+        "max_reduced_dual_residual": 2.270059417915942e-11,
+        "task_residual_norm_max": {
+          "tcp": 0.01386727721930308,
+          "com": 0.1094979176640033,
+          "base_position": 0.10215799856582597,
+          "base_rotation": 0.045944925337582,
+          "posture": 2.019571595725412,
+          "force": 11.112442255086645,
+          "torque_change": 17.992453495962238
+        }
+      }
+    },
+    "push": {
+      "passed": true,
+      "failures": [],
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "nominal_acceleration_mismatch": 1e-06,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "metrics": {
+        "tcp_peak": 7.294379287005491e-05,
+        "rotation_peak": 0.0004183511921480898,
+        "foot_position": 1.296653874959403e-06,
+        "foot_velocity": 5.3716213483045595e-06,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 8.526512829121202e-14,
+        "contact_residual": 7.736378811878941e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "nominal_acceleration_mismatch": 2.4567529000735222e-11,
+        "qp_equality_residual": 3.979039320256561e-13,
+        "qp_inequality_violation": 0.0,
+        "tcp_rmse": 3.7095588692921406e-05,
+        "terminal_speed": 0.0006774753769338345,
+        "executed_steps": 500
+      },
+      "termination": null,
+      "solver_timing": {
+        "first_s": 0.00873374700313434,
+        "p50_s": 0.006573193008080125,
+        "p95_s": 0.008129597612423822,
+        "p99_s": 0.00883024263428524,
+        "max_s": 0.01032705302350223,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "cycle_timing": {
+        "first_s": 0.011999013018794358,
+        "p50_s": 0.00961575098335743,
+        "p95_s": 0.011402785021346059,
+        "p99_s": 0.012538830543635412,
+        "max_s": 0.013798586034681648,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "modes": {
+        "active": 401,
+        "return_to_standing": 100
+      },
+      "rejected_packets": 0,
+      "integration_frequency_hz": 200.0,
+      "realtime_accepted": false,
+      "realtime_note": "Fixed simulation step; measured latency is not real-time certification",
+      "planner": null,
+      "trace_sha256": "29bf4657ab59b72e5dcdef86d535407e181e7f39db7e5f26279fb54de29ca442",
+      "qp_summary": {
+        "samples": 500,
+        "all_converged": true,
+        "max_iterations": 6,
+        "max_reduced_dual_residual": 1.7354264389501068e-11,
+        "task_residual_norm_max": {
+          "tcp": 0.0023714416583715254,
+          "com": 0.02573004812209372,
+          "base_position": 0.032420519916100336,
+          "base_rotation": 0.011430521939282607,
+          "posture": 1.0113900445444144,
+          "force": 22.478093154446587,
+          "torque_change": 18.065751064326047
+        }
+      }
+    },
+    "expired": {
+      "passed": true,
+      "failures": [],
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "nominal_acceleration_mismatch": 1e-06,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "metrics": {
+        "tcp_peak": 8.942294171376526e-05,
+        "rotation_peak": 1.108499224136803e-06,
+        "foot_position": 1.4278025719044262e-06,
+        "foot_velocity": 6.062226968292951e-06,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 7.306655280814311e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "nominal_acceleration_mismatch": 3.0243809369325143e-11,
+        "qp_equality_residual": 5.400124791776761e-13,
+        "qp_inequality_violation": 0.0,
+        "tcp_rmse": 4.0081947596951005e-05,
+        "terminal_speed": 3.2820257613983425e-06,
+        "executed_steps": 500
+      },
+      "termination": null,
+      "solver_timing": {
+        "first_s": 0.007259101024828851,
+        "p50_s": 0.007205328962299973,
+        "p95_s": 0.009835228009615093,
+        "p99_s": 0.01269239624496549,
+        "max_s": 0.016500530007760972,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "cycle_timing": {
+        "first_s": 0.010564485972281545,
+        "p50_s": 0.01014935999410227,
+        "p95_s": 0.013558536872733383,
+        "p99_s": 0.017248375187627972,
+        "max_s": 0.021593458019196987,
+        "deadline_misses": 500,
+        "samples": 500
+      },
+      "modes": {
+        "active": 131,
+        "return_to_standing": 199,
+        "standing": 171
+      },
+      "rejected_packets": 0,
+      "integration_frequency_hz": 200.0,
+      "realtime_accepted": false,
+      "realtime_note": "Fixed simulation step; measured latency is not real-time certification",
+      "planner": null,
+      "trace_sha256": "8a4553eb2eae35a805c00004dc464e06d5db33cddb589e99c0b38118f0d77299",
+      "qp_summary": {
+        "samples": 500,
+        "all_converged": true,
+        "max_iterations": 6,
+        "max_reduced_dual_residual": 1.7354264389501068e-11,
+        "task_residual_norm_max": {
+          "tcp": 0.0022066791800592718,
+          "com": 0.011210295418805253,
+          "base_position": 0.009863485277730977,
+          "base_rotation": 0.008979540208836425,
+          "posture": 0.28263601228237245,
+          "force": 20.890116215755913,
+          "torque_change": 18.065751064326047
+        }
+      }
+    }
+  },
+  "passed": true,
+  "tests": {
+    "passed": 89,
+    "skipped": 1,
+    "failed": 0,
+    "duration_s": 19.905,
+    "timestamp": "2026-11-13T17:51:20.883251+08:00",
+    "by_module": {
+      "tests.test_guidance": {
+        "passed": 17,
+        "skipped": 0,
+        "failed": 0
+      },
+      "tests.test_whole_body_qp": {
+        "passed": 15,
+        "skipped": 0,
+        "failed": 0
+      },
+      "tests.test_qp": {
+        "passed": 3,
+        "skipped": 0,
+        "failed": 0
+      },
+      "tests.test_standing_whole_body": {
+        "passed": 30,
+        "skipped": 0,
+        "failed": 0
+      },
+      "tests.test_walking_whole_body_demo": {
+        "passed": 11,
+        "skipped": 0,
+        "failed": 0
+      },
+      "tests.test_go2_arm": {
+        "passed": 10,
+        "skipped": 0,
+        "failed": 0
+      },
+      "tests.test_go2_tensor_adapter": {
+        "passed": 3,
+        "skipped": 1,
+        "failed": 0
+      }
+    },
+    "skip_reason": "CUDA unavailable: Go2 adapter non-default stream"
+  },
+  "w_planner_settings": {
+    "nodes": 40,
+    "dt": 0.05,
+    "max_iterations": 100,
+    "stopping_threshold": 1e-07,
+    "friction": 0.6,
+    "normal_min": 2.0,
+    "normal_max": 200.0,
+    "contact_kp": 100.0,
+    "contact_kd": 20.0,
+    "tcp_position_weight": 20000.0,
+    "tcp_rotation_weight": 500.0,
+    "tcp_velocity_weight": 5.0,
+    "com_weight": 100.0,
+    "base_weight": 200.0,
+    "posture_weight": 1.0,
+    "torque_weight": 0.0001,
+    "torque_change_weight": 0.01,
+    "barrier_weight": 100000.0,
+    "base_translation_bound": [
+      0.08,
+      0.08,
+      0.05
+    ],
+    "base_rotation_bound": 0.25,
+    "base_linear_velocity_bound": 0.5,
+    "base_angular_velocity_bound": 1.0,
+    "gap_tolerance": 1e-06,
+    "dynamics_tolerance": 1e-07,
+    "bound_tolerance": 1e-06,
+    "foot_position_tolerance": 0.001,
+    "foot_velocity_tolerance": 0.01,
+    "tcp_position_tolerance": 0.005,
+    "tcp_rotation_tolerance": 0.02
+  },
+  "baseline_commit": "b1b290df14a66f704d8fca94c0f214c178928bbc",
+  "raw_report": {
+    "path": "artifacts/go2-z1-wbc/report.json",
+    "sha256": "34757fb0fded79d677111d4a1a856db0ecc1bf7a07e679b42dd11046462b3cf5",
+    "note": "Local ignored artifact with per-step QP diagnostics; regenerate with documented command."
+  },
+  "preservation": {
+    "report": "preservation.json",
+    "existing_files_unchanged": 117,
+    "dependency_metadata_unchanged": 82
+  },
+  "pending_acceptance": [
+    "200 Hz real-time budget",
+    "receding-horizon MPC and online packet handoff",
+    "C0/C1 planners and paired comparison",
+    "Isaac Lab/PhysX and full 18-joint tensor adapter",
+    "nonzero object payload and collisions",
+    "walking WBC"
+  ]
+}
