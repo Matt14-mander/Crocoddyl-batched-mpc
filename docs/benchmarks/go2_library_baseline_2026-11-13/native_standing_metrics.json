@@ -1,0 +1,53 @@
+{
+  "plant": "pinocchio",
+  "backend": "torch",
+  "device": "cpu",
+  "batch_size": 2,
+  "steps": 65,
+  "dt": 0.02,
+  "horizon": 8,
+  "iterations_per_solve": 1,
+  "disturbance_step": 32,
+  "wall_seconds": 77.87209879502188,
+  "all_actions_usable": true,
+  "initial_state_error": [
+    0.10148891556282684,
+    0.10148891556282684
+  ],
+  "final_state_error": [
+    0.0008013101644497068,
+    0.0008807550249015382
+  ],
+  "final_configuration_error": [
+    0.00010690265718410675,
+    0.00012203710941000037
+  ],
+  "final_velocity_norm": [
+    0.0007941472165394736,
+    0.0008722593409165422
+  ],
+  "last_five_state_error_max": [
+    0.0013926602733331636,
+    0.0015072441102034772
+  ],
+  "max_torque_limit_fraction": [
+    0.13574359140507267,
+    0.13557987000770122
+  ],
+  "min_normal_force_N": [
+    30.1485768714926,
+    30.76667653054876
+  ],
+  "max_tangential_normal_ratio": [
+    0.07868347485601233,
+    0.10257857337146796
+  ],
+  "max_contact_acceleration_residual": [
+    6.777645935804322e-15,
+    8.42793716759882e-15
+  ],
+  "final_foot_position_error_m": [
+    3.052688292108137e-05,
+    2.8036532974685918e-05
+  ]
+}

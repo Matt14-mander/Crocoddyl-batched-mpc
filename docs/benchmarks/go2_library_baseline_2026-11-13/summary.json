@@ -1,0 +1,409 @@
+{
+  "date": "2026-11-13",
+  "timezone": "Asia/Shanghai",
+  "commit": "27180b95ecb7dab9153aaccaa13f3a0cfe805b08",
+  "scope": "Local Go2 library regression; no Isaac Lab, CUDA execution, training or dependency installation",
+  "suites": [
+    {
+      "name": "pytest_torch",
+      "counts": {
+        "passed": 16,
+        "skipped": 4,
+        "failed": 0,
+        "error": 0
+      },
+      "seconds": 27.36,
+      "cases": [
+        {
+          "id": "tests.test_go2_tensor_adapter::test_pack_and_scatter_handle_origins_frames_and_permuted_joints",
+          "seconds": 0.353,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tensor_adapter::test_adapter_compute_isolates_bad_environment_and_resets",
+          "seconds": 0.321,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tensor_adapter::test_adapter_uses_only_torch_and_validates_simulator_contract",
+          "seconds": 0.085,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tensor_adapter::test_adapter_cuda_nondefault_stream",
+          "seconds": 0.0,
+          "status": "skipped",
+          "reason": "CUDA unavailable",
+          "detail": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/tests/test_go2_tensor_adapter.py:117: CUDA unavailable"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_no_optional_native_dependency_is_imported",
+          "seconds": 2.433,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_compiled_physics_support_masks_remain_dynamic",
+          "seconds": 6.048,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_stance_and_front_leg_closed_loop",
+          "seconds": 11.539,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[state]",
+          "seconds": 0.355,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[reference]",
+          "seconds": 0.361,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[acceleration]",
+          "seconds": 0.368,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[anchors]",
+          "seconds": 0.356,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_per_environment_support_release_and_no_implicit_touchdown",
+          "seconds": 0.339,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_invalid_support_anchor_change_and_dtype_rejected",
+          "seconds": 0.356,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_cuda_acceptance_refuses_to_report_success_without_cuda",
+          "seconds": 2.365,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_tracking_cuda_parity_stream_and_no_scalar_sync",
+          "seconds": 0.001,
+          "status": "skipped",
+          "reason": "CUDA unavailable",
+          "detail": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/tests/test_go2_tracking.py:157: CUDA unavailable"
+        },
+        {
+          "id": "tests.test_go2_tracking::test_tracking_cuda_closed_loop",
+          "seconds": 0.0,
+          "status": "skipped",
+          "reason": "CUDA unavailable",
+          "detail": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/tests/test_go2_tracking.py:208: CUDA unavailable"
+        },
+        {
+          "id": "tests.test_go2_standing::test_standing_cost_includes_equilibrium_feedforward",
+          "seconds": 0.026,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_standing::test_go2_solver_warm_start_reset_and_invalid_environment_isolation[torch]",
+          "seconds": 1.41,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_standing::test_go2_solver_warm_start_reset_and_invalid_environment_isolation[fddp]",
+          "seconds": 0.528,
+          "status": "passed"
+        },
+        {
+          "id": "tests.test_go2_standing::test_go2_standing_recovers_and_holds_against_independent_plant",
+          "seconds": 0.001,
+          "status": "skipped",
+          "reason": "could not import 'pinocchio': No module named 'pinocchio'",
+          "detail": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/tests/test_go2_standing.py:43: could not import 'pinocchio': No module named 'pinocchio'"
+        }
+      ]
+    },
+    {
+      "name": "pytest_asset",
+      "counts": {
+        "passed": 1,
+        "skipped": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "seconds": 0.065,
+      "cases": [
+        {
+          "id": "tests.test_go2::test_pinned_go2_asset_integrity_and_license",
+          "seconds": 0.003,
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "name": "pytest_native_standing",
+      "counts": {
+        "passed": 1,
+        "skipped": 0,
+        "failed": 0,
+        "error": 0
+      },
+      "seconds": 78.844,
+      "cases": [
+        {
+          "id": "tests.test_go2_standing::test_go2_standing_recovers_and_holds_against_independent_plant",
+          "seconds": 78.778,
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "execution_counts": {
+    "passed": 18,
+    "skipped": 4,
+    "failed": 0,
+    "error": 0
+  },
+  "distinct_test_counts_after_native_followup": {
+    "passed": 18,
+    "skipped": 3,
+    "failed": 0,
+    "error": 0
+  },
+  "distinct_tests": [
+    {
+      "id": "tests.test_go2_tensor_adapter::test_pack_and_scatter_handle_origins_frames_and_permuted_joints",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tensor_adapter::test_adapter_compute_isolates_bad_environment_and_resets",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tensor_adapter::test_adapter_uses_only_torch_and_validates_simulator_contract",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tensor_adapter::test_adapter_cuda_nondefault_stream",
+      "status": "skipped",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_no_optional_native_dependency_is_imported",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_compiled_physics_support_masks_remain_dynamic",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_stance_and_front_leg_closed_loop",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[state]",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[reference]",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[acceleration]",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_invalid_slot_is_finite_and_sticky_until_masked_reset[anchors]",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_per_environment_support_release_and_no_implicit_touchdown",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_invalid_support_anchor_change_and_dtype_rejected",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_cuda_acceptance_refuses_to_report_success_without_cuda",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_tracking_cuda_parity_stream_and_no_scalar_sync",
+      "status": "skipped",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_tracking::test_tracking_cuda_closed_loop",
+      "status": "skipped",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_standing::test_standing_cost_includes_equilibrium_feedforward",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_standing::test_go2_solver_warm_start_reset_and_invalid_environment_isolation[torch]",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_standing::test_go2_solver_warm_start_reset_and_invalid_environment_isolation[fddp]",
+      "status": "passed",
+      "runs": [
+        "pytest_torch"
+      ]
+    },
+    {
+      "id": "tests.test_go2_standing::test_go2_standing_recovers_and_holds_against_independent_plant",
+      "status": "passed",
+      "runs": [
+        "pytest_torch",
+        "pytest_native_standing"
+      ]
+    },
+    {
+      "id": "tests.test_go2::test_pinned_go2_asset_integrity_and_license",
+      "status": "passed",
+      "runs": [
+        "pytest_asset"
+      ]
+    }
+  ],
+  "adapter_stance": {
+    "task": "stance",
+    "device": "cpu",
+    "batch_size": 2,
+    "steps": 120,
+    "all_actions_usable": true,
+    "max_fl_error_m": 2.0206364052201326e-16,
+    "final_fl_error_m": 6.798699777552591e-17,
+    "joint_order_permuted": true,
+    "root_quaternion_order": "wxyz",
+    "root_velocity_frame": "world",
+    "passed": true
+  },
+  "native_standing": {
+    "plant": "pinocchio",
+    "backend": "torch",
+    "device": "cpu",
+    "batch_size": 2,
+    "steps": 65,
+    "dt": 0.02,
+    "horizon": 8,
+    "iterations_per_solve": 1,
+    "disturbance_step": 32,
+    "wall_seconds": 77.87209879502188,
+    "all_actions_usable": true,
+    "initial_state_error": [
+      0.10148891556282684,
+      0.10148891556282684
+    ],
+    "final_state_error": [
+      0.0008013101644497068,
+      0.0008807550249015382
+    ],
+    "final_configuration_error": [
+      0.00010690265718410675,
+      0.00012203710941000037
+    ],
+    "final_velocity_norm": [
+      0.0007941472165394736,
+      0.0008722593409165422
+    ],
+    "last_five_state_error_max": [
+      0.0013926602733331636,
+      0.0015072441102034772
+    ],
+    "max_torque_limit_fraction": [
+      0.13574359140507267,
+      0.13557987000770122
+    ],
+    "min_normal_force_N": [
+      30.1485768714926,
+      30.76667653054876
+    ],
+    "max_tangential_normal_ratio": [
+      0.07868347485601233,
+      0.10257857337146796
+    ],
+    "max_contact_acceleration_residual": [
+      6.777645935804322e-15,
+      8.42793716759882e-15
+    ],
+    "final_foot_position_error_m": [
+      3.052688292108137e-05,
+      2.8036532974685918e-05
+    ]
+  },
+  "asset": {
+    "actual_sha256": "7d19fe48e2e689ee1a032ab99f2a4a8b671d87e73de48d3e65811682a5b48b9e",
+    "declared_sha256": "7d19fe48e2e689ee1a032ab99f2a4a8b671d87e73de48d3e65811682a5b48b9e",
+    "matches": true
+  },
+  "integrity": {
+    "integrity_unchanged": true,
+    "dependency_metadata_unchanged": true,
+    "code_and_configuration_unchanged": true
+  },
+  "pending_acceptance": [
+    "CUDA adapter stream, CPU/GPU parity, synchronization and closed-loop acceptance",
+    "Isaac Lab/PhysX asset, state/effort interface, actuator/contact behavior and reset lifecycle",
+    "Full training/checkpoint compatibility on the training machine; no claim about current remote process state",
+    "Real-time deadlines, larger batch/horizon performance and robustness beyond the exercised cases",
+    "Standing-arm model, planners and WBC: not implemented or exercised in this baseline"
+  ],
+  "seed_policy": "Existing deterministic scenarios; no added global random seed or multi-seed claim",
+  "status": "passed_with_pending_acceptance"
+}

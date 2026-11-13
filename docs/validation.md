@@ -1,5 +1,138 @@
 # 项目验证记录
 
+## 2026-11-13 Go2 本机库级基线：adapter 与站立回归
+
+本次基线对应 `main` 提交 `27180b95ecb7dab9153aaccaa13f3a0cfe805b08`，用于站立带臂
+阶段 A 开发前的旧 Go2 行为对照。**本次范围内 18 个不同测试通过、3 个 CUDA 测试跳过，
+无失败；另一个 adapter 双环境站立用例通过。** 未运行全仓库测试、Isaac Lab 或训练。
+
+机器可读结果见 [汇总 JSON](benchmarks/go2_library_baseline_2026-11-13/summary.json)，
+完整命令、进程退出码和上海时区时间见
+[执行清单](benchmarks/go2_library_baseline_2026-11-13/manifest.json)。
+
+### 环境与隔离
+
+- Intel macOS，CPU 单线程；Python 3.11.4、Torch 2.2.2、NumPy 1.26.4、pytest 9.1.1。
+  CUDA 不可用；测试的 MPC/闭环使用 float64。
+- 基础回归使用已有 `.venv/bin/python` 和 `PYTHONPATH=src`，其中无 Pinocchio/Crocoddyl。
+- 原生对照仍使用同一 Python，仅对子进程增加已有目录
+  `.dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages`。
+  实际导入 Pinocchio 4.0.0、Crocoddyl 3.2.1，NumPy 仍来自 `.venv` 的 1.26.4。
+  没有把独立依赖目录顶层的 NumPy 加入路径。
+- 禁用字节码写入、用户 site、pytest 插件自动加载和 pytest 缓存；Torch/BLAS 线程设为 1。
+  环境变量只作用于测试子进程，没有安装、卸载或升级依赖，没有修改 `croco_env`。
+- 执行前后，受跟踪的 `src/`、`tests/`、`examples/`、`pyproject.toml`、CI 配置文件哈希一致；
+  `.venv` 和使用的独立依赖目录的分发元数据与 `.pth` 文件哈希一致。见
+  [执行前校验](benchmarks/go2_library_baseline_2026-11-13/integrity_before.json) 与
+  [执行后校验](benchmarks/go2_library_baseline_2026-11-13/integrity_after.json)。
+  本次仓库变更仅为验证文档与结果文件；没有操作训练服务器。
+
+实际导入版本和模块路径分别保存在
+[Torch 环境记录](benchmarks/go2_library_baseline_2026-11-13/environment_torch.json) 与
+[原生环境记录](benchmarks/go2_library_baseline_2026-11-13/environment_native.json)。
+
+### 执行结果与跳过项
+
+| 执行项目 | 通过 | 跳过 | 失败 | pytest 用时 |
+| --- | ---: | ---: | ---: | ---: |
+| `test_go2_tensor_adapter.py`、`test_go2_tracking.py`、`test_go2_standing.py`，基础环境 | 16 | 4 | 0 | 27.36 s |
+| 独立 Pinocchio 站立测试，原生环境补测 | 1 | 0 | 0 | 78.84 s |
+| Go2 资产 SHA-256 与许可证测试 | 1 | 0 | 0 | 0.06 s |
+
+基础环境的 4 个跳过项为：
+
+1. `test_adapter_cuda_nondefault_stream`：CUDA 不可用。
+2. `test_tracking_cuda_parity_stream_and_no_scalar_sync`：CUDA 不可用。
+3. `test_tracking_cuda_closed_loop`：CUDA 不可用。
+4. `test_go2_standing_recovers_and_holds_against_independent_plant`：基础环境缺少 Pinocchio；
+   **已在原生环境单独补测通过**。
+
+所以原始执行计数为 **18 passed / 4 skipped**；按测试身份去重并计入原生补测后，
+最终为 **18 passed / 3 skipped**。验证“无 CUDA 时验收程序返回 unavailable”的测试通过，
+只代表缺设备处理正确，不能计作 GPU 验收。
+
+通过项覆盖四元数及速度坐标转换、环境原点、关节重排与额外槽位、异常环境隔离和局部
+reset、纯 Torch 依赖隔离、编译/eager 对照、站立与前腿闭环、支撑锚点保护，以及
+Torch DDP/FDDP 的站立首步、warm start 和异常状态隔离。完整 65 周期原生站立补测的
+控制后端为 Torch DDP；本次没有执行 Crocoddyl 求解器或完整 FDDP 站立闭环验收。
+
+Go2 URDF 实际 SHA-256 与 `SOURCE.json` 相同，均为
+`7d19fe48e2e689ee1a032ab99f2a4a8b671d87e73de48d3e65811682a5b48b9e`。
+2026-10-28 记录中的资产校验不一致问题在当前快照未复现；本次没有修改资产或元数据。
+
+原始日志与逐测试 JUnit 记录：
+[基础回归日志](benchmarks/go2_library_baseline_2026-11-13/pytest_torch.log) /
+[XML](benchmarks/go2_library_baseline_2026-11-13/pytest_torch.xml)，
+[原生站立日志](benchmarks/go2_library_baseline_2026-11-13/pytest_native_standing.log) /
+[XML](benchmarks/go2_library_baseline_2026-11-13/pytest_native_standing.xml)，
+[资产校验日志](benchmarks/go2_library_baseline_2026-11-13/pytest_asset.log) /
+[XML](benchmarks/go2_library_baseline_2026-11-13/pytest_asset.xml)。
+
+### 闭环指标
+
+额外执行 `go2_torch_tensor_adapter.py --task stance --batch-size 2 --device cpu`：
+120 个 20 ms 周期，两个环境所有动作可用，最大 FL 位置误差约 `2.02e-16 m`。
+该用例从名义站立状态出发，使用 wxyz、世界系根速度、不同环境原点及反向关节顺序。
+机器精度量级的误差只说明该数值平衡用例成立；plant 与控制器共享 Torch 方程。
+见 [adapter 原始输出](benchmarks/go2_library_baseline_2026-11-13/adapter_stance.json)。
+
+独立 Pinocchio KKT/integrate 站立补测采用 B=2、T=8、dt=0.02 s，每周期 1 次 DDP，
+65 周期，第 32 步加入角速度扰动；两环境初始 roll 扰动方向相反，并有共同关节/速度偏移。
+全部动作可用、最终状态有限；各指标取两环境中的最坏值：
+
+| 指标 | 实测值 | 既有测试门槛 |
+| --- | ---: | ---: |
+| 最后 5 步最大状态误差范数 | 0.00150724 | < 0.015 |
+| 最终构型误差范数 | 0.000122037 | < 0.005 |
+| 最终广义速度范数 | 0.000872259 | < 0.015 |
+| 最终足端锚点误差 | 0.030527 mm | < 0.1 mm |
+| 峰值力矩 / URDF 力矩限值 | 0.135744 | < 1 |
+| 最小法向支撑力 | 30.1486 N | > 0 N |
+| 最大切向力 / 法向力 | 0.102579 | < 0.6 |
+| 最大接触加速度残差 | 8.43e-15 | < 1e-9 |
+
+状态/构型范数混合多个坐标分量，不解释为单一长度误差。
+最后 5 步状态误差还通过“小于最小初始误差的 1/5”的恢复门槛。
+闭环循环墙钟用时 77.87 s，包含控制器和独立 plant；配置 dt=20 ms 不代表实际达到 50 Hz。
+逐环境完整指标见 [原生站立指标](benchmarks/go2_library_baseline_2026-11-13/native_standing_metrics.json)。
+场景沿用既有确定性设置，没有新增随机采样或多种子统计。
+
+### 待验收与结论边界
+
+- CUDA 的非默认 stream、CPU/GPU 一致性、同步行为及站立/前腿闭环仍待目标 GPU 验收。
+- Isaac Lab/PhysX 的资产、状态与力矩映射、执行器、接触行为及 episode reset 尚未在本次运行。
+- 当前单 Go2 RL 训练的实际进程、checkpoint 重载与服务器工作副本未核查；本次库级测试
+  不代表训练收益或完整训练链路验收。
+- 实时截止期、更大 batch/horizon、更多扰动工况，以及全仓库回归均不在本次完成范围内。
+- 带臂模型、固定支撑 WBC、C0/C1/W 规划器和带载实验仍为后续开发/验收内容。
+
+### 核心复现命令
+
+从仓库根目录执行。子 shell 限定环境变量作用域；依赖全部使用本机已有文件。
+完整原始 argv、日志输出位置及进程用时以执行清单为准。
+
+```bash
+(
+  export PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1
+  export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+  export OPENBLAS_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 OMP_NUM_THREADS=1
+
+  PYTHONPATH=src .venv/bin/python -B -X faulthandler -m pytest \
+    -p no:cacheprovider -vv -ra \
+    tests/test_go2_tensor_adapter.py tests/test_go2_tracking.py tests/test_go2_standing.py
+
+  PYTHONPATH=src .venv/bin/python -B examples/go2_torch_tensor_adapter.py \
+    --task stance --batch-size 2 --device cpu
+
+  PYTHONPATH=src .venv/bin/python -B -m pytest -p no:cacheprovider -vv -ra \
+    tests/test_go2.py::test_pinned_go2_asset_integrity_and_license
+
+  PYTHONPATH=.dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages:src \
+    .venv/bin/python -B -X faulthandler -m pytest -p no:cacheprovider -vv -ra -s \
+    tests/test_go2_standing.py::test_go2_standing_recovers_and_holds_against_independent_plant
+)
+```
+
 ## 2026-10-28 Go2 Torch 模拟器张量用例
 
 新增纯 Torch `Go2TensorAdapter`，将模拟器形状的世界根姿态/速度、环境原点与任意关节

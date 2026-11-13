@@ -1,0 +1,211 @@
+{
+  "started_at": "2026-11-13T13:47:56.424243+08:00",
+  "timezone": "Asia/Shanghai",
+  "repository": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc",
+  "commit": "27180b95ecb7dab9153aaccaa13f3a0cfe805b08",
+  "branch": "main",
+  "initial_git_status": "?? docs/benchmarks/go2_library_baseline_2026-11-13/\n",
+  "environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONNOUSERSITE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "PYTHONPATH": "src"
+  },
+  "runs": [
+    {
+      "name": "environment_torch",
+      "argv": [
+        "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python",
+        "-u",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-c",
+        "import json, platform, sys\nimport numpy, torch, pytest\nfrom crocoddyl_batched_mpc.models import Go2TensorAdapter\ntorch.set_num_threads(1)\ndata = dict(python=sys.version, executable=sys.executable, platform=platform.platform(), machine=platform.machine(), torch=torch.__version__, numpy=numpy.__version__, pytest=pytest.__version__, torch_path=torch.__file__, numpy_path=numpy.__file__, cuda_available=torch.cuda.is_available(), cuda_runtime=torch.version.cuda, torch_threads=torch.get_num_threads(), adapter_import=\"passed\")\nif \"native\" in sys.argv:\n    import pinocchio, crocoddyl\n    from crocoddyl_batched_mpc.models import load_go2\n    robot = load_go2()\n    data.update(pinocchio=pinocchio.__version__, crocoddyl=crocoddyl.__version__, pinocchio_path=pinocchio.__file__, crocoddyl_path=crocoddyl.__file__, nq=robot.nq, nv=robot.nv)\nprint(json.dumps(data, indent=2))\n"
+      ],
+      "environment_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONNOUSERSITE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "PYTHONPATH": "src"
+      },
+      "started_at": "2026-11-13T13:47:56.467428+08:00",
+      "output": "docs/benchmarks/go2_library_baseline_2026-11-13/environment_torch.json",
+      "exit_code": 0,
+      "wall_seconds": 3.6431210950249806,
+      "finished_at": "2026-11-13T13:48:00.110633+08:00"
+    },
+    {
+      "name": "environment_native",
+      "argv": [
+        "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python",
+        "-u",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-c",
+        "import json, platform, sys\nimport numpy, torch, pytest\nfrom crocoddyl_batched_mpc.models import Go2TensorAdapter\ntorch.set_num_threads(1)\ndata = dict(python=sys.version, executable=sys.executable, platform=platform.platform(), machine=platform.machine(), torch=torch.__version__, numpy=numpy.__version__, pytest=pytest.__version__, torch_path=torch.__file__, numpy_path=numpy.__file__, cuda_available=torch.cuda.is_available(), cuda_runtime=torch.version.cuda, torch_threads=torch.get_num_threads(), adapter_import=\"passed\")\nif \"native\" in sys.argv:\n    import pinocchio, crocoddyl\n    from crocoddyl_batched_mpc.models import load_go2\n    robot = load_go2()\n    data.update(pinocchio=pinocchio.__version__, crocoddyl=crocoddyl.__version__, pinocchio_path=pinocchio.__file__, crocoddyl_path=crocoddyl.__file__, nq=robot.nq, nv=robot.nv)\nprint(json.dumps(data, indent=2))\n",
+        "native"
+      ],
+      "environment_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONNOUSERSITE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "PYTHONPATH": ".dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages:src"
+      },
+      "started_at": "2026-11-13T13:48:00.111682+08:00",
+      "output": "docs/benchmarks/go2_library_baseline_2026-11-13/environment_native.json",
+      "exit_code": 0,
+      "wall_seconds": 5.777816296031233,
+      "finished_at": "2026-11-13T13:48:05.889643+08:00"
+    },
+    {
+      "name": "pytest_torch",
+      "argv": [
+        "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python",
+        "-u",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "-vv",
+        "-ra",
+        "--durations=5",
+        "--junitxml=/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/docs/benchmarks/go2_library_baseline_2026-11-13/pytest_torch.xml",
+        "tests/test_go2_tensor_adapter.py",
+        "tests/test_go2_tracking.py",
+        "tests/test_go2_standing.py"
+      ],
+      "environment_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONNOUSERSITE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "PYTHONPATH": "src"
+      },
+      "started_at": "2026-11-13T13:48:05.890845+08:00",
+      "output": "docs/benchmarks/go2_library_baseline_2026-11-13/pytest_torch.log",
+      "exit_code": 0,
+      "wall_seconds": 30.127008602023125,
+      "finished_at": "2026-11-13T13:48:36.018514+08:00"
+    },
+    {
+      "name": "adapter_stance",
+      "argv": [
+        "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python",
+        "-u",
+        "-B",
+        "-X",
+        "faulthandler",
+        "examples/go2_torch_tensor_adapter.py",
+        "--task",
+        "stance",
+        "--batch-size",
+        "2",
+        "--device",
+        "cpu"
+      ],
+      "environment_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONNOUSERSITE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "PYTHONPATH": "src"
+      },
+      "started_at": "2026-11-13T13:48:36.019649+08:00",
+      "output": "docs/benchmarks/go2_library_baseline_2026-11-13/adapter_stance.json",
+      "exit_code": 0,
+      "wall_seconds": 6.431220937985927,
+      "finished_at": "2026-11-13T13:48:42.451028+08:00"
+    },
+    {
+      "name": "pytest_asset",
+      "argv": [
+        "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python",
+        "-u",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "-vv",
+        "-ra",
+        "--junitxml=/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/docs/benchmarks/go2_library_baseline_2026-11-13/pytest_asset.xml",
+        "tests/test_go2.py::test_pinned_go2_asset_integrity_and_license"
+      ],
+      "environment_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONNOUSERSITE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "PYTHONPATH": "src"
+      },
+      "started_at": "2026-11-13T13:48:42.452177+08:00",
+      "output": "docs/benchmarks/go2_library_baseline_2026-11-13/pytest_asset.log",
+      "exit_code": 0,
+      "wall_seconds": 2.5374698740197346,
+      "finished_at": "2026-11-13T13:48:44.989726+08:00"
+    },
+    {
+      "name": "pytest_native_standing",
+      "argv": [
+        "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python",
+        "-u",
+        "-B",
+        "-X",
+        "faulthandler",
+        "-m",
+        "pytest",
+        "-p",
+        "no:cacheprovider",
+        "-vv",
+        "-ra",
+        "-s",
+        "--durations=5",
+        "--junitxml=/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/docs/benchmarks/go2_library_baseline_2026-11-13/pytest_native_standing.xml",
+        "tests/test_go2_standing.py::test_go2_standing_recovers_and_holds_against_independent_plant"
+      ],
+      "environment_overrides": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "PYTHONNOUSERSITE": "1",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "OMP_NUM_THREADS": "1",
+        "PYTHONPATH": ".dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages:src"
+      },
+      "started_at": "2026-11-13T13:48:44.991120+08:00",
+      "output": "docs/benchmarks/go2_library_baseline_2026-11-13/pytest_native_standing.log",
+      "exit_code": 0,
+      "wall_seconds": 81.3565084389993,
+      "finished_at": "2026-11-13T13:50:06.349389+08:00"
+    }
+  ],
+  "finished_at": "2026-11-13T13:50:06.474381+08:00",
+  "integrity_unchanged": true,
+  "dependency_metadata_unchanged": true,
+  "code_and_configuration_unchanged": true,
+  "asset_sha256_actual": "7d19fe48e2e689ee1a032ab99f2a4a8b671d87e73de48d3e65811682a5b48b9e",
+  "asset_sha256_declared": "7d19fe48e2e689ee1a032ab99f2a4a8b671d87e73de48d3e65811682a5b48b9e",
+  "final_git_status": "?? docs/benchmarks/go2_library_baseline_2026-11-13/\n"
+}

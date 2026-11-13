@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-13",
+  "upstream_git_blob_and_sha256_checks": "passed",
+  "deterministic_urdf_rebuild": "passed",
+  "standalone_pinocchio_asset_audit": "passed",
+  "new_offline_scripts_ruff_check_and_format": "passed",
+  "existing_source_tests_examples_configuration_hashes_match_go2_library_baseline": true,
+  "existing_dependency_metadata_and_pth_hashes_match_go2_library_baseline": true,
+  "baseline_manifest": "../../../../docs/benchmarks/go2_library_baseline_2026-11-13/manifest.json",
+  "no_install_or_environment_update_performed": true,
+  "scope": "Asset preparation only; combined Go2+Z1 support/actuation not validated"
+}

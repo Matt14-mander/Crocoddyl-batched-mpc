@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.065" timestamp="2026-11-13T13:48:44.490155+08:00" hostname="zhengyuanhaodeMacBook-Pro.local"><testcase classname="tests.test_go2" name="test_pinned_go2_asset_integrity_and_license" time="0.003" /></testsuite></testsuites>

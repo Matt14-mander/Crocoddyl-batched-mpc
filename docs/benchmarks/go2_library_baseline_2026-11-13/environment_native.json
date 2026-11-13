@@ -1,0 +1,21 @@
+{
+  "python": "3.11.4 (main, Jul  5 2023, 09:00:44) [Clang 14.0.6 ]",
+  "executable": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python",
+  "platform": "macOS-10.16-x86_64-i386-64bit",
+  "machine": "x86_64",
+  "torch": "2.2.2",
+  "numpy": "1.26.4",
+  "pytest": "9.1.1",
+  "torch_path": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/lib/python3.11/site-packages/torch/__init__.py",
+  "numpy_path": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/lib/python3.11/site-packages/numpy/__init__.py",
+  "cuda_available": false,
+  "cuda_runtime": null,
+  "torch_threads": 1,
+  "adapter_import": "passed",
+  "pinocchio": "4.0.0",
+  "crocoddyl": "3.2.1",
+  "pinocchio_path": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages/pinocchio/__init__.py",
+  "crocoddyl_path": "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages/crocoddyl/__init__.py",
+  "nq": 19,
+  "nv": 18
+}

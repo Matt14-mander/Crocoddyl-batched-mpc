@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "model_id": "go2_z1_fixed_gripper",
+  "status": "standalone_arm_prepared; combined_model_not_built",
+  "selected_on": "2026-11-13",
+  "selected_robot": "Unitree Go2 + Unitree Z1 (pinned official model, fixed Unitree gripper)",
+  "source_commit": "5994d4faef0a9cadd3287f8de0199a67eeb2a259",
+  "hardware_variant": "Unspecified by the pinned official Z1 asset; do not label AIR or PRO without further evidence",
+  "go2": {
+    "path": "../go2/go2.urdf",
+    "sha256": "7d19fe48e2e689ee1a032ab99f2a4a8b671d87e73de48d3e65811682a5b48b9e",
+    "unchanged": true,
+    "mass_kg": 16.087
+  },
+  "z1": {
+    "path": "z1_fixed_gripper.urdf",
+    "sha256": "ef8676e0c10e626837f534e6068f3c950e46b9c0b637a2189136439a01a0409d",
+    "base_frame": "z1_link00",
+    "gripper_mount_frame": "z1_gripperStator",
+    "frame_type": "BODY",
+    "arm_without_gripper_mass_kg": 4.41872026,
+    "gripper_mass_kg": 0.8022495700000001,
+    "mass_kg": 5.22096983,
+    "gripper_locked_angle_rad": 0.0,
+    "gripper_lock_joint": "z1_gripper_lock_joint",
+    "joint_metadata": [
+      {
+        "name": "z1_joint1",
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "origin_xyz_m": [
+          0.0,
+          0.0,
+          0.0585
+        ],
+        "limits": {
+          "effort": 30.0,
+          "lower": -2.6179938779914944,
+          "upper": 2.6179938779914944,
+          "velocity": 3.1415
+        },
+        "upstream_dynamics": {
+          "damping": 1.0,
+          "friction": 1.0
+        }
+      },
+      {
+        "name": "z1_joint2",
+        "axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "origin_xyz_m": [
+          0.0,
+          0.0,
+          0.045
+        ],
+        "limits": {
+          "effort": 60.0,
+          "lower": 0.0,
+          "upper": 2.9670597283903604,
+          "velocity": 3.1415
+        },
+        "upstream_dynamics": {
+          "damping": 2.0,
+          "friction": 2.0
+        }
+      },
+      {
+        "name": "z1_joint3",
+        "axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "origin_xyz_m": [
+          -0.35,
+          0.0,
+          0.0
+        ],
+        "limits": {
+          "effort": 30.0,
+          "lower": -2.8797932657906435,
+          "upper": 0.0,
+          "velocity": 3.1415
+        },
+        "upstream_dynamics": {
+          "damping": 1.0,
+          "friction": 1.0
+        }
+      },
+      {
+        "name": "z1_joint4",
+        "axis": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "origin_xyz_m": [
+          0.218,
+          0.0,
+          0.057
+        ],
+        "limits": {
+          "effort": 30.0,
+          "lower": -1.5184364492350666,
+          "upper": 1.5184364492350666,
+          "velocity": 3.1415
+        },
+        "upstream_dynamics": {
+          "damping": 1.0,
+          "friction": 1.0
+        }
+      },
+      {
+        "name": "z1_joint5",
+        "axis": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "origin_xyz_m": [
+          0.07,
+          0.0,
+          0.0
+        ],
+        "limits": {
+          "effort": 30.0,
+          "lower": -1.3439035240356338,
+          "upper": 1.3439035240356338,
+          "velocity": 3.1415
+        },
+        "upstream_dynamics": {
+          "damping": 1.0,
+          "friction": 1.0
+        }
+      },
+      {
+        "name": "z1_joint6",
+        "axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "origin_xyz_m": [
+          0.0492,
+          0.0,
+          0.0
+        ],
+        "limits": {
+          "effort": 30.0,
+          "lower": -2.792526803190927,
+          "upper": 2.792526803190927,
+          "velocity": 3.1415
+        },
+        "upstream_dynamics": {
+          "damping": 1.0,
+          "friction": 1.0
+        }
+      }
+    ]
+  },
+  "derivation": {
+    "script": "build_z1_fixed_gripper.py",
+    "script_sha256": "a5026fac52037fb05199675d0ab1a540cf1f2844df38106a2271b05b9dc3b6c1",
+    "steps": [
+      "Copy standalone z1.urdf links and arm joints; omit world, base_static_joint, Gazebo plugins and transmissions.",
+      "Add official UnitreeGripper links/inertias from robot.xacro and const.xacro.",
+      "Lock jointGripper at 0 rad, preserving its zero-angle origin and both gripper link inertias.",
+      "Prefix every link/joint name with z1_; name the fixed joints z1_gripper_mount_joint and z1_gripper_lock_joint to avoid frame-name ambiguity.",
+      "Preserve official visual/collision references and six arm joints dynamics tags. No meshes included."
+    ]
+  },
+  "planned_combined_contract": {
+    "implemented": false,
+    "nq": 25,
+    "nv": 24,
+    "nx": 49,
+    "ndx": 48,
+    "nu": 18,
+    "joint_order": [
+      "FL_hip_joint",
+      "FL_thigh_joint",
+      "FL_calf_joint",
+      "FR_hip_joint",
+      "FR_thigh_joint",
+      "FR_calf_joint",
+      "RL_hip_joint",
+      "RL_thigh_joint",
+      "RL_calf_joint",
+      "RR_hip_joint",
+      "RR_thigh_joint",
+      "RR_calf_joint",
+      "z1_joint1",
+      "z1_joint2",
+      "z1_joint3",
+      "z1_joint4",
+      "z1_joint5",
+      "z1_joint6"
+    ],
+    "configuration_order": [
+      "base_position_xyz",
+      "base_quaternion_xyzw",
+      "legs_12",
+      "z1_6"
+    ],
+    "velocity_order": [
+      "base_body_linear_xyz",
+      "base_body_angular_xyz",
+      "legs_12",
+      "z1_6"
+    ],
+    "adapter_rule": "Explicit name-based gather/scatter; verify Pinocchio and simulator ordering instead of assuming tree traversal order.",
+    "units": {
+      "length": "m",
+      "angle": "rad",
+      "mass": "kg",
+      "inertia": "kg*m^2",
+      "torque": "N*m"
+    }
+  },
+  "mount": {
+    "status": "required_before_combined_model",
+    "parent_frame": "base",
+    "child_frame": "z1_link00",
+    "xyz_m": null,
+    "rpy_rad": null,
+    "bracket_mass_kg": null,
+    "bracket_com_m": null,
+    "bracket_inertia_kg_m2": null,
+    "rule": "Supply an explicit simulation assembly configuration or measured CAD transform; never copy AlienGo/B1 mounting values as Go2 calibration."
+  },
+  "task_tcp": {
+    "status": "required_before_hand_tracking",
+    "parent_frame": "z1_gripperStator",
+    "xyz_m": null,
+    "rpy_rad": null,
+    "rule": "The gripper mounting frame is available; it is not an asserted grasp center or calibrated TCP."
+  },
+  "payload": {
+    "first_unloaded_case_mass_kg": 0.0,
+    "rule": "Gripper mass is already in the arm; payload is a separate rigid inertial body with explicit mass, COM, inertia and attachment transform."
+  },
+  "known_link_mass_sum_without_bracket_payload_kg": 21.307969829999998,
+  "actuation": {
+    "urdf_effort_is_hardware_rating": false,
+    "validated_continuous_effort_Nm": null,
+    "urdf_velocity_rad_s": 3.1415,
+    "passive_dynamics_status": "Official damping/friction retained in the asset; Pinocchio rigid-body audit does not validate these terms. Explicitly choose and match controller and PhysX passive dynamics before closed-loop comparisons.",
+    "control_mode_for_future_wbc": "Joint effort; avoid a second implicit position PD loop."
+  },
+  "packaging": {
+    "source_checkout_asset_only": true,
+    "pyproject_unchanged": true,
+    "wheel_support": "Pending explicit package-data addition in the isolated model implementation"
+  },
+  "pending": [
+    "Go2 mount and bracket configuration",
+    "Task TCP offset",
+    "Mesh download/visual and collision QA from pinned inventory",
+    "Combined-model FK/COM/gravity/Jacobian and all-joint mappings",
+    "Static support feasibility and WBC",
+    "URDF/USD consistency and PhysX acceptance"
+  ]
+}

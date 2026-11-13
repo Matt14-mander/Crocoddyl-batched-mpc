@@ -1,0 +1,13 @@
+{
+  "task": "stance",
+  "device": "cpu",
+  "batch_size": 2,
+  "steps": 120,
+  "all_actions_usable": true,
+  "max_fl_error_m": 2.0206364052201326e-16,
+  "final_fl_error_m": 6.798699777552591e-17,
+  "joint_order_permuted": true,
+  "root_quaternion_order": "wxyz",
+  "root_velocity_frame": "world",
+  "passed": true
+}

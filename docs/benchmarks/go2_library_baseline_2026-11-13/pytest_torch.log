@@ -1,0 +1,41 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0 -- /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python
+rootdir: /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc
+configfile: pyproject.toml
+collecting ... collected 20 items
+
+tests/test_go2_tensor_adapter.py::test_pack_and_scatter_handle_origins_frames_and_permuted_joints PASSED [  5%]
+tests/test_go2_tensor_adapter.py::test_adapter_compute_isolates_bad_environment_and_resets PASSED [ 10%]
+tests/test_go2_tensor_adapter.py::test_adapter_uses_only_torch_and_validates_simulator_contract PASSED [ 15%]
+tests/test_go2_tensor_adapter.py::test_adapter_cuda_nondefault_stream SKIPPED [ 20%]
+tests/test_go2_tracking.py::test_no_optional_native_dependency_is_imported PASSED [ 25%]
+tests/test_go2_tracking.py::test_compiled_physics_support_masks_remain_dynamic PASSED [ 30%]
+tests/test_go2_tracking.py::test_stance_and_front_leg_closed_loop PASSED [ 35%]
+tests/test_go2_tracking.py::test_invalid_slot_is_finite_and_sticky_until_masked_reset[state] PASSED [ 40%]
+tests/test_go2_tracking.py::test_invalid_slot_is_finite_and_sticky_until_masked_reset[reference] PASSED [ 45%]
+tests/test_go2_tracking.py::test_invalid_slot_is_finite_and_sticky_until_masked_reset[acceleration] PASSED [ 50%]
+tests/test_go2_tracking.py::test_invalid_slot_is_finite_and_sticky_until_masked_reset[anchors] PASSED [ 55%]
+tests/test_go2_tracking.py::test_per_environment_support_release_and_no_implicit_touchdown PASSED [ 60%]
+tests/test_go2_tracking.py::test_invalid_support_anchor_change_and_dtype_rejected PASSED [ 65%]
+tests/test_go2_tracking.py::test_cuda_acceptance_refuses_to_report_success_without_cuda PASSED [ 70%]
+tests/test_go2_tracking.py::test_tracking_cuda_parity_stream_and_no_scalar_sync SKIPPED [ 75%]
+tests/test_go2_tracking.py::test_tracking_cuda_closed_loop SKIPPED (CUDA
+unavailable)                                                             [ 80%]
+tests/test_go2_standing.py::test_standing_cost_includes_equilibrium_feedforward PASSED [ 85%]
+tests/test_go2_standing.py::test_go2_solver_warm_start_reset_and_invalid_environment_isolation[torch] PASSED [ 90%]
+tests/test_go2_standing.py::test_go2_solver_warm_start_reset_and_invalid_environment_isolation[fddp] PASSED [ 95%]
+tests/test_go2_standing.py::test_go2_standing_recovers_and_holds_against_independent_plant SKIPPED [100%]
+
+- generated xml file: /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/docs/benchmarks/go2_library_baseline_2026-11-13/pytest_torch.xml -
+============================= slowest 5 durations ==============================
+11.54s call     tests/test_go2_tracking.py::test_stance_and_front_leg_closed_loop
+6.05s call     tests/test_go2_tracking.py::test_compiled_physics_support_masks_remain_dynamic
+2.43s call     tests/test_go2_tracking.py::test_no_optional_native_dependency_is_imported
+2.36s call     tests/test_go2_tracking.py::test_cuda_acceptance_refuses_to_report_success_without_cuda
+1.41s call     tests/test_go2_standing.py::test_go2_solver_warm_start_reset_and_invalid_environment_isolation[torch]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_go2_tensor_adapter.py:117: CUDA unavailable
+SKIPPED [1] tests/test_go2_tracking.py:157: CUDA unavailable
+SKIPPED [1] tests/test_go2_tracking.py:208: CUDA unavailable
+SKIPPED [1] tests/test_go2_standing.py:43: could not import 'pinocchio': No module named 'pinocchio'
+======================== 16 passed, 4 skipped in 27.36s ========================

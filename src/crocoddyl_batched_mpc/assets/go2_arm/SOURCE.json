@@ -1,0 +1,180 @@
+{
+  "repository": "https://github.com/unitreerobotics/unitree_ros",
+  "commit": "5994d4faef0a9cadd3287f8de0199a67eeb2a259",
+  "retrieved_on": "2026-11-13",
+  "license": "BSD-3-Clause (repository LICENSE; package.xml license is TODO)",
+  "selection": "Official Z1 URDF snapshot; AIR/PRO hardware variant not identified by this source",
+  "files": [
+    {
+      "path": "upstream/robots/z1_description/xacro/z1.urdf",
+      "upstream_path": "robots/z1_description/xacro/z1.urdf",
+      "git_blob_sha1": "031fd639f7a8b3845622cfcca7be3fd7e4410302",
+      "sha256": "8c065e6c8ba910c4fa01d3f5261541f54b864af97bdd98388d8a9f5ddd8e6833",
+      "size_bytes": 10240,
+      "url": "https://github.com/unitreerobotics/unitree_ros/blob/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/xacro/z1.urdf"
+    },
+    {
+      "path": "upstream/robots/z1_description/xacro/robot.xacro",
+      "upstream_path": "robots/z1_description/xacro/robot.xacro",
+      "git_blob_sha1": "7f57a05aa96b375b04c22f91f24468727cceb994",
+      "sha256": "206706026f6eaf15db82d4bac54dc4a2d6698b6248ff36f44319abe1de1876fa",
+      "size_bytes": 12128,
+      "url": "https://github.com/unitreerobotics/unitree_ros/blob/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/xacro/robot.xacro"
+    },
+    {
+      "path": "upstream/robots/z1_description/xacro/const.xacro",
+      "upstream_path": "robots/z1_description/xacro/const.xacro",
+      "git_blob_sha1": "bc61ad464c3a121c543e561ee7f411388c29524d",
+      "sha256": "88cf78300067568752b4afb13be62bcce9ed1ad186029412d3a3088acb5252ed",
+      "size_bytes": 7457,
+      "url": "https://github.com/unitreerobotics/unitree_ros/blob/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/xacro/const.xacro"
+    },
+    {
+      "path": "upstream/robots/z1_description/xacro/gazebo.xacro",
+      "upstream_path": "robots/z1_description/xacro/gazebo.xacro",
+      "git_blob_sha1": "acf0b7ef6a675dd73fde5edfe3bceefbe08bd789",
+      "sha256": "b710d5deef0c2c30013acbd46e417a66e387d082995ae5169e884547666f5cbb",
+      "size_bytes": 564,
+      "url": "https://github.com/unitreerobotics/unitree_ros/blob/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/xacro/gazebo.xacro"
+    },
+    {
+      "path": "upstream/robots/z1_description/xacro/transmission.xacro",
+      "upstream_path": "robots/z1_description/xacro/transmission.xacro",
+      "git_blob_sha1": "a86f80c74f3bbe9bed40693039b61a617e5c0b47",
+      "sha256": "17996ec6c0afc8ea12b0a3eb7b9a9e197c21ea22004ae15c6fed9a80d05a0855",
+      "size_bytes": 685,
+      "url": "https://github.com/unitreerobotics/unitree_ros/blob/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/xacro/transmission.xacro"
+    },
+    {
+      "path": "upstream/robots/z1_description/package.xml",
+      "upstream_path": "robots/z1_description/package.xml",
+      "git_blob_sha1": "9ce0f2f2e3b082d2c88bac45f34314fde45995cb",
+      "sha256": "f64cf9781e3ae216ccdfffe2e1fda41e0c3f5010459392cd25aff905370a7183",
+      "size_bytes": 548,
+      "url": "https://github.com/unitreerobotics/unitree_ros/blob/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/package.xml"
+    },
+    {
+      "path": "upstream/LICENSE",
+      "upstream_path": "LICENSE",
+      "git_blob_sha1": "6dfdadaa90baa4f7bea7400d3c4e8b9c784ae37f",
+      "sha256": "84aac59fd3246e3ddc49d1387644e8fcf43b0def4f0b9fe687f372e90446df2d",
+      "size_bytes": 1558,
+      "url": "https://github.com/unitreerobotics/unitree_ros/blob/5994d4faef0a9cadd3287f8de0199a67eeb2a259/LICENSE"
+    }
+  ],
+  "meshes": {
+    "downloaded": false,
+    "purpose": "Pinned source inventory for later visual/collision asset import; not required by Pinocchio buildModelFromUrdf",
+    "files": [
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_GripperMover.STL",
+        "git_blob_sha1": "7e9d78c8c533c550287c04ddd98c9e0e3c140350",
+        "size_bytes": 1152684,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_GripperMover.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_GripperStator.STL",
+        "git_blob_sha1": "762062f79d6b9ba4e5e8bdb8f5362c658ed4e726",
+        "size_bytes": 2170284,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_GripperStator.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_Link00.STL",
+        "git_blob_sha1": "25827622e485f25250b58101729393ca2a5e5054",
+        "size_bytes": 818684,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_Link00.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_Link01.STL",
+        "git_blob_sha1": "951349f6d45d414b3bfec86f189e0d59a5e4c697",
+        "size_bytes": 2813284,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_Link01.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_Link02.STL",
+        "git_blob_sha1": "f14f26e17e51b36fa9fc11f3c4e5393a7393b2aa",
+        "size_bytes": 1306284,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_Link02.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_Link03.STL",
+        "git_blob_sha1": "ec6b6129ed37232f7aba01adca140ad8e7659f13",
+        "size_bytes": 1679084,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_Link03.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_Link04.STL",
+        "git_blob_sha1": "36241d2654d88ce9d5ecc23c22982b18852eaeb7",
+        "size_bytes": 1263884,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_Link04.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_Link05.STL",
+        "git_blob_sha1": "7402293d4863e29688d36b490d90649a05b699b8",
+        "size_bytes": 901584,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_Link05.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/collision/z1_Link06.STL",
+        "git_blob_sha1": "efa007bbdbbe1dc6dcc405be82a4a967aa636d1f",
+        "size_bytes": 114584,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/collision/z1_Link06.STL"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_GripperMover.dae",
+        "git_blob_sha1": "b0a5082210b10e728d5627911cdc3b712376956e",
+        "size_bytes": 1946416,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_GripperMover.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_GripperStator.dae",
+        "git_blob_sha1": "9e81d24f2449cbfa2721f2f6471c90abe087cfaf",
+        "size_bytes": 3636421,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_GripperStator.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_Link00.dae",
+        "git_blob_sha1": "41d0ea6ad0aebcc46dc3d098c40f66ff2624b8e3",
+        "size_bytes": 1356348,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_Link00.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_Link01.dae",
+        "git_blob_sha1": "2c5fb339fbd0f2a699ebe69fd405e938e5afb295",
+        "size_bytes": 4719004,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_Link01.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_Link02.dae",
+        "git_blob_sha1": "e579fec6b6aa915ea6d3eee623e39ac7121b11d4",
+        "size_bytes": 2220491,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_Link02.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_Link03.dae",
+        "git_blob_sha1": "dc70c99e82bd72a391582333b71b7c6e30ad7f47",
+        "size_bytes": 2858050,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_Link03.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_Link04.dae",
+        "git_blob_sha1": "3b14f695f57aaa21520deb2d0e7e165973f32e9b",
+        "size_bytes": 2142272,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_Link04.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_Link05.dae",
+        "git_blob_sha1": "1f110f8dde5a47a5edc9ed17beff1fecccb67ab0",
+        "size_bytes": 1526000,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_Link05.dae"
+      },
+      {
+        "upstream_path": "robots/z1_description/meshes/visual/z1_Link06.dae",
+        "git_blob_sha1": "34b80d17dfc16a5a06538df2716984f124e2b4c4",
+        "size_bytes": 236046,
+        "url": "https://raw.githubusercontent.com/unitreerobotics/unitree_ros/5994d4faef0a9cadd3287f8de0199a67eeb2a259/robots/z1_description/meshes/visual/z1_Link06.dae"
+      }
+    ]
+  },
+  "upstream_modifications": "None; byte identity checked against Git blob SHA-1. Derived files are separate."
+}
