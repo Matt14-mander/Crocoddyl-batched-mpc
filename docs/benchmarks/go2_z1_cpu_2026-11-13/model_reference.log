@@ -1,0 +1,552 @@
+{
+  "scope": "CPU rigid-body model inspection, not a standing/control/PhysX acceptance",
+  "python": "3.11.4",
+  "numpy": "1.26.4",
+  "pinocchio": "4.0.0",
+  "platform": "macOS-10.16-x86_64-i386-64bit",
+  "config": {
+    "schema_version": 1,
+    "name": "go2_z1_standing_sim_v1",
+    "authority": "Project simulation assumptions; not hardware calibration or collision certification",
+    "mount": {
+      "parent_frame": "base",
+      "child_frame": "z1_link00",
+      "xyz_m": [
+        0.05,
+        0.0,
+        0.1
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "bracket": {
+      "frame": "go2_z1_bracket",
+      "mass_kg": 0.3,
+      "box_size_m": [
+        0.16,
+        0.09,
+        0.04
+      ],
+      "com_xyz_in_base_m": [
+        0.05,
+        0.0,
+        0.08
+      ],
+      "inertia_model": "uniform_box_at_com_aligned_with_base",
+      "interpretation": "Equivalent rigid mount, including fasteners; not a specified material or fabricated part"
+    },
+    "tcp": {
+      "parent_frame": "z1_gripperStator",
+      "frame": "z1_tcp",
+      "xyz_m": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "interpretation": "Massless virtual task point; +x forward from the gripper mounting frame, not a measured grasp center"
+    },
+    "nominal_arm_configuration_rad": [
+      0.0,
+      1.2,
+      -1.8,
+      0.6,
+      0.0,
+      0.0
+    ],
+    "payload_mass_kg": 0.0,
+    "gravity_world_m_s2": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "passive_joint_dynamics": {
+      "damping": 0.0,
+      "friction": 0.0,
+      "interpretation": "Ideal rigid-body baseline; overwrite these tags only in the derived combined URDF and match this in the future simulator"
+    },
+    "limitations": [
+      "Fixed gripper at 0 rad, six actuated arm joints",
+      "No contact constraints or WBC are applied by this model",
+      "No payload other than the already modeled gripper",
+      "Mesh, self-collision, support feasibility and PhysX acceptance remain pending"
+    ]
+  },
+  "urdf_sha256": "1b989a15c5c5acc588fc63ac4f81e3cef07dad4c66e4eba861c779a0c6e18f3f",
+  "dimensions": {
+    "nq": 25,
+    "nv": 24,
+    "nx": 49,
+    "ndx": 48,
+    "nu": 18
+  },
+  "total_mass_kg": 21.607969830000005,
+  "joint_mapping": [
+    {
+      "name": "FL_hip_joint",
+      "canonical_q_index": 7,
+      "canonical_v_index": 6,
+      "torque_index": 0,
+      "native_joint_id": 2,
+      "native_q_index": 7,
+      "native_v_index": 6,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FL_thigh_joint",
+      "canonical_q_index": 8,
+      "canonical_v_index": 7,
+      "torque_index": 1,
+      "native_joint_id": 3,
+      "native_q_index": 8,
+      "native_v_index": 7,
+      "lower_rad": -1.5708,
+      "upper_rad": 3.4907,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FL_calf_joint",
+      "canonical_q_index": 9,
+      "canonical_v_index": 8,
+      "torque_index": 2,
+      "native_joint_id": 4,
+      "native_q_index": 9,
+      "native_v_index": 8,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "FR_hip_joint",
+      "canonical_q_index": 10,
+      "canonical_v_index": 9,
+      "torque_index": 3,
+      "native_joint_id": 5,
+      "native_q_index": 10,
+      "native_v_index": 9,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FR_thigh_joint",
+      "canonical_q_index": 11,
+      "canonical_v_index": 10,
+      "torque_index": 4,
+      "native_joint_id": 6,
+      "native_q_index": 11,
+      "native_v_index": 10,
+      "lower_rad": -1.5708,
+      "upper_rad": 3.4907,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FR_calf_joint",
+      "canonical_q_index": 12,
+      "canonical_v_index": 11,
+      "torque_index": 5,
+      "native_joint_id": 7,
+      "native_q_index": 12,
+      "native_v_index": 11,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "RL_hip_joint",
+      "canonical_q_index": 13,
+      "canonical_v_index": 12,
+      "torque_index": 6,
+      "native_joint_id": 8,
+      "native_q_index": 13,
+      "native_v_index": 12,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RL_thigh_joint",
+      "canonical_q_index": 14,
+      "canonical_v_index": 13,
+      "torque_index": 7,
+      "native_joint_id": 9,
+      "native_q_index": 14,
+      "native_v_index": 13,
+      "lower_rad": -0.5236,
+      "upper_rad": 4.5379,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RL_calf_joint",
+      "canonical_q_index": 15,
+      "canonical_v_index": 14,
+      "torque_index": 8,
+      "native_joint_id": 10,
+      "native_q_index": 15,
+      "native_v_index": 14,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "RR_hip_joint",
+      "canonical_q_index": 16,
+      "canonical_v_index": 15,
+      "torque_index": 9,
+      "native_joint_id": 11,
+      "native_q_index": 16,
+      "native_v_index": 15,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RR_thigh_joint",
+      "canonical_q_index": 17,
+      "canonical_v_index": 16,
+      "torque_index": 10,
+      "native_joint_id": 12,
+      "native_q_index": 17,
+      "native_v_index": 16,
+      "lower_rad": -0.5236,
+      "upper_rad": 4.5379,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RR_calf_joint",
+      "canonical_q_index": 18,
+      "canonical_v_index": 17,
+      "torque_index": 11,
+      "native_joint_id": 13,
+      "native_q_index": 18,
+      "native_v_index": 17,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "z1_joint1",
+      "canonical_q_index": 19,
+      "canonical_v_index": 18,
+      "torque_index": 12,
+      "native_joint_id": 14,
+      "native_q_index": 19,
+      "native_v_index": 18,
+      "lower_rad": -2.6179938779914944,
+      "upper_rad": 2.6179938779914944,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint2",
+      "canonical_q_index": 20,
+      "canonical_v_index": 19,
+      "torque_index": 13,
+      "native_joint_id": 15,
+      "native_q_index": 20,
+      "native_v_index": 19,
+      "lower_rad": 0.0,
+      "upper_rad": 2.9670597283903604,
+      "effort_Nm": 60.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint3",
+      "canonical_q_index": 21,
+      "canonical_v_index": 20,
+      "torque_index": 14,
+      "native_joint_id": 16,
+      "native_q_index": 21,
+      "native_v_index": 20,
+      "lower_rad": -2.8797932657906435,
+      "upper_rad": 0.0,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint4",
+      "canonical_q_index": 22,
+      "canonical_v_index": 21,
+      "torque_index": 15,
+      "native_joint_id": 17,
+      "native_q_index": 22,
+      "native_v_index": 21,
+      "lower_rad": -1.5184364492350666,
+      "upper_rad": 1.5184364492350666,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint5",
+      "canonical_q_index": 23,
+      "canonical_v_index": 22,
+      "torque_index": 16,
+      "native_joint_id": 18,
+      "native_q_index": 23,
+      "native_v_index": 22,
+      "lower_rad": -1.3439035240356338,
+      "upper_rad": 1.3439035240356338,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint6",
+      "canonical_q_index": 24,
+      "canonical_v_index": 23,
+      "torque_index": 17,
+      "native_joint_id": 19,
+      "native_q_index": 24,
+      "native_v_index": 23,
+      "lower_rad": -2.792526803190927,
+      "upper_rad": 2.792526803190927,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    }
+  ],
+  "cases": [
+    {
+      "name": "nominal",
+      "q": [
+        0.0,
+        0.0,
+        0.2967970581818924,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.8,
+        -1.6,
+        0.0,
+        0.8,
+        -1.6,
+        0.0,
+        0.8,
+        -1.6,
+        0.0,
+        0.8,
+        -1.6,
+        0.0,
+        1.2,
+        -1.8,
+        0.6,
+        0.0,
+        0.0
+      ],
+      "tcp_pose_world": [
+        [
+          1.0,
+          0.0,
+          -5.551115123125783e-17,
+          0.3411133289999571
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          5.551115123125783e-17,
+          0.0,
+          1.0,
+          0.9966469275203909
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "foot_positions_world_m": [
+        [
+          0.1934,
+          0.14200000000000002,
+          -2.7755575615628914e-17
+        ],
+        [
+          0.1934,
+          -0.14200000000000002,
+          -2.7755575615628914e-17
+        ],
+        [
+          -0.1934,
+          0.14200000000000002,
+          -2.7755575615628914e-17
+        ],
+        [
+          -0.1934,
+          -0.14200000000000002,
+          -2.7755575615628914e-17
+        ]
+      ],
+      "com_world_m": [
+        0.022763461143137275,
+        5.613523766956765e-05,
+        0.3988673402037503
+      ],
+      "generalized_gravity": [
+        -3.552713678800501e-15,
+        0.0,
+        211.97418403230003,
+        0.011899221200466048,
+        -4.825266101567496,
+        -3.469446951953614e-18,
+        1.0754268417000001,
+        0.3949821019447196,
+        -0.19035534905628249,
+        -1.0754268417000001,
+        0.3949821019447196,
+        -0.19035534905628249,
+        1.0754268417000001,
+        0.3949821019447196,
+        -0.19035534905628249,
+        -1.0754268417000001,
+        0.3949821019447196,
+        -0.19035534905628249,
+        -3.469446951953614e-18,
+        -2.2735992957849116,
+        -6.310678449615624,
+        -2.788246865458124,
+        0.0,
+        0.010577088716873167
+      ],
+      "potential_energy_J": 84.54957897682378,
+      "mass_matrix_min_eigenvalue": 0.0007588371496762257
+    },
+    {
+      "name": "tilted",
+      "q": [
+        0.2,
+        -0.15,
+        0.39679705818189237,
+        0.11712474205515305,
+        -0.07808316137010204,
+        0.16592671791146685,
+        0.9760395171262755,
+        0.0,
+        0.8,
+        -1.6,
+        0.0,
+        0.8,
+        -1.6,
+        0.0,
+        0.8,
+        -1.6,
+        0.0,
+        0.8,
+        -1.6,
+        0.3,
+        1.0,
+        -1.6,
+        0.4,
+        0.2,
+        -0.3
+      ],
+      "tcp_pose_world": [
+        [
+          0.6169595201876042,
+          -0.6275592742396875,
+          -0.4749003135034111,
+          0.3142168956294402
+        ],
+        [
+          0.6475082397002024,
+          0.7477597262011606,
+          -0.1469301582110024,
+          -0.16336797780744955
+        ],
+        [
+          0.44731871184897515,
+          -0.2168519061187192,
+          0.867687282863159,
+          1.157551958490483
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "foot_positions_world_m": [
+        [
+          0.3655041910405654,
+          0.11493959602381791,
+          0.17754508680610337
+        ],
+        [
+          0.46268700517793804,
+          -0.14563047161455497,
+          0.11997130382048839
+        ],
+        [
+          0.004719319172412695,
+          -0.003270787895397101,
+          0.10355305098634528
+        ],
+        [
+          0.10190213330978526,
+          -0.26384085553376996,
+          0.045979268000730336
+        ]
+      ],
+      "com_world_m": [
+        0.19971360152618972,
+        -0.1700705449800423,
+        0.4954393887462853
+      ],
+      "generalized_gravity": [
+        40.54912465817458,
+        42.972379119818456,
+        203.5735685652678,
+        -3.949742002388725,
+        1.5115393255261895,
+        0.4676645428109148,
+        1.1713902842755313,
+        0.2486942331025525,
+        -0.21596924507400375,
+        -0.894224270583514,
+        0.2486942331025525,
+        -0.21596924507400375,
+        1.1713902842755313,
+        0.2486942331025525,
+        -0.21596924507400375,
+        -0.894224270583514,
+        0.2486942331025525,
+        -0.21596924507400375,
+        -0.04973846728394687,
+        3.2412384551607856,
+        -4.836573854277867,
+        -2.4587773752816275,
+        0.07171383740589504,
+        0.0077415550098724655
+      ],
+      "potential_energy_J": 105.02036016695529,
+      "mass_matrix_min_eigenvalue": 0.0007587802111997709
+    }
+  ],
+  "gravity_interpretation": "First six components are unactuated base wrench. Joint components alone do not define a support-consistent standing torque; contact forces/WBC are pending."
+}

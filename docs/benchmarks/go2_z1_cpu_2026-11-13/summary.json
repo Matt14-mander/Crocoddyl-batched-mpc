@@ -1,0 +1,538 @@
+{
+  "date": "2026-11-13",
+  "recorded_at": "2026-11-13T14:18:38.535921+08:00",
+  "repository_base_commit": "099a5ef65665aa2c27ce5f8cd14fe7b66b471b29",
+  "code_state": "Uncommitted new isolated CPU model and associated tests/assets/documentation; hashes below identify validated files",
+  "status": "cpu_model_passed; support_control_PhysX_pending",
+  "scope": "Independent Go2+Z1 CPU kinematics/dynamics and joint mappings; no closed-loop control or training",
+  "environment": {
+    "python": "3.11.4",
+    "numpy": "1.26.4",
+    "pinocchio": "4.0.0",
+    "platform": "macOS-10.16-x86_64-i386-64bit"
+  },
+  "process_environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONNOUSERSITE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "native_pythonpath": ".dev-tools/crocoddyl321-pin400/cmeel.prefix/lib/python3.11/site-packages:src",
+  "legacy_pythonpath": "src",
+  "commands": [
+    ".venv/bin/python -B -X faulthandler -m pytest -p no:cacheprovider -vv -ra -s tests/test_go2_arm.py --junitxml=docs/benchmarks/go2_z1_cpu_2026-11-13/model_tests.xml",
+    ".venv/bin/python -B -m pytest -p no:cacheprovider -vv -ra tests/test_go2_tensor_adapter.py --junitxml=docs/benchmarks/go2_z1_cpu_2026-11-13/legacy_adapter.xml",
+    ".venv/bin/python -B examples/go2_arm_reference.py --output docs/benchmarks/go2_z1_cpu_2026-11-13/model_reference.json --urdf-output src/crocoddyl_batched_mpc/assets/go2_arm/go2_z1_fixed_gripper.urdf"
+  ],
+  "suites": [
+    {
+      "name": "model_tests",
+      "seconds": 5.108,
+      "counts": {
+        "passed": 10,
+        "skipped": 0,
+        "failure": 0,
+        "error": 0
+      },
+      "cases": [
+        {
+          "name": "tests.test_go2_arm::test_fk_com_and_mass_match_separate_xml_oracle[nominal]",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.953
+        },
+        {
+          "name": "tests.test_go2_arm::test_fk_com_and_mass_match_separate_xml_oracle[tilted]",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.028
+        },
+        {
+          "name": "tests.test_go2_arm::test_fk_com_and_mass_match_separate_xml_oracle[rotated_mount]",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.033
+        },
+        {
+          "name": "tests.test_go2_arm::test_full_tangent_jacobians_and_gravity_against_independent_differences[nominal]",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.604
+        },
+        {
+          "name": "tests.test_go2_arm::test_full_tangent_jacobians_and_gravity_against_independent_differences[tilted]",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.529
+        },
+        {
+          "name": "tests.test_go2_arm::test_full_tangent_jacobians_and_gravity_against_independent_differences[rotated_mount]",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.562
+        },
+        {
+          "name": "tests.test_go2_arm::test_all_eighteen_joint_state_torque_mapping_and_virtual_work",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.015
+        },
+        {
+          "name": "tests.test_go2_arm::test_invalid_state_names_and_configuration_rejected",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.014
+        },
+        {
+          "name": "tests.test_go2_arm::test_import_does_not_require_native_dependencies_or_change_legacy_api",
+          "status": "passed",
+          "reason": null,
+          "seconds": 2.221
+        },
+        {
+          "name": "tests.test_go2_arm::test_zero_passive_dynamics_and_bracket_inertia_in_combined_asset",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.024
+        }
+      ]
+    },
+    {
+      "name": "legacy_adapter",
+      "seconds": 1.228,
+      "counts": {
+        "passed": 3,
+        "skipped": 1,
+        "failure": 0,
+        "error": 0
+      },
+      "cases": [
+        {
+          "name": "tests.test_go2_tensor_adapter::test_pack_and_scatter_handle_origins_frames_and_permuted_joints",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.499
+        },
+        {
+          "name": "tests.test_go2_tensor_adapter::test_adapter_compute_isolates_bad_environment_and_resets",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.455
+        },
+        {
+          "name": "tests.test_go2_tensor_adapter::test_adapter_uses_only_torch_and_validates_simulator_contract",
+          "status": "passed",
+          "reason": null,
+          "seconds": 0.146
+        },
+        {
+          "name": "tests.test_go2_tensor_adapter::test_adapter_cuda_nondefault_stream",
+          "status": "skipped",
+          "reason": "CUDA unavailable",
+          "seconds": 0.001
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "passed": 13,
+    "skipped": 1,
+    "failure": 0,
+    "error": 0
+  },
+  "comparison_metrics": [
+    {
+      "case": "nominal",
+      "fk_max_abs_error": 1.1102230246251565e-16,
+      "com_max_abs_error": 1.0408340855860843e-17,
+      "mass_kg": 21.60796983
+    },
+    {
+      "case": "tilted",
+      "fk_max_abs_error": 2.220446049250313e-16,
+      "com_max_abs_error": 5.551115123125783e-17,
+      "mass_kg": 21.60796983
+    },
+    {
+      "case": "rotated_mount",
+      "fk_max_abs_error": 5.551115123125783e-16,
+      "com_max_abs_error": 5.551115123125783e-17,
+      "mass_kg": 21.777969829999996
+    },
+    {
+      "case": "nominal",
+      "tcp_jacobian_max_abs_error": 7.719247463455758e-11,
+      "foot_jacobian_max_abs_error": 3.62797569763984e-11,
+      "com_jacobian_max_abs_error": 5.374675931499621e-11,
+      "gravity_max_abs_error": 1.4920514896515913e-08
+    },
+    {
+      "case": "tilted",
+      "tcp_jacobian_max_abs_error": 1.9415236085507104e-10,
+      "foot_jacobian_max_abs_error": 5.06094055552353e-11,
+      "com_jacobian_max_abs_error": 8.313005839255538e-11,
+      "gravity_max_abs_error": 1.8424771042191423e-08
+    },
+    {
+      "case": "rotated_mount",
+      "tcp_jacobian_max_abs_error": 2.1620030765667764e-10,
+      "foot_jacobian_max_abs_error": 5.06094055552353e-11,
+      "com_jacobian_max_abs_error": 1.108856340081843e-10,
+      "gravity_max_abs_error": 3.2276069816816744e-08
+    }
+  ],
+  "finite_difference_step": 1e-06,
+  "thresholds": {
+    "fk_absolute": 2e-12,
+    "com_absolute_m": 2e-12,
+    "jacobian_absolute": 2e-08,
+    "generalized_gravity_absolute": 2e-06
+  },
+  "config": {
+    "schema_version": 1,
+    "name": "go2_z1_standing_sim_v1",
+    "authority": "Project simulation assumptions; not hardware calibration or collision certification",
+    "mount": {
+      "parent_frame": "base",
+      "child_frame": "z1_link00",
+      "xyz_m": [
+        0.05,
+        0.0,
+        0.1
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "bracket": {
+      "frame": "go2_z1_bracket",
+      "mass_kg": 0.3,
+      "box_size_m": [
+        0.16,
+        0.09,
+        0.04
+      ],
+      "com_xyz_in_base_m": [
+        0.05,
+        0.0,
+        0.08
+      ],
+      "inertia_model": "uniform_box_at_com_aligned_with_base",
+      "interpretation": "Equivalent rigid mount, including fasteners; not a specified material or fabricated part"
+    },
+    "tcp": {
+      "parent_frame": "z1_gripperStator",
+      "frame": "z1_tcp",
+      "xyz_m": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "interpretation": "Massless virtual task point; +x forward from the gripper mounting frame, not a measured grasp center"
+    },
+    "nominal_arm_configuration_rad": [
+      0.0,
+      1.2,
+      -1.8,
+      0.6,
+      0.0,
+      0.0
+    ],
+    "payload_mass_kg": 0.0,
+    "gravity_world_m_s2": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "passive_joint_dynamics": {
+      "damping": 0.0,
+      "friction": 0.0,
+      "interpretation": "Ideal rigid-body baseline; overwrite these tags only in the derived combined URDF and match this in the future simulator"
+    },
+    "limitations": [
+      "Fixed gripper at 0 rad, six actuated arm joints",
+      "No contact constraints or WBC are applied by this model",
+      "No payload other than the already modeled gripper",
+      "Mesh, self-collision, support feasibility and PhysX acceptance remain pending"
+    ]
+  },
+  "dimensions": {
+    "nq": 25,
+    "nv": 24,
+    "nx": 49,
+    "ndx": 48,
+    "nu": 18
+  },
+  "total_mass_kg": 21.607969830000005,
+  "joint_mapping": [
+    {
+      "name": "FL_hip_joint",
+      "canonical_q_index": 7,
+      "canonical_v_index": 6,
+      "torque_index": 0,
+      "native_joint_id": 2,
+      "native_q_index": 7,
+      "native_v_index": 6,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FL_thigh_joint",
+      "canonical_q_index": 8,
+      "canonical_v_index": 7,
+      "torque_index": 1,
+      "native_joint_id": 3,
+      "native_q_index": 8,
+      "native_v_index": 7,
+      "lower_rad": -1.5708,
+      "upper_rad": 3.4907,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FL_calf_joint",
+      "canonical_q_index": 9,
+      "canonical_v_index": 8,
+      "torque_index": 2,
+      "native_joint_id": 4,
+      "native_q_index": 9,
+      "native_v_index": 8,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "FR_hip_joint",
+      "canonical_q_index": 10,
+      "canonical_v_index": 9,
+      "torque_index": 3,
+      "native_joint_id": 5,
+      "native_q_index": 10,
+      "native_v_index": 9,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FR_thigh_joint",
+      "canonical_q_index": 11,
+      "canonical_v_index": 10,
+      "torque_index": 4,
+      "native_joint_id": 6,
+      "native_q_index": 11,
+      "native_v_index": 10,
+      "lower_rad": -1.5708,
+      "upper_rad": 3.4907,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "FR_calf_joint",
+      "canonical_q_index": 12,
+      "canonical_v_index": 11,
+      "torque_index": 5,
+      "native_joint_id": 7,
+      "native_q_index": 12,
+      "native_v_index": 11,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "RL_hip_joint",
+      "canonical_q_index": 13,
+      "canonical_v_index": 12,
+      "torque_index": 6,
+      "native_joint_id": 8,
+      "native_q_index": 13,
+      "native_v_index": 12,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RL_thigh_joint",
+      "canonical_q_index": 14,
+      "canonical_v_index": 13,
+      "torque_index": 7,
+      "native_joint_id": 9,
+      "native_q_index": 14,
+      "native_v_index": 13,
+      "lower_rad": -0.5236,
+      "upper_rad": 4.5379,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RL_calf_joint",
+      "canonical_q_index": 15,
+      "canonical_v_index": 14,
+      "torque_index": 8,
+      "native_joint_id": 10,
+      "native_q_index": 15,
+      "native_v_index": 14,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "RR_hip_joint",
+      "canonical_q_index": 16,
+      "canonical_v_index": 15,
+      "torque_index": 9,
+      "native_joint_id": 11,
+      "native_q_index": 16,
+      "native_v_index": 15,
+      "lower_rad": -1.0472,
+      "upper_rad": 1.0472,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RR_thigh_joint",
+      "canonical_q_index": 17,
+      "canonical_v_index": 16,
+      "torque_index": 10,
+      "native_joint_id": 12,
+      "native_q_index": 17,
+      "native_v_index": 16,
+      "lower_rad": -0.5236,
+      "upper_rad": 4.5379,
+      "effort_Nm": 23.7,
+      "velocity_rad_s": 30.1
+    },
+    {
+      "name": "RR_calf_joint",
+      "canonical_q_index": 18,
+      "canonical_v_index": 17,
+      "torque_index": 11,
+      "native_joint_id": 13,
+      "native_q_index": 18,
+      "native_v_index": 17,
+      "lower_rad": -2.7227,
+      "upper_rad": -0.83776,
+      "effort_Nm": 45.43,
+      "velocity_rad_s": 15.7
+    },
+    {
+      "name": "z1_joint1",
+      "canonical_q_index": 19,
+      "canonical_v_index": 18,
+      "torque_index": 12,
+      "native_joint_id": 14,
+      "native_q_index": 19,
+      "native_v_index": 18,
+      "lower_rad": -2.6179938779914944,
+      "upper_rad": 2.6179938779914944,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint2",
+      "canonical_q_index": 20,
+      "canonical_v_index": 19,
+      "torque_index": 13,
+      "native_joint_id": 15,
+      "native_q_index": 20,
+      "native_v_index": 19,
+      "lower_rad": 0.0,
+      "upper_rad": 2.9670597283903604,
+      "effort_Nm": 60.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint3",
+      "canonical_q_index": 21,
+      "canonical_v_index": 20,
+      "torque_index": 14,
+      "native_joint_id": 16,
+      "native_q_index": 21,
+      "native_v_index": 20,
+      "lower_rad": -2.8797932657906435,
+      "upper_rad": 0.0,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint4",
+      "canonical_q_index": 22,
+      "canonical_v_index": 21,
+      "torque_index": 15,
+      "native_joint_id": 17,
+      "native_q_index": 22,
+      "native_v_index": 21,
+      "lower_rad": -1.5184364492350666,
+      "upper_rad": 1.5184364492350666,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint5",
+      "canonical_q_index": 23,
+      "canonical_v_index": 22,
+      "torque_index": 16,
+      "native_joint_id": 18,
+      "native_q_index": 23,
+      "native_v_index": 22,
+      "lower_rad": -1.3439035240356338,
+      "upper_rad": 1.3439035240356338,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    },
+    {
+      "name": "z1_joint6",
+      "canonical_q_index": 24,
+      "canonical_v_index": 23,
+      "torque_index": 17,
+      "native_joint_id": 19,
+      "native_q_index": 24,
+      "native_v_index": 23,
+      "lower_rad": -2.792526803190927,
+      "upper_rad": 2.792526803190927,
+      "effort_Nm": 30.0,
+      "velocity_rad_s": 3.1415
+    }
+  ],
+  "sha256": {
+    "src/crocoddyl_batched_mpc/models/go2_arm.py": "1e4e8e197be9e42e890b815584625c90d1025c9fc93fc759ce0f3ff75105f9e1",
+    "tests/test_go2_arm.py": "27b58b51cad262aa739b9781497c00e6a022b462dece47908238a9a0aa259616",
+    "examples/go2_arm_reference.py": "969bbeeed27219778deced53977ecf2cfabfe1d36306802178829351c3fedb0a",
+    "src/crocoddyl_batched_mpc/assets/go2_arm/SIMULATION_CONFIG.json": "407acf9d73b70ca034d4fd65bca9e35ece878e9d79b757c78ed6571e40201245",
+    "src/crocoddyl_batched_mpc/assets/go2_arm/MODEL_SPEC.json": "2e508db1f0d01a6169c828ef0e56646e09131e673b72369a504f19ef011eb1d3",
+    "src/crocoddyl_batched_mpc/assets/go2_arm/go2_z1_fixed_gripper.urdf": "1b989a15c5c5acc588fc63ac4f81e3cef07dad4c66e4eba861c779a0c6e18f3f"
+  },
+  "preservation": {
+    "previous_tracked_source_tests_examples_config_files_checked": 92,
+    "existing_files_changed": [
+      "src/crocoddyl_batched_mpc/assets/go2_arm/MODEL_SPEC.json"
+    ],
+    "legacy_go2_source_assets_imports_tests_examples_pyproject_unchanged": true,
+    "dependency_metadata_and_pth_match_previous_library_baseline": true,
+    "dependency_install_upgrade_performed": false,
+    "training_server_accessed": false
+  },
+  "not_validated": [
+    "Fixed-support force/torque/friction feasibility or WBC",
+    "Nonzero payload",
+    "Mesh/self-collision and hardware mounting/TCP",
+    "Isaac Lab Tensor adapter/reset, USD and PhysX",
+    "CUDA or real-time deadlines",
+    "Distribution packaging of new non-Python assets"
+  ]
+}

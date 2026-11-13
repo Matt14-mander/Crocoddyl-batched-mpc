@@ -1,0 +1,25 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.11.4, pytest-9.1.1, pluggy-1.6.0 -- /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/.venv/bin/python
+rootdir: /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc
+configfile: pyproject.toml
+collecting ... collected 10 items
+
+tests/test_go2_arm.py::test_fk_com_and_mass_match_separate_xml_oracle[nominal] {"case": "nominal", "fk_max_abs_error": 1.1102230246251565e-16, "com_max_abs_error": 1.0408340855860843e-17, "mass_kg": 21.60796983}
+PASSED
+tests/test_go2_arm.py::test_fk_com_and_mass_match_separate_xml_oracle[tilted] {"case": "tilted", "fk_max_abs_error": 2.220446049250313e-16, "com_max_abs_error": 5.551115123125783e-17, "mass_kg": 21.60796983}
+PASSED
+tests/test_go2_arm.py::test_fk_com_and_mass_match_separate_xml_oracle[rotated_mount] {"case": "rotated_mount", "fk_max_abs_error": 5.551115123125783e-16, "com_max_abs_error": 5.551115123125783e-17, "mass_kg": 21.777969829999996}
+PASSED
+tests/test_go2_arm.py::test_full_tangent_jacobians_and_gravity_against_independent_differences[nominal] {"case": "nominal", "tcp_jacobian_max_abs_error": 7.719247463455758e-11, "foot_jacobian_max_abs_error": 3.62797569763984e-11, "com_jacobian_max_abs_error": 5.374675931499621e-11, "gravity_max_abs_error": 1.4920514896515913e-08}
+PASSED
+tests/test_go2_arm.py::test_full_tangent_jacobians_and_gravity_against_independent_differences[tilted] {"case": "tilted", "tcp_jacobian_max_abs_error": 1.9415236085507104e-10, "foot_jacobian_max_abs_error": 5.06094055552353e-11, "com_jacobian_max_abs_error": 8.313005839255538e-11, "gravity_max_abs_error": 1.8424771042191423e-08}
+PASSED
+tests/test_go2_arm.py::test_full_tangent_jacobians_and_gravity_against_independent_differences[rotated_mount] {"case": "rotated_mount", "tcp_jacobian_max_abs_error": 2.1620030765667764e-10, "foot_jacobian_max_abs_error": 5.06094055552353e-11, "com_jacobian_max_abs_error": 1.108856340081843e-10, "gravity_max_abs_error": 3.2276069816816744e-08}
+PASSED
+tests/test_go2_arm.py::test_all_eighteen_joint_state_torque_mapping_and_virtual_work PASSED
+tests/test_go2_arm.py::test_invalid_state_names_and_configuration_rejected PASSED
+tests/test_go2_arm.py::test_import_does_not_require_native_dependencies_or_change_legacy_api PASSED
+tests/test_go2_arm.py::test_zero_passive_dynamics_and_bracket_inertia_in_combined_asset PASSED
+
+- generated xml file: /Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/docs/benchmarks/go2_z1_cpu_2026-11-13/model_tests.xml -
+============================== 10 passed in 5.11s ==============================
