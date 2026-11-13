@@ -1,0 +1,17 @@
+status { ready: true, error: undefined, report: undefined } []
+{
+  "data": {
+    "meshes": 29,
+    "vertices": 1929561,
+    "duration": 7.800000190734863,
+    "minClipDuration": 7.800000190734863,
+    "maxClipDuration": 7.800000190734863,
+    "actions": 340,
+    "labels": "FL\nFR\nRL\nRR",
+    "errors": "0.40"
+  },
+  "paused": true,
+  "speed": 0.5,
+  "errors": [],
+  "externalRequests": []
+}

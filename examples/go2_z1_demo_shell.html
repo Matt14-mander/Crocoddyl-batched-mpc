@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Go2 + Z1 · W 全身规划回放</title>
+  <style>
+    :root {
+      color-scheme:light dark; --font-size-base:14px;
+      --background:light-dark(#fafaf8,#17191b); --foreground:light-dark(#272b30,#e7e9ed);
+      --muted-foreground:light-dark(#626970,#a8afb8); --border:light-dark(#d4d9df,#41464e);
+      --primary:var(--foreground); --primary-foreground:var(--background);
+      --viz-series-1:light-dark(#167d9b,#62c8e8); --viz-series-2:light-dark(#b76a25,#e9ae68);
+      --viz-series-3:light-dark(#3c8660,#72c69b); --viz-series-4:light-dark(#9765a3,#cba0db);
+    }
+    * {box-sizing:border-box}
+    body {margin:0;padding:24px;font:400 var(--font-size-base)/1.5 system-ui,sans-serif;background:var(--background);color:var(--foreground)}
+    main {max-width:1000px;margin:0 auto}
+    h2 {font-size:1.3em;font-weight:500;margin:0}
+    .text-small {font-size:.86em}
+    .text-muted {color:var(--muted-foreground)}
+    .tabular-nums {font-variant-numeric:tabular-nums}
+    .viz-controls {display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .form-label {display:flex;gap:8px;align-items:center;font-weight:400}
+    .form-select,.btn {font:inherit;color:var(--foreground);background:var(--background);border:1px solid var(--border);border-radius:7px;padding:7px 11px;min-height:36px}
+    .btn {cursor:pointer}
+    .btn-primary {color:var(--primary-foreground);background:var(--primary);border-color:var(--primary)}
+    .form-range {width:100%;margin:0;accent-color:var(--foreground)}
+    .sr-only {position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+    @media(max-width:480px){body{padding:14px}.viz-controls{gap:8px}.form-label{gap:5px}}
+    @media(pointer:coarse){.btn,.form-select{min-height:44px}.form-range{min-height:32px}}
+  </style>
+</head>
+<body><main><!--REPLAY--></main></body>
+</html>

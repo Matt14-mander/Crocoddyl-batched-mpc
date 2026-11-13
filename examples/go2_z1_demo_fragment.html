@@ -1,0 +1,307 @@
+<div id="go2-z1-replay">
+  <div class="demo-heading">
+    <h2>Go2 + Z1 · 全身规划</h2>
+    <span class="text-small text-muted">CPU 预测回放 · 简化几何 · 18 关节</span>
+  </div>
+  <div class="viz-controls">
+    <button type="button" class="btn btn-primary" data-role="play">播放</button>
+    <label class="form-label">播放速度
+      <select class="form-select" data-role="speed" aria-label="播放速度">
+        <option value="0.25">0.25×</option><option value="0.5" selected>0.5×</option>
+        <option value="1">1×</option>
+      </select>
+    </label>
+    <label class="form-label">观察视角
+      <select class="form-select" data-role="view" aria-label="观察视角">
+        <option value="iso">斜视</option><option value="front">正视</option>
+        <option value="side">侧视</option><option value="top">俯视</option>
+        <option value="free">自由旋转</option>
+      </select>
+    </label>
+  </div>
+  <canvas data-role="scene" role="img" aria-label="Go2 加 Z1 机械臂的三维预测回放。四足固定支撑，手端前伸、侧移并下降后返回。可用观察视角菜单切换，或拖动旋转、滚轮缩放。"></canvas>
+  <div class="demo-legend text-small">
+    <span><i class="legend-mark tcp"></i>预测 TCP</span>
+    <span><i class="legend-mark target"></i>目标 TCP</span>
+    <span><i class="legend-mark com"></i>质心</span>
+    <span><i class="legend-mark force"></i>接触力</span>
+    <span class="text-muted">拖动旋转 · 滚轮缩放</span>
+  </div>
+  <div class="time-label">
+    <label class="form-label" for="go2-z1-timeline">规划时间</label>
+    <output class="tabular-nums" data-role="time">0.00 / 3.00 s</output>
+  </div>
+  <input class="form-range" id="go2-z1-timeline" data-role="timeline" type="range"
+         min="0" max="3" step="0.005" value="0" aria-label="规划时间，秒">
+  <div class="demo-readout text-small tabular-nums">
+    <span>TCP 误差 <output data-role="error">0.000</output> mm</span>
+    <span>最大力矩占比 <output data-role="torque">0.0</output>%</span>
+    <span>足端漂移 <output data-role="drift">0.00</output> μm</span>
+  </div>
+  <div class="text-small text-muted demo-footnote">3 s 往返 · 前伸 6 cm / 侧移 12 cm / 下降 3 cm · 非物理闭环</div>
+  <span class="sr-only" aria-live="polite" data-role="announce"></span>
+  <script type="application/json" data-role="data">__GO2_Z1_DATA__</script>
+</div>
+<style>
+  #go2-z1-replay { display:flex; flex-direction:column; gap:calc(var(--font-size-base) * 0.65); }
+  #go2-z1-replay .demo-heading { display:flex; flex-direction:column; gap:calc(var(--font-size-base) * 0.25); padding-right:100px; }
+  #go2-z1-replay canvas { display:block; width:100%; height:clamp(310px,58vw,450px); touch-action:none; cursor:grab; }
+  #go2-z1-replay .demo-legend, #go2-z1-replay .demo-readout { display:flex; flex-wrap:wrap; align-items:center; gap:calc(var(--font-size-base) * 0.9); }
+  #go2-z1-replay .demo-legend span { display:inline-flex; align-items:center; gap:calc(var(--font-size-base) * 0.35); }
+  #go2-z1-replay .legend-mark { display:inline-block; width:9px; height:9px; flex:none; }
+  #go2-z1-replay .tcp { background:var(--viz-series-1); border-radius:50%; }
+  #go2-z1-replay .target { border:1.5px solid var(--viz-series-2); border-radius:50%; }
+  #go2-z1-replay .com { background:var(--viz-series-4); transform:rotate(45deg); }
+  #go2-z1-replay .force { background:var(--viz-series-3); clip-path:polygon(40% 100%,40% 40%,0 40%,50% 0,100% 40%,60% 40%,60% 100%); }
+  #go2-z1-replay .time-label { display:flex; justify-content:space-between; }
+  #go2-z1-replay .demo-footnote { overflow-wrap:anywhere; }
+</style>
+<script>
+(() => {
+  'use strict';
+  const root = document.getElementById('go2-z1-replay');
+  const find = name => root.querySelector(`[data-role="${name}"]`);
+  const data = JSON.parse(find('data').textContent);
+  const canvas = find('scene'), ctx = canvas.getContext('2d');
+  const play = find('play'), timeline = find('timeline'), speedControl = find('speed');
+  const viewControl = find('view');
+  const instanceId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  let time = 0, speed = 0.5, playing = false, view = 'iso';
+  let yaw = -0.8, elevation = 0.31, zoom = 1, lastTimestamp = null;
+  let width = 736, height = 450, palette, dragging = null, animationId = 0;
+  const add = (a,b) => a.map((v,i) => v+b[i]);
+  const sub = (a,b) => a.map((v,i) => v-b[i]);
+  const mul = (a,s) => a.map(v => v*s);
+  const dot = (a,b) => a.reduce((s,v,i) => s+v*b[i],0);
+  const cross = (a,b) => [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const unit = v => mul(v,1/(Math.hypot(...v)||1));
+  const mix = (a,b,t) => a.map((v,i) => v*(1-t)+b[i]*t);
+  const clamp = (v,lo,hi) => Math.max(lo,Math.min(hi,v));
+  const rgba = (c,a=1) => `rgba(${c.map(v=>Math.round(v)).join(',')},${a})`;
+  const light = unit([-0.3,-0.5,1]);
+  const center = [0.04,0.0,0.51];
+  const colorProbe = document.createElement('span');
+  colorProbe.hidden = true;
+  root.appendChild(colorProbe);
+  const colorCanvas = document.createElement('canvas');
+  colorCanvas.width = colorCanvas.height = 1;
+  const colorCtx = colorCanvas.getContext('2d',{willReadFrequently:true});
+  function color(variable) {
+    colorProbe.style.color = `var(${variable})`;
+    colorCtx.clearRect(0,0,1,1);
+    colorCtx.fillStyle = getComputedStyle(colorProbe).color;
+    colorCtx.fillRect(0,0,1,1);
+    return Array.from(colorCtx.getImageData(0,0,1,1).data).slice(0,3);
+  }
+  function updatePalette() {
+    const fg=color('--foreground'), bg=color('--background');
+    palette={fg,bg,muted:color('--muted-foreground'),arm:color('--viz-series-1'),
+      target:color('--viz-series-2'),force:color('--viz-series-3'),com:color('--viz-series-4'),
+      body:mix(fg,bg,.47),joint:mix(fg,bg,.17),mount:mix(fg,bg,.7)};
+    draw();
+  }
+  function quatRotate(p,q) {
+    const a=q.slice(0,3), uv=cross(a,p), uuv=cross(a,uv);
+    return add(p,add(mul(uv,2*q[3]),mul(uuv,2)));
+  }
+  function slerp(a,b,t) {
+    let cosine=dot(a,b);
+    if(cosine<0) { b=mul(b,-1); cosine=-cosine; }
+    if(cosine>.9995) return unit(mix(a,b,t));
+    const angle=Math.acos(clamp(cosine,-1,1)), sine=Math.sin(angle);
+    return add(mul(a,Math.sin((1-t)*angle)/sine),mul(b,Math.sin(t*angle)/sine));
+  }
+  function project(point) {
+    const p=sub(point,center), cy=Math.cos(yaw), sy=Math.sin(yaw);
+    const ce=Math.cos(elevation), se=Math.sin(elevation);
+    const right=[-sy,cy,0], up=[-cy*se,-sy*se,ce], eye=[cy*ce,sy*ce,se];
+    const depth=dot(p,eye), scale=Math.min(height,width*.92)*1.95*zoom/(2.6-depth);
+    return [width*.5+dot(p,right)*scale,height*.52-dot(p,up)*scale,depth];
+  }
+  function mesh(shape) {
+    const v=[], f=[], size=shape.size, sides=14;
+    if(shape.kind==='box') {
+      for(const z of [-1,1]) for(const y of [-1,1]) for(const x of [-1,1])
+        v.push([x*size[0]/2,y*size[1]/2,z*size[2]/2]);
+      f.push([0,2,3,1],[4,5,7,6],[0,1,5,4],[2,6,7,3],[0,4,6,2],[1,3,7,5]);
+    } else if(shape.kind==='cylinder') {
+      for(const z of [-size[1]/2,size[1]/2]) for(let i=0;i<sides;i++) {
+        const a=i*2*Math.PI/sides; v.push([size[0]*Math.cos(a),size[0]*Math.sin(a),z]);
+      }
+      for(let i=0;i<sides;i++) { const j=(i+1)%sides; f.push([i,j,j+sides,i+sides]); }
+      f.push(Array.from({length:sides},(_,i)=>sides-i-1));
+      f.push(Array.from({length:sides},(_,i)=>i+sides));
+    } else {
+      const rings=8;
+      for(let j=0;j<=rings;j++) for(let i=0;i<sides;i++) {
+        const p=Math.PI*j/rings, a=2*Math.PI*i/sides, r=size[0];
+        v.push([r*Math.sin(p)*Math.cos(a),r*Math.sin(p)*Math.sin(a),r*Math.cos(p)]);
+      }
+      for(let j=0;j<rings;j++) for(let i=0;i<sides;i++) {
+        const k=j*sides+i,n=j*sides+(i+1)%sides; f.push([k,k+sides,n+sides,n]);
+      }
+    }
+    return {v,f};
+  }
+  const meshes=data.geometries.map(mesh);
+  function line(points,colorValue,lineWidth=1,dash=[],alpha=1) {
+    ctx.beginPath(); points.forEach((p,i)=>{const xy=project(p);i?ctx.lineTo(xy[0],xy[1]):ctx.moveTo(xy[0],xy[1]);});
+    ctx.strokeStyle=rgba(colorValue,alpha);ctx.lineWidth=lineWidth;ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([]);
+  }
+  function circle(point,radius,colorValue,filled=true) {
+    const p=project(point);ctx.beginPath();ctx.arc(p[0],p[1],radius,0,2*Math.PI);
+    ctx.fillStyle=rgba(colorValue);ctx.strokeStyle=rgba(colorValue);ctx.lineWidth=1.7;
+    filled?ctx.fill():ctx.stroke();
+  }
+  function label(text,point,colorValue,dx=7,dy=-7,align='left') {
+    const p=project(point);ctx.fillStyle=rgba(colorValue);ctx.textAlign=align;
+    const textWidth=ctx.measureText(text).width;
+    const x=clamp(p[0]+dx,align==='right'?textWidth+3:3,align==='right'?width-3:width-textWidth-3);
+    ctx.fillText(text,x,clamp(p[1]+dy,14,height-5));
+  }
+  function arrow(start,end,colorValue) {
+    line([start,end],colorValue,1.8);
+    const a=project(start),b=project(end),angle=Math.atan2(b[1]-a[1],b[0]-a[0]);
+    ctx.beginPath();ctx.moveTo(b[0],b[1]);
+    ctx.lineTo(b[0]-7*Math.cos(angle-.4),b[1]-7*Math.sin(angle-.4));
+    ctx.lineTo(b[0]-7*Math.cos(angle+.4),b[1]-7*Math.sin(angle+.4));
+    ctx.closePath();ctx.fillStyle=rgba(colorValue);ctx.fill();
+  }
+  function sample() {
+    let k=0;while(k<data.frames.length-2&&data.frames[k+1].t<time)k++;
+    const a=data.frames[k], b=data.frames[k+1], t=clamp((time-a.t)/(b.t-a.t),0,1);
+    const pose=[];
+    for(let j=0;j<a.poses.length;j+=7) pose.push(...mix(a.poses.slice(j,j+3),b.poses.slice(j,j+3),t),
+      ...slerp(a.poses.slice(j+3,j+7),b.poses.slice(j+3,j+7),t));
+    return {pose,tcp:mix(a.tcp,b.tcp,t),target:mix(a.target,b.target,t),com:mix(a.com,b.com,t),
+      gripper:mix(a.gripper,b.gripper,t),feet:a.feet.map((p,i)=>mix(p,b.feet[i],t)),
+      forces:a.forces.map((p,i)=>mix(p,b.forces[i],t)),error:a.error_mm*(1-t)+b.error_mm*t,
+      torque:a.torque_percent*(1-t)+b.torque_percent*t,drift:a.foot_drift_um*(1-t)+b.foot_drift_um*t};
+  }
+  function draw() {
+    if(!palette||width<1)return;
+    const ratio=canvas.width/width;ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,width,height);
+    const font=getComputedStyle(root),base=parseFloat(font.getPropertyValue('--font-size-base'))||14;
+    ctx.font=`${Math.max(11,base*.86)}px ${font.fontFamily}`;
+    const s=sample(), floorZ=data.anchors[0][2];
+    for(let i=-7;i<=7;i++) {
+      const p=i*.1;
+      line([[p,-.7,floorZ],[p,.7,floorZ]],palette.fg,0.7,[],.1);
+      line([[-.7,p,floorZ],[.7,p,floorZ]],palette.fg,0.7,[],.1);
+    }
+    const support=[0,1,3,2].map(i=>data.anchors[i]);
+    ctx.beginPath();support.forEach((p,i)=>{const xy=project(p);i?ctx.lineTo(...xy.slice(0,2)):ctx.moveTo(...xy.slice(0,2));});
+    ctx.closePath();ctx.fillStyle=rgba(palette.force,.07);ctx.fill();
+    line([...support,support[0]],palette.force,1,[],.45);
+    const axis=[-.45,-.20,floorZ];
+    arrow(axis,add(axis,[.17,0,0]),palette.muted);label('X',add(axis,[.17,0,0]),palette.muted);
+    arrow(axis,add(axis,[0,.17,0]),palette.muted);label('Y',add(axis,[0,.17,0]),palette.muted);
+    label('0.1 m 网格',[-.42,-.48,floorZ],palette.muted,0,16);
+    const polygons=[];
+    meshes.forEach((mesh,index)=>{
+      const p=s.pose.slice(index*7,index*7+3),q=s.pose.slice(index*7+3,index*7+7);
+      const vertices=mesh.v.map(v=>add(quatRotate(v,q),p));
+      const screen=vertices.map(project),material=palette[data.geometries[index].material];
+      for(const face of mesh.f) {
+        const n=unit(cross(sub(vertices[face[1]],vertices[face[0]]),sub(vertices[face[2]],vertices[face[0]])));
+        const shade=.53+.40*Math.max(0,dot(n,light));
+        polygons.push({points:face.map(i=>screen[i]),depth:face.reduce((v,i)=>v+screen[i][2],0)/face.length,
+          fill:rgba(mix(material,palette.bg,1-shade))});
+      }
+    });
+    polygons.sort((a,b)=>a.depth-b.depth);
+    for(const face of polygons) {
+      ctx.beginPath();face.points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+      ctx.closePath();ctx.fillStyle=face.fill;ctx.fill();
+    }
+    line(data.frames.map(f=>f.target),palette.target,1.5,[5,4],.85);
+    const path=data.frames.filter(f=>f.t<=time).map(f=>f.tcp);path.push(s.tcp);
+    if(path.length>1)line(path,palette.arm,2.2);
+    line([s.gripper,s.tcp],palette.muted,1,[3,3]);
+    circle(s.target,8,palette.target,false);circle(s.tcp,3.8,palette.arm);
+    label('TCP',s.tcp,palette.fg,13,-12);
+    const com=project(s.com);ctx.beginPath();ctx.moveTo(com[0],com[1]-5);
+    ctx.lineTo(com[0]+5,com[1]);ctx.lineTo(com[0],com[1]+5);ctx.lineTo(com[0]-5,com[1]);
+    ctx.closePath();ctx.fillStyle=rgba(palette.com);ctx.fill();
+    line([s.com,[s.com[0],s.com[1],floorZ]],palette.com,1,[3,3],.65);
+    circle([s.com[0],s.com[1],floorZ],3,palette.com,false);
+    for(let i=0;i<4;i++) {
+      circle(data.anchors[i],4,palette.force,false);
+      const end=add(s.feet[i],mul(s.forces[i],1/400));arrow(s.feet[i],end,palette.force);
+      const left=project(end)[0]<width*.5;
+      label(`${['FL','FR','RL','RR'][i]} ${s.forces[i][2].toFixed(1)} N`,end,palette.fg,left?-8:8,-5,left?'right':'left');
+    }
+    find('time').value=`${time.toFixed(2)} / ${data.duration.toFixed(2)} s`;
+    timeline.value=String(time);timeline.setAttribute('aria-valuetext',`${time.toFixed(2)} 秒`);
+    find('error').value=s.error.toFixed(3);find('torque').value=s.torque.toFixed(1);find('drift').value=s.drift.toFixed(2);
+    root.dataset.time=time.toFixed(3);root.dataset.frames=String(data.frames.length);
+    root.dataset.accepted=String(data.accepted);
+  }
+  function persist() {
+    if(window.openai?.setWidgetState) window.openai.setWidgetState({
+      modelContent:{robot:'Go2 + Z1',scope:'CPU prediction replay',time_s:time,speed,view},
+      privateContent:{time,speed,view,yaw,elevation,zoom,sender:instanceId}
+    }).catch(()=>{});
+  }
+  function setPlaying(value) {
+    cancelAnimationFrame(animationId);animationId=0;
+    playing=value;play.textContent=value?'暂停':time>=data.duration?'重播':'播放';
+    play.setAttribute('aria-pressed',String(value));lastTimestamp=null;
+    find('announce').textContent=value?'正在播放预测轨迹':`暂停于 ${time.toFixed(2)} 秒`;
+    if(value)animationId=requestAnimationFrame(tick);
+  }
+  function tick(timestamp) {
+    animationId=0;
+    if(!playing)return;
+    if(lastTimestamp!==null)time=Math.min(data.duration,time+(timestamp-lastTimestamp)/1000*speed);
+    lastTimestamp=timestamp;draw();
+    if(time>=data.duration) {setPlaying(false);persist();}
+    else animationId=requestAnimationFrame(tick);
+  }
+  play.addEventListener('click',()=>{if(!playing&&time>=data.duration)time=0;setPlaying(!playing);draw();persist();});
+  timeline.max=String(data.duration);
+  timeline.addEventListener('input',()=>{time=Number(timeline.value);setPlaying(false);draw();});
+  timeline.addEventListener('change',persist);
+  speedControl.addEventListener('change',()=>{speed=Number(speedControl.value);persist();});
+  viewControl.addEventListener('change',()=>{
+    view=viewControl.value;
+    const presets={iso:[-.8,.31],front:[0,.18],side:[-Math.PI/2,.18],top:[-.8,1.48]};
+    if(presets[view])[yaw,elevation]=presets[view];zoom=1;draw();persist();
+  });
+  canvas.addEventListener('pointerdown',event=>{dragging=[event.clientX,event.clientY];canvas.setPointerCapture(event.pointerId);canvas.style.cursor='grabbing';});
+  canvas.addEventListener('pointermove',event=>{
+    if(!dragging)return;
+    yaw-=(event.clientX-dragging[0])*.008;elevation=clamp(elevation+(event.clientY-dragging[1])*.006,-.05,1.5);
+    dragging=[event.clientX,event.clientY];view='free';viewControl.value=view;draw();
+  });
+  function endDrag(){if(dragging){dragging=null;canvas.style.cursor='grab';persist();}}
+  canvas.addEventListener('pointerup',endDrag);canvas.addEventListener('pointercancel',endDrag);
+  let wheelTimer;
+  canvas.addEventListener('wheel',event=>{
+    event.preventDefault();zoom=clamp(zoom*Math.exp(-event.deltaY*.001),.6,1.7);draw();
+    clearTimeout(wheelTimer);wheelTimer=setTimeout(persist,200);
+  },{passive:false});
+  function restore(saved) {
+    const state=saved?.privateContent;
+    if(!state||state.sender===instanceId)return;
+    if(Number.isFinite(state.time))time=clamp(state.time,0,data.duration);
+    if([.25,.5,1].includes(state.speed))speed=state.speed;
+    if(['iso','front','side','top','free'].includes(state.view))view=state.view;
+    if(Number.isFinite(state.yaw))yaw=state.yaw;
+    if(Number.isFinite(state.elevation))elevation=clamp(state.elevation,-.05,1.5);
+    if(Number.isFinite(state.zoom))zoom=clamp(state.zoom,.6,1.7);
+    speedControl.value=String(speed);viewControl.value=view;setPlaying(false);draw();
+  }
+  function resize() {
+    const r=canvas.getBoundingClientRect();width=r.width;height=r.height;
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);draw();
+  }
+  new ResizeObserver(resize).observe(canvas);
+  new MutationObserver(updatePalette).observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',updatePalette);
+  window.addEventListener('openai:set_globals',event=>{restore(event.detail?.globals?.widgetState);updatePalette();});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)setPlaying(false);});
+  restore(window.openai?.widgetState);updatePalette();resize();
+})();
+</script>

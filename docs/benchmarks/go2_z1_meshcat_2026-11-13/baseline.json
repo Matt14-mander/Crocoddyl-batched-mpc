@@ -1,0 +1,381 @@
+{
+  "scope": "Offline hybrid whole-body OCP with scheduled rigid point contacts; nominal CPU feedback replay",
+  "settings": {
+    "cycles": 2,
+    "dt": 0.025,
+    "step_length": 0.08,
+    "step_height": 0.04,
+    "swing_nodes": 20,
+    "transfer_nodes": 14,
+    "hold_nodes": 20,
+    "curve_y": 0.04,
+    "curve_z": 0.06,
+    "iterations": 250
+  },
+  "ocp_settings": {
+    "nodes": 10,
+    "dt": 0.025,
+    "max_iterations": 250,
+    "stopping_threshold": 1e-07,
+    "friction": 0.6,
+    "normal_min": 2.0,
+    "normal_max": 200.0,
+    "contact_kp": 100.0,
+    "contact_kd": 20.0,
+    "tcp_position_weight": 40000,
+    "tcp_rotation_weight": 5000,
+    "tcp_velocity_weight": 5.0,
+    "com_weight": 2000,
+    "base_weight": 200.0,
+    "posture_weight": 1.0,
+    "torque_weight": 0.0001,
+    "torque_change_weight": 0.01,
+    "barrier_weight": 1000000.0,
+    "base_translation_bound": [
+      0.1,
+      0.1,
+      0.07
+    ],
+    "base_rotation_bound": 0.25,
+    "base_linear_velocity_bound": 0.5,
+    "base_angular_velocity_bound": 1.0,
+    "gap_tolerance": 1e-06,
+    "dynamics_tolerance": 1e-07,
+    "bound_tolerance": 1e-06,
+    "foot_position_tolerance": 0.001,
+    "foot_velocity_tolerance": 0.01,
+    "tcp_position_tolerance": 0.005,
+    "tcp_rotation_tolerance": 0.02
+  },
+  "versions": {
+    "python": "3.11.4",
+    "numpy": "1.26.4",
+    "pinocchio": "4.0.0",
+    "crocoddyl": "3.2.1",
+    "platform": "macOS-10.16-x86_64-i386-64bit"
+  },
+  "source_sha256": {
+    "src/crocoddyl_batched_mpc/planners/walking_whole_body_demo.py": "e3fc7d7d5ff67db8a200eb9a77f5747ace28874072792028999f8b219425fd02",
+    "src/crocoddyl_batched_mpc/planners/standing_whole_body.py": "d372c6f5fe9369af614e7235d8adcf673247932b818227925fd94060bfebd4c6",
+    "src/crocoddyl_batched_mpc/planners/_whole_body_native.py": "012f2365878e3c5770fef0db3d2ef903739d0ab5c0ad36f2a69b9e68edca24b2",
+    "src/crocoddyl_batched_mpc/models/go2_arm.py": "1e4e8e197be9e42e890b815584625c90d1025c9fc93fc759ce0f3ff75105f9e1",
+    "examples/go2_z1_walking_curve.py": "aa90827ec71dc5881f7746f3308d765152898fad4b5114202c58fd63d29d1bfc"
+  },
+  "urdf_sha256": "1b989a15c5c5acc588fc63ac4f81e3cef07dad4c66e4eba861c779a0c6e18f3f",
+  "model_configuration": {
+    "schema_version": 1,
+    "name": "go2_z1_standing_sim_v1",
+    "authority": "Project simulation assumptions; not hardware calibration or collision certification",
+    "mount": {
+      "parent_frame": "base",
+      "child_frame": "z1_link00",
+      "xyz_m": [
+        0.05,
+        0.0,
+        0.1
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "bracket": {
+      "frame": "go2_z1_bracket",
+      "mass_kg": 0.3,
+      "box_size_m": [
+        0.16,
+        0.09,
+        0.04
+      ],
+      "com_xyz_in_base_m": [
+        0.05,
+        0.0,
+        0.08
+      ],
+      "inertia_model": "uniform_box_at_com_aligned_with_base",
+      "interpretation": "Equivalent rigid mount, including fasteners; not a specified material or fabricated part"
+    },
+    "tcp": {
+      "parent_frame": "z1_gripperStator",
+      "frame": "z1_tcp",
+      "xyz_m": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "rpy_rad": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "interpretation": "Massless virtual task point; +x forward from the gripper mounting frame, not a measured grasp center"
+    },
+    "nominal_arm_configuration_rad": [
+      0.0,
+      1.2,
+      -1.8,
+      0.6,
+      0.0,
+      0.0
+    ],
+    "payload_mass_kg": 0.0,
+    "gravity_world_m_s2": [
+      0.0,
+      0.0,
+      -9.81
+    ],
+    "passive_joint_dynamics": {
+      "damping": 0.0,
+      "friction": 0.0,
+      "interpretation": "Ideal rigid-body baseline; overwrite these tags only in the derived combined URDF and match this in the future simulator"
+    },
+    "limitations": [
+      "Fixed gripper at 0 rad, six actuated arm joints",
+      "No contact constraints or WBC are applied by this model",
+      "No payload other than the already modeled gripper",
+      "Mesh, self-collision, support feasibility and PhysX acceptance remain pending"
+    ]
+  },
+  "initial_canonical_state": [
+    0.0,
+    0.0,
+    0.2967970581818924,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.8,
+    -1.6,
+    0.0,
+    0.8,
+    -1.6,
+    0.0,
+    0.8,
+    -1.6,
+    0.0,
+    0.8,
+    -1.6,
+    0.0,
+    1.6,
+    -1.6,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "joint_names": [
+    "FL_hip_joint",
+    "FL_thigh_joint",
+    "FL_calf_joint",
+    "FR_hip_joint",
+    "FR_thigh_joint",
+    "FR_calf_joint",
+    "RL_hip_joint",
+    "RL_thigh_joint",
+    "RL_calf_joint",
+    "RR_hip_joint",
+    "RR_thigh_joint",
+    "RR_calf_joint",
+    "z1_joint1",
+    "z1_joint2",
+    "z1_joint3",
+    "z1_joint4",
+    "z1_joint5",
+    "z1_joint6"
+  ],
+  "dimensions": {
+    "q": 25,
+    "v": 24,
+    "physical_x": 49,
+    "augmented_x": 67,
+    "augmented_dx": 66,
+    "flow_u": 18,
+    "impact_u": 0
+  },
+  "solver": {
+    "converged": false,
+    "iterations": 250,
+    "cost": 4.449346524536359,
+    "stop": 9.899202628055698e-05,
+    "stopping_threshold": 1e-06,
+    "solve_time_s": 107.10494351095986,
+    "warm_start": null
+  },
+  "plan_metrics": {
+    "gap": 7.809031199457195e-14,
+    "dynamics_residual": 5.684341886080802e-14,
+    "contact_residual": 7.407269242420966e-15,
+    "torque": 0.0,
+    "friction": 3.1744134592059936e-06,
+    "normal": 0.0,
+    "impulse_friction": 3.3251781887672857e-05,
+    "impulse_normal": 1.701322369061441e-05,
+    "joint": 0.0,
+    "velocity": 0.0,
+    "stance_position": 0.0005323881294887282,
+    "stance_velocity": 0.005120602706964276,
+    "penetration": 0.0005080165022481042,
+    "tcp_peak": 0.002676263601912187,
+    "rotation_peak": 0.001883909164339316,
+    "quaternion": 2.220446049250313e-16,
+    "base_position": 0.0,
+    "base_rotation": 0.0,
+    "initial_gap": 0.0,
+    "tcp_rmse": 0.0006979251921128821,
+    "forward_displacement": 0.18414299513523155,
+    "max_ik_error": 9.92407511724025e-09,
+    "minimum_swing_peak": 0.039999958601844826,
+    "terminal_speed": 0.5933893701209898
+  },
+  "plan_acceptance": {
+    "passed": true,
+    "failures": [],
+    "upper_limits": {
+      "initial_gap": 1e-10,
+      "gap": 1e-06,
+      "dynamics_residual": 1e-07,
+      "contact_residual": 1e-07,
+      "torque": 1e-06,
+      "friction": 0.001,
+      "normal": 0.001,
+      "impulse_friction": 0.0001,
+      "impulse_normal": 0.0001,
+      "joint": 1e-06,
+      "velocity": 1e-06,
+      "quaternion": 1e-10,
+      "base_position": 1e-06,
+      "base_rotation": 1e-06,
+      "stance_position": 0.001,
+      "stance_velocity": 0.01,
+      "penetration": 0.001,
+      "tcp_peak": 0.005,
+      "rotation_peak": 0.02,
+      "max_ik_error": 1e-06
+    },
+    "lower_limits": {
+      "forward_displacement": 0.096,
+      "minimum_swing_peak": 0.024
+    }
+  },
+  "replay_metrics": {
+    "gap": 0.0,
+    "dynamics_residual": 8.526512829121202e-14,
+    "contact_residual": 8.641958676447459e-15,
+    "torque": 0.0,
+    "friction": 3.174413773621154e-06,
+    "normal": 0.0,
+    "impulse_friction": 3.3251781887314636e-05,
+    "impulse_normal": 1.7013223690022663e-05,
+    "joint": 0.0,
+    "velocity": 0.0,
+    "stance_position": 0.0005323881294886677,
+    "stance_velocity": 0.005120602706968438,
+    "penetration": 0.0005080165022481875,
+    "tcp_peak": 0.0026762636019120644,
+    "rotation_peak": 0.0018839091643404707,
+    "quaternion": 2.220446049250313e-16,
+    "base_position": 0.0,
+    "base_rotation": 0.0,
+    "initial_gap": 0.0,
+    "tcp_rmse": 0.000697925192112878,
+    "forward_displacement": 0.18414299513523116,
+    "max_ik_error": 9.92407511724025e-09,
+    "minimum_swing_peak": 0.0399999586018448,
+    "terminal_speed": 0.5933893701209854
+  },
+  "replay_acceptance": {
+    "passed": true,
+    "failures": [],
+    "upper_limits": {
+      "initial_gap": 1e-10,
+      "gap": 1e-06,
+      "dynamics_residual": 1e-07,
+      "contact_residual": 1e-07,
+      "torque": 1e-06,
+      "friction": 0.001,
+      "normal": 0.001,
+      "impulse_friction": 0.0001,
+      "impulse_normal": 0.0001,
+      "joint": 1e-06,
+      "velocity": 1e-06,
+      "quaternion": 1e-10,
+      "base_position": 1e-06,
+      "base_rotation": 1e-06,
+      "stance_position": 0.001,
+      "stance_velocity": 0.01,
+      "penetration": 0.001,
+      "tcp_peak": 0.005,
+      "rotation_peak": 0.02,
+      "max_ik_error": 1e-06
+    },
+    "lower_limits": {
+      "forward_displacement": 0.096,
+      "minimum_swing_peak": 0.024
+    }
+  },
+  "feedback": {
+    "clipped_steps": 0,
+    "maximum_plan_deviation": 1.2256862191861728e-13
+  },
+  "disposition": {
+    "passed": [
+      "18-actuator canonical mapping",
+      "independent Pinocchio dynamics replay",
+      "walking and TCP tracking gates"
+    ],
+    "skipped": [
+      "Isaac Lab / PhysX",
+      "CUDA",
+      "existing single-Go2 training execution"
+    ],
+    "pending": [
+      "receding-horizon MPC and WBC",
+      "contact detection and collision checks",
+      "disturbance robustness",
+      "real-time and hardware validation",
+      "solver convergence threshold"
+    ]
+  },
+  "units": {
+    "positions": "m",
+    "angles": "rad",
+    "time": "s",
+    "controls": "Nm",
+    "forces": "N on flow rows, Ns on zero-time impact rows"
+  },
+  "assumptions": [
+    "Go2-Z1 mount and TCP use the existing simulation-only CPU model configuration.",
+    "Flat ground, four point feet, crawl RR-FR-RL-FL; collisions are not checked.",
+    "Perfectly inelastic zero-duration impulses; semi-implicit flow at configured dt.",
+    "Mu=0.6 inscribed diamond cones; force 2..200 N per active support foot.",
+    "0.5 mm floor soft-cost allowance; 1 mm independent numerical geometry gate.",
+    "World-fixed vertical yz figure eight, fixed orientation; IK is warm start only.",
+    "Replay starts at the same initial state; it checks model consistency, not robustness."
+  ],
+  "trace_sha256": "13c63bd4d09c9276b467b004edde91adf24ef1c017846c9203b0bd4827c2e240"
+}

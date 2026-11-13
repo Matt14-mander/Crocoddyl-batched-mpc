@@ -1,0 +1,120 @@
+{
+  "assets": {
+    "repository": "unitreerobotics/unitree_ros",
+    "commit": "5994d4faef0a9cadd3287f8de0199a67eeb2a259",
+    "license": "BSD-3-Clause",
+    "visual_meshes": 16,
+    "files": [
+      {
+        "path": "LICENSE",
+        "git_blob_sha1": "6dfdadaa90baa4f7bea7400d3c4e8b9c784ae37f",
+        "size_bytes": 1558,
+        "sha256": "84aac59fd3246e3ddc49d1387644e8fcf43b0def4f0b9fe687f372e90446df2d"
+      },
+      {
+        "path": "robots/go2_description/dae/base.dae",
+        "git_blob_sha1": "4e47b5bec4a3c91ae4a1d49d73080d697a917cf1",
+        "size_bytes": 10727399,
+        "sha256": "e52bebbb5c7ff1f6aedee620c9b5b349f6e965360ecc63a9bb743eeff2d0be64"
+      },
+      {
+        "path": "robots/go2_description/dae/calf.dae",
+        "git_blob_sha1": "83221779392a5d19af59561d0ea4eea48ef6102a",
+        "size_bytes": 1125517,
+        "sha256": "29872fa1a435b92bc2b395fdfa7f0aee26101db3c494681896bd4ef24ee7883c"
+      },
+      {
+        "path": "robots/go2_description/dae/calf_mirror.dae",
+        "git_blob_sha1": "413fd75d8b173b4597a35cc71e618a7d025069bd",
+        "size_bytes": 1125457,
+        "sha256": "79c66be7ed06760bd5001c067a1fb0ac517f639d8b1a5f89be471903b3f359e1"
+      },
+      {
+        "path": "robots/go2_description/dae/foot.dae",
+        "git_blob_sha1": "22bfcf49d7b6d07015c88f55e4ca153463bd5d0e",
+        "size_bytes": 506988,
+        "sha256": "ffbd95fd641866ce9bd277aa249b92dafc9148d70131fa2c52709a35ce5b710b"
+      },
+      {
+        "path": "robots/go2_description/dae/hip.dae",
+        "git_blob_sha1": "1bec1a72feb8a5d941ad6767341bc1d79d7eff0d",
+        "size_bytes": 4666421,
+        "sha256": "8735e10617afe252cef0844c1d139d15bc6d4c653660d742fea9fe05c2704d8f"
+      },
+      {
+        "path": "robots/go2_description/dae/thigh.dae",
+        "git_blob_sha1": "a17c0482f296f2e19849f2544bf309866adfb801",
+        "size_bytes": 3884136,
+        "sha256": "a622381ae308897ff143b8bbf02f075457c342b22984205040424a5a983246fa"
+      },
+      {
+        "path": "robots/go2_description/dae/thigh_mirror.dae",
+        "git_blob_sha1": "fb424112d623ad912f75248bedb1f62c6c28d3b6",
+        "size_bytes": 3896575,
+        "sha256": "c7bae0b0565c2aa4b7cc15a538d795e9153e0f10c821cc18429e92693172bdc6"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_GripperMover.dae",
+        "git_blob_sha1": "b0a5082210b10e728d5627911cdc3b712376956e",
+        "size_bytes": 1946416,
+        "sha256": "22070433a988290de089b572483e0e080bd48aed42ed978ed3d0e17a0a90b12d"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_GripperStator.dae",
+        "git_blob_sha1": "9e81d24f2449cbfa2721f2f6471c90abe087cfaf",
+        "size_bytes": 3636421,
+        "sha256": "86bea214534cc45b432198f6b1db90713563406cc2f7545fac74f64edcdac0fc"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_Link00.dae",
+        "git_blob_sha1": "41d0ea6ad0aebcc46dc3d098c40f66ff2624b8e3",
+        "size_bytes": 1356348,
+        "sha256": "df276eb556db351f8136d25a023347021fe5e1ff61ecde87f84d18da440073ff"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_Link01.dae",
+        "git_blob_sha1": "2c5fb339fbd0f2a699ebe69fd405e938e5afb295",
+        "size_bytes": 4719004,
+        "sha256": "c3838b573d4881a046b56b561bb0bcead15e28eddcec891f4df7d2dabe5fc7dc"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_Link02.dae",
+        "git_blob_sha1": "e579fec6b6aa915ea6d3eee623e39ac7121b11d4",
+        "size_bytes": 2220491,
+        "sha256": "fcc86e640824d447f393b60751fc4d5391490d76074c2feffc7cce02d7dcce12"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_Link03.dae",
+        "git_blob_sha1": "dc70c99e82bd72a391582333b71b7c6e30ad7f47",
+        "size_bytes": 2858050,
+        "sha256": "d28522a8eb04cf19dcd997e3c06e8d1f490bb61416a5609fb4ec8ec0e98de5b8"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_Link04.dae",
+        "git_blob_sha1": "3b14f695f57aaa21520deb2d0e7e165973f32e9b",
+        "size_bytes": 2142272,
+        "sha256": "b785d8dcb7e618b70c92356189c355143152e7cf3ccfdb21cdc055ab55693ba7"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_Link05.dae",
+        "git_blob_sha1": "1f110f8dde5a47a5edc9ed17beff1fecccb67ab0",
+        "size_bytes": 1526000,
+        "sha256": "23174b5a0cb554a8d18248fda1064f2ae7fbcab03af03d70f6d7edb221a423b1"
+      },
+      {
+        "path": "robots/z1_description/meshes/visual/z1_Link06.dae",
+        "git_blob_sha1": "34b80d17dfc16a5a06538df2716984f124e2b4c4",
+        "size_bytes": 236046,
+        "sha256": "a71e4bb0a1e85dbc0f712e3581333f49526a9e3e30dc272b1839a0a696aa4cf0"
+      }
+    ]
+  },
+  "meshcat_version": "0.3.2",
+  "robot_visual_objects": 27,
+  "trace_sha256": "13c63bd4d09c9276b467b004edde91adf24ef1c017846c9203b0bd4827c2e240",
+  "html_sha256": "0d75d009e95a34d24d73c2d251f942c3d6b170610728006f1fe3e0c9ffa63650",
+  "source_sha256": {
+    "go2_z1_meshcat.py": "37147252c7e566fc3f2ae9be81f92387e4425700ffe678641e34cba3596bd14f",
+    "go2_z1_meshcat_shell.html": "37c6b9b59198867dd9b2c0b8b313b3f5335cac1c46b421967c3377dc8f27ee45"
+  }
+}

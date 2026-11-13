@@ -1,0 +1,17 @@
+{
+  "errors": [],
+  "played_time_s": 0.3,
+  "inline_played_time_s": 1.758,
+  "mobile_overflow": false,
+  "checked": [
+    "play/pause",
+    "timeline",
+    "view selector",
+    "light",
+    "dark",
+    "320px layout",
+    "inline iframe playback and metrics",
+    "widget state echo does not pause playback",
+    "stops at end without looping"
+  ]
+}

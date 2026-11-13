@@ -1,0 +1,36 @@
+{
+  "scope": "Go2-Z1 W CPU prediction replay, no physics or WBC execution",
+  "passed": true,
+  "source_sha256": {
+    "examples/go2_z1_whole_body_demo.py": "180277a235e200c9238aef13af0487ec6e2da6d9ffdb4e03039baa0cbef87358",
+    "examples/go2_z1_demo_fragment.html": "39bfbc3e801226d310b66eb1a5d78c9d859ca15b3bd20d75aeaec745b753a0a6",
+    "examples/go2_z1_demo_shell.html": "bc6629fca5fa78f409a1cefe12b0d1b9de66da6bc76131497871437bf27bcbc1"
+  },
+  "generated_sha256": {
+    "index.html": "1f0a0288f55c3dc73b4a73956b833a77c01a7a8e1cd24cd23a4ae077ba381c99",
+    "replay.html": "678462d0344d67ca785418cf86975a43c4ad8bd93e0d0a05a06837b97ba16b62",
+    "trace.json": "336d305f29195a778e40b57f708be8899199f097b29776300a0d501ba34f1faf",
+    "scene.json": "234d6d575a0ca7311aca7dde0f70b7078b7e4b49a3831e1b9ae438573b91ba0c"
+  },
+  "artifacts": [
+    "report.json",
+    "browser_checks.json",
+    "data_checks.json",
+    "preservation_hashes.json"
+  ],
+  "duration_s": 3.0,
+  "nodes": 60,
+  "display_frames": 61,
+  "geometry_primitives": 44,
+  "displacement_world_m": [
+    0.06,
+    0.12,
+    -0.03
+  ],
+  "notes": [
+    "Trajectory solved in both directions, not reversed playback",
+    "Display interpolation only between validated knots",
+    "Simplified arm geometry; no collision mesh acceptance",
+    "Existing controller, model, training code and dependency environment unchanged"
+  ]
+}

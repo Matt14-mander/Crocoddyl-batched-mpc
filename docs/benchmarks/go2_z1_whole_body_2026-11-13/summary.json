@@ -1,0 +1,119 @@
+{
+  "scope": "First offline CPU W planner; no existing Go2 training or environment changes",
+  "base_commit": "c9b2c673243737c8339767927303444fdc0341d5",
+  "tests": {
+    "planner_tests": {
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "legacy_adapter": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    }
+  },
+  "total": {
+    "passed": 33,
+    "skipped": 1,
+    "failed": 0
+  },
+  "skipped": [
+    "CUDA non-default-stream legacy adapter test: CUDA unavailable"
+  ],
+  "passed": [
+    "Static support equilibrium and total wrench balance",
+    "Augmented manifold and action derivatives",
+    "Contact forces and gradients against independent KKT / finite differences",
+    "Active soft force barrier gradients",
+    "Exact adjacent-control memory/cross derivatives",
+    "Full independent KKT rollout",
+    "Nonfinite, invalid quaternion, memory/gap, torque, state, friction and normal-force rejection",
+    "Iteration-limit and numerical-failure statuses",
+    "Converged but infeasible candidates rejected",
+    "All four offline tasks converged, feasible and tracking accepted"
+  ],
+  "offline_cases": [
+    {
+      "name": "hold",
+      "passed": true,
+      "converged": true,
+      "status": "SUCCESS",
+      "iterations": 1,
+      "solve_time_s": 0.009356464026495814,
+      "tcp_rmse_m": 1.3105036983065184e-16,
+      "total_time_s": 0.047564035980030894
+    },
+    {
+      "name": "reach",
+      "passed": true,
+      "converged": true,
+      "status": "SUCCESS",
+      "iterations": 3,
+      "solve_time_s": 0.023744045000057667,
+      "tcp_rmse_m": 2.325129640328858e-05,
+      "total_time_s": 0.056820529978722334
+    },
+    {
+      "name": "side",
+      "passed": true,
+      "converged": true,
+      "status": "SUCCESS",
+      "iterations": 4,
+      "solve_time_s": 0.03311675100121647,
+      "tcp_rmse_m": 7.259822023918804e-05,
+      "total_time_s": 0.06568623596103862
+    },
+    {
+      "name": "combined",
+      "passed": true,
+      "converged": true,
+      "status": "SUCCESS",
+      "iterations": 4,
+      "solve_time_s": 0.02937931998167187,
+      "tcp_rmse_m": 7.356158495669801e-05,
+      "total_time_s": 0.05857568298233673
+    }
+  ],
+  "pending": [
+    "Shared kinematic reference and Guidance schema/time validity",
+    "Unified WBC and fallback",
+    "Receding-horizon state updates, shifting and warm starts",
+    "C0/C1 and paired 12/36-scenario comparison",
+    "Collision and nonzero payload model checks",
+    "Isaac Lab/PhysX, simulator adapter/reset and execution",
+    "Real-time latency distributions, Torch/CUDA batch path",
+    "Packaging new non-Python assets in wheel/sdist"
+  ],
+  "not_rerun": [
+    "Previously recorded complete single-Go2 standing baseline",
+    "Training and integration repository/server checks"
+  ],
+  "preserved": {
+    "existing_files": 98,
+    "dependency_metadata_files": 82,
+    "changed": {
+      "tracked_files": [],
+      "environment": []
+    }
+  },
+  "artifacts": {
+    "legacy_adapter.log": "f656243b43a02e1198363bcceeae6678af8d7e60d3337826f1fb658f73952339",
+    "legacy_adapter.xml": "f712ee017d9fc659c30d7b8c90bc8b8d78869c5989ae01b23743024881e3540d",
+    "planner_reference.json": "c93379c39cc3999f5f6e5baeb1ac55527c53c7ffa385446e970c0275018ab6f4",
+    "planner_reference.log": "dc8467b3488bac691b09bf2ab6ee9fedbfcb74d3fc7cef2ec3eabdf375a97d21",
+    "planner_tests.log": "f303f3011bc248a1b92a12af91dffb48da2dee67f22b94014131e9331a026a18",
+    "planner_tests.xml": "75e78d6954be0a8289e413e81fceb80c9be0aa54d01eb69d3aedcdb407466893",
+    "preservation_hashes.json": "937e9a1a372c36ee31f3c77ba584d0912155fc5ae19dce93d05b154fd101084e"
+  },
+  "versions": {
+    "python": "3.11.4",
+    "numpy": "1.26.4",
+    "pinocchio": "4.0.0",
+    "crocoddyl": "3.2.1",
+    "torch": "2.2.2",
+    "platform": "macOS-10.16-x86_64-i386-64bit"
+  }
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Go2 × Z1 · Walking figure eight · Meshcat</title>
+<style>
+*{box-sizing:border-box}body{margin:0;color:#233743;background:#eef3f6;font:14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}#meshcat-pane{position:fixed;inset:0}canvas{display:block}header{position:fixed;left:32px;top:28px;pointer-events:none;max-width:520px}header .eyebrow{font-size:11px;letter-spacing:2.4px;color:#4c7986;font-weight:700}h1{font-size:34px;letter-spacing:-1.3px;margin:10px 0 7px;font-weight:650}header p{font-size:13px;color:#586e7a;margin:6px 0;line-height:1.65}.legend{display:flex;gap:18px;margin-top:17px;font-size:12px}.legend span:before{content:"";display:inline-block;width:20px;height:3px;background:#d58421;vertical-align:middle;margin-right:7px}.legend span+span:before{background:#138ca0}.stats{position:fixed;left:32px;bottom:120px;display:flex;gap:28px;pointer-events:none}.stat strong{display:block;font:500 26px ui-monospace,monospace;margin-top:7px}.stat label{font-size:11px;color:#5a7381;letter-spacing:.4px}.stat small{font-size:12px;margin-left:4px;color:#637986}.panel{position:fixed;bottom:25px;left:32px;right:32px;background:#ffffffeb;border:1px solid #cbd8df;border-radius:14px;padding:17px 20px;box-shadow:0 8px 30px #203a4d10;display:flex;align-items:center;gap:16px}button,select{font:inherit;border:1px solid #c5d4dc;background:white;color:#294953;border-radius:7px;padding:8px 12px;cursor:pointer}button.primary{background:#173e4a;color:white;border-color:#173e4a;min-width:74px}button:hover{filter:brightness(.95)}input[type=range]{flex:1;min-width:80px;accent-color:#176d7b}#clock{font:12px ui-monospace,monospace;white-space:nowrap}.contact{display:flex;gap:5px;margin-top:14px}.contact span{font:10px ui-monospace,monospace;border-radius:4px;padding:5px 7px;background:#d1ddd9;color:#276e55}.contact span.swing{background:#f0d7b2;color:#986619}.badge{position:fixed;right:32px;top:29px;text-align:right;color:#5b7180;font-size:11px;line-height:1.7}.badge b{color:#2c6a55;font-weight:600}#load{position:fixed;inset:0;display:grid;place-content:center;background:#eef3f6;z-index:50;text-align:center}#load strong{font-size:24px;font-weight:500}#load p{color:#617989}#load progress{width:260px;accent-color:#176d7b}.dg.ac{display:none}body.controls .dg.ac{display:block;z-index:20}#help{position:fixed;right:34px;bottom:122px;text-align:right;color:#66818f;font-size:11px;line-height:1.8}a{color:inherit}
+@media(max-width:760px){header{left:18px;top:18px;max-width:75%}h1{font-size:26px}.badge{right:14px;top:112px}.panel{left:12px;right:12px;bottom:12px;gap:8px;padding:10px;flex-wrap:wrap}.stats{left:18px;bottom:135px;gap:18px}.stat strong{font-size:21px}#help{display:none}.optional{display:none}input[type=range]{order:2;flex-basis:70%}#clock{order:3}header p{font-size:11px}}
+.curve-panel{position:fixed;right:32px;top:122px;width:220px;padding:15px;background:#ffffffbd;border:1px solid #d2dfe5;border-radius:12px;pointer-events:none}.curve-panel label{font-size:11px;color:#58717e;letter-spacing:.5px}.curve-panel svg{width:100%;height:195px;display:block}.curve-panel p{margin:0;text-align:center;font:10px ui-monospace,monospace;color:#75909d}@media(max-width:900px){.curve-panel{display:none}}
+</style></head><body>
+<div id="meshcat-pane"></div>
+<header><div class="eyebrow">LOCOMOTION + MANIPULATION / MESHCAT</div><h1>Go2 × Z1 <span style="font-weight:350">行走画 8 字</span></h1><p>世界坐标系固定竖直曲线 · 四足交替迈步 · 18 个驱动关节<br>Unitree 官方外观网格 · Crocoddyl 全身轨迹 + Pinocchio 动力学回放</p><div class="legend"><span>目标曲线</span><span>TCP 实际轨迹</span></div><div class="contact" id="contacts"><span>FL</span><span>FR</span><span>RL</span><span>RR</span></div></header>
+<div class="badge"><b>CPU 动力学回放通过</b><br><span id="solver-state"></span><br>离线演示 · 待仿真器闭环验收</div>
+<div class="curve-panel"><label>手端轨迹 · 世界 YZ 平面</label><svg viewBox="0 0 200 200" aria-label="目标和实际竖直八字轨迹"><path d="M 20 100 H 180 M 100 20 V 180" stroke="#d7e1e6" stroke-width="1" fill="none"/><path id="curve-target" fill="none" stroke="#d58421" stroke-width="2.4" opacity=".65"/><path id="curve-actual" fill="none" stroke="#138ca0" stroke-width="2.4"/><circle id="curve-dot" r="4" fill="#138ca0"/><text x="182" y="112" fill="#78919e" font-size="10">Y</text><text x="108" y="19" fill="#78919e" font-size="10">Z</text></svg><p>世界坐标固定 · 实际轨迹逐帧绘制</p></div>
+<div class="stats"><div class="stat"><label>TCP 当前误差</label><strong><span id="error">0.00</span><small>mm</small></strong></div><div class="stat"><label>机身向前位移</label><strong><span id="distance">0.0</span><small>cm</small></strong></div><div class="stat"><label>轨迹 RMS 误差</label><strong><span id="rms">—</span><small>mm</small></strong></div></div>
+<div id="help">拖动旋转 · 滚轮缩放 · 右键平移<br>绿色：支撑足　橙色：摆动足</div>
+<div class="panel"><button class="primary" id="play">播放</button><button id="reset" title="回到起点">重播</button><input aria-label="播放时间" id="seek" type="range" min="0" max="1" step="0.001" value="0"><span id="clock">0.00 / 0.00 s</span><select id="speed" aria-label="播放速度"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select><button class="optional" id="view">正视曲线</button><button class="optional" id="native">Meshcat 控件</button></div>
+<div id="load"><strong>Go2 × Z1</strong><p id="loading">正在载入完整机器人网格…</p><progress id="progress" value="0" max="1"></progress></div>
+<script>/*__MESHCAT_JS__*/</script>
+<script>
+const commands=/*__COMMANDS__*/;
+const report=/*__REPORT__*/;
+window.demoReport=report;
+const viewer=window.viewer=new MeshCat.Viewer(document.getElementById('meshcat-pane'));
+const $=id=>document.getElementById(id);
+const center=report.target_yz[0];
+function point(p){return [100+(p[0]-center[0])*1150,100-(p[1]-center[1])*1150];}
+function path(points){return points.map((p,i)=>(i?'L':'M')+point(p).join(',')).join(' ');}
+$('curve-target').setAttribute('d',path(report.target_yz));
+// Meshcat rotates the Z-up robot scene into Three.js Y-up. The camera's
+// compensating parent rotation makes camera positions and OrbitControls Y-up.
+function camera(front=false){viewer.set_transform(['Cameras','default','rotated'],[1,0,0,0,0,0,1,0,0,-1,0,0,0,0,0,1]);viewer.camera.up.set(0,1,0);viewer.camera.position.set(...(front?[2.3,.95,.02]:[1.8,1.35,2.0]));viewer.controls.target.set(.22,.48,0);viewer.camera.fov=38;viewer.camera.updateProjectionMatrix();viewer.controls.update();viewer.set_dirty();}
+async function boot(){
+  for(let i=0;i<commands.length;i++){
+    const binary=Uint8Array.from(atob(commands[i]),c=>c.charCodeAt(0));
+    const stream=new Blob([binary]).stream().pipeThrough(new DecompressionStream('gzip'));
+    viewer.handle_command_bytearray(new Uint8Array(await new Response(stream).arrayBuffer()));
+    $('progress').value=(i+1)/commands.length;
+    if(i%15===0)await new Promise(requestAnimationFrame);
+  }
+  camera();viewer.gui.domElement.style.display='none';viewer.animator.seek(0);viewer.set_3d_pane_size();
+  $('seek').max=report.duration;$('rms').textContent=(report.metrics.tcp_rmse*1000).toFixed(2);
+  $('solver-state').textContent=report.converged?'求解器已收敛':'求解器达到迭代上限 · 可行轨迹';
+  $('load').style.display='none';window.demoReady=true;
+  viewer.animator.play();$('play').textContent='暂停';
+}
+$('play').onclick=()=>{viewer.animator.playing?viewer.animator.pause():viewer.animator.play();};
+$('reset').onclick=()=>{viewer.animator.reset();viewer.animator.play();};
+$('seek').oninput=e=>{viewer.animator.pause();viewer.animator.seek(Number(e.target.value));viewer.animator.display_progress(Number(e.target.value));};
+$('speed').onchange=e=>viewer.animator.mixer.timeScale=Number(e.target.value);
+let front=false;$('view').onclick=()=>{front=!front;camera(front);$('view').textContent=front?'立体视角':'正视曲线';};
+$('native').onclick=()=>{const show=document.body.classList.toggle('controls');viewer.gui.domElement.style.display=show?'':'none';};
+let lastFrame=-1;
+function hud(){if(window.demoReady){const t=viewer.animator.time||0;let k=0;while(k+1<report.times.length&&report.times[k+1]<=t+1e-8)k++;$('seek').value=t;$('clock').textContent=`${t.toFixed(2)} / ${report.duration.toFixed(2)} s`;$('error').textContent=report.tcp_error_mm[k].toFixed(2);$('distance').textContent=report.forward_cm[k].toFixed(1);$('play').textContent=viewer.animator.playing?'暂停':'播放';[...$('contacts').children].forEach((node,i)=>node.classList.toggle('swing',!report.contacts[k][i]));if(k!==lastFrame){$('curve-actual').setAttribute('d',path(report.actual_yz.slice(0,k+1)));const xy=point(report.actual_yz[k]);$('curve-dot').setAttribute('cx',xy[0]);$('curve-dot').setAttribute('cy',xy[1]);lastFrame=k;}}requestAnimationFrame(hud);}hud();
+boot().catch(e=>{$('loading').textContent='载入失败：'+e.message;window.demoError=e.message;console.error(e);});
+</script></body></html>

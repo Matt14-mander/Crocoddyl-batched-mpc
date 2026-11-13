@@ -1,0 +1,34 @@
+{
+  "repository": "unitreerobotics/unitree_ros",
+  "commit": "5994d4faef0a9cadd3287f8de0199a67eeb2a259",
+  "files": [
+    {
+      "path": "robots/go2_description/dae/base.dae",
+      "git_blob_sha1": "4e47b5bec4a3c91ae4a1d49d73080d697a917cf1"
+    },
+    {
+      "path": "robots/go2_description/dae/calf.dae",
+      "git_blob_sha1": "83221779392a5d19af59561d0ea4eea48ef6102a"
+    },
+    {
+      "path": "robots/go2_description/dae/calf_mirror.dae",
+      "git_blob_sha1": "413fd75d8b173b4597a35cc71e618a7d025069bd"
+    },
+    {
+      "path": "robots/go2_description/dae/foot.dae",
+      "git_blob_sha1": "22bfcf49d7b6d07015c88f55e4ca153463bd5d0e"
+    },
+    {
+      "path": "robots/go2_description/dae/hip.dae",
+      "git_blob_sha1": "1bec1a72feb8a5d941ad6767341bc1d79d7eff0d"
+    },
+    {
+      "path": "robots/go2_description/dae/thigh.dae",
+      "git_blob_sha1": "a17c0482f296f2e19849f2544bf309866adfb801"
+    },
+    {
+      "path": "robots/go2_description/dae/thigh_mirror.dae",
+      "git_blob_sha1": "fb424112d623ad912f75248bedb1f62c6c28d3b6"
+    }
+  ]
+}

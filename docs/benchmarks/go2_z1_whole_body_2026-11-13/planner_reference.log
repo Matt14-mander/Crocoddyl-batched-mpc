@@ -1,0 +1,4 @@
+{"name": "hold", "passed": true, "status": "SUCCESS", "iterations": 1, "solve_time_s": 0.009356464026495814, "total_time_s": 0.047564035980030894, "tcp_rmse_m": 1.3105036983065184e-16, "failures": []}
+{"name": "reach", "passed": true, "status": "SUCCESS", "iterations": 3, "solve_time_s": 0.023744045000057667, "total_time_s": 0.056820529978722334, "tcp_rmse_m": 2.325129640328858e-05, "failures": []}
+{"name": "side", "passed": true, "status": "SUCCESS", "iterations": 4, "solve_time_s": 0.03311675100121647, "total_time_s": 0.06568623596103862, "tcp_rmse_m": 7.259822023918804e-05, "failures": []}
+{"name": "combined", "passed": true, "status": "SUCCESS", "iterations": 4, "solve_time_s": 0.02937931998167187, "total_time_s": 0.05857568298233673, "tcp_rmse_m": 7.356158495669801e-05, "failures": []}

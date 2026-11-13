@@ -1,5 +1,24 @@
 # 项目验证记录
 
+## 2026-11-13 Go2–Z1 W 全身规划器 CPU 首版
+
+新增独立 `planners/standing_whole_body.py`：固定四足接触、18 力矩 Box-FDDP、TCP/质心/
+基座/姿态任务，以及真实相邻力矩状态增广。物理状态为 49/48，增广后为 67/66。
+摩擦、法向力及状态范围采用软 barrier，最终以独立 Pinocchio KKT 和逐节点门槛验收，
+不会把优化收敛视为约束通过。
+
+新测试 **30 passed**，旧 Go2 adapter **3 passed / 1 skipped**（CUDA unavailable）；
+总计 **33 passed / 1 skipped / 0 failed**。新增静态保持、前伸 1 cm、侧移 2 cm、组合位移
+四个离线例均收敛且通过任务/约束检查。移动任务 TCP RMSE 为 0.0233–0.0736 mm，
+预测动力学 gap 最大 8.13e-14，力矩/摩擦/法向力及关节/基座边界违反均为零。
+该结论限于刚体模型预测，尚无物理执行验收。
+
+98 个既有源文件/资产/测试/示例/配置和 82 个依赖元数据文件与本轮开始前哈希一致。
+未运行安装、升级、单 Go2 训练或集成仓库操作。既有 Go2 完整站立回归沿用前次证据，
+本轮未重复执行。Guidance/WBC、在线重规划/回退、碰撞/载荷、PhysX 和实时性仍待验收。
+实现约定与复现命令见 [W CPU 记录](go2_z1_whole_body.md)，原始证据见
+[本轮结果](benchmarks/go2_z1_whole_body_2026-11-13/summary.json)。
+
 ## 2026-11-13 Go2 + Z1 独立 Pinocchio CPU 模型
 
 新增独立 `models/go2_arm.py`、仿真装配配置与组合 URDF。Z1 根相对 Go2 base 为

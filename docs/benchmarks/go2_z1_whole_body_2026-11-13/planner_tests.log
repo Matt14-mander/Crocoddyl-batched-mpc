@@ -1,0 +1,4 @@
+...........derivative_errors {"Fx": 4.83295045650145e-08, "Fu": 3.234465023593813e-08, "Lx": 1.2348184090238412e-06, "Lu": 9.006459315320792e-13, "force_x": 1.975469920978412e-08, "force_u": 1.4693727123926692e-08}
+....moving_case {"tcp_position_rmse_m": 7.356158495669801e-05, "tcp_rotation_peak_rad": 0.00041755245541516957, "max_dynamics_gap": 8.129608097817709e-14, "max_foot_position_error_m": 4.683145744662516e-07, "max_torque_fraction": 0.2163681331939991}
+...............
+30 passed in 4.01s
