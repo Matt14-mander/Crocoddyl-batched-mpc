@@ -1,0 +1,183 @@
+{
+  "all_pairs_passed": true,
+  "cases": {
+    "hold": {
+      "W": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 8,
+        "tcp_peak_mm": 0.00041545309778892364,
+        "tcp_rmse_mm": 0.00019307547690905987,
+        "original_task_tcp_peak_mm": 0.00041545309778892364,
+        "rotation_peak_rad": 4.342423415080951e-07,
+        "common_com_rmse_mm": 0.0034097111111569206,
+        "native_request_samples": 8,
+        "native_request_p50_ms": 158.666898496449,
+        "native_request_p95_ms": 201.00360073847693,
+        "native_request_max_ms": 216.0395079990849,
+        "converged_candidates": 8,
+        "control_updates": 325
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 8,
+        "tcp_peak_mm": 0.0028898395955667157,
+        "tcp_rmse_mm": 0.0008270302460107246,
+        "original_task_tcp_peak_mm": 0.0028898395955667157,
+        "rotation_peak_rad": 1.0085860560976172e-05,
+        "common_com_rmse_mm": 0.07699084343748977,
+        "native_request_samples": 8,
+        "native_request_p50_ms": 180.78147553023882,
+        "native_request_p95_ms": 215.81261907413133,
+        "native_request_max_ms": 229.18986197328195,
+        "converged_candidates": 8,
+        "control_updates": 325
+      }
+    },
+    "reach": {
+      "W": {
+        "passed": true,
+        "accepted": 12,
+        "requests": 12,
+        "tcp_peak_mm": 0.02234856566831758,
+        "tcp_rmse_mm": 0.012207113618975684,
+        "original_task_tcp_peak_mm": 0.257917844562237,
+        "rotation_peak_rad": 5.1605424042496833e-05,
+        "common_com_rmse_mm": 0.0730037012506737,
+        "native_request_samples": 12,
+        "native_request_p50_ms": 162.0673750003334,
+        "native_request_p95_ms": 197.28108204144516,
+        "native_request_max_ms": 209.08244798192754,
+        "converged_candidates": 12,
+        "control_updates": 425
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 12,
+        "requests": 12,
+        "tcp_peak_mm": 0.02171298045160345,
+        "tcp_rmse_mm": 0.011839200826803573,
+        "original_task_tcp_peak_mm": 0.2589877939022547,
+        "rotation_peak_rad": 5.343894922298005e-05,
+        "common_com_rmse_mm": 0.102296706438207,
+        "native_request_samples": 12,
+        "native_request_p50_ms": 178.40636349865235,
+        "native_request_p95_ms": 261.3285194587661,
+        "native_request_max_ms": 280.18047398654744,
+        "converged_candidates": 12,
+        "control_updates": 425
+      }
+    },
+    "high_low": {
+      "W": {
+        "passed": true,
+        "accepted": 24,
+        "requests": 24,
+        "tcp_peak_mm": 0.4483930396576332,
+        "tcp_rmse_mm": 0.15709666012824317,
+        "original_task_tcp_peak_mm": 0.4483930396580452,
+        "rotation_peak_rad": 0.005016931610735743,
+        "common_com_rmse_mm": 0.22018781571041524,
+        "native_request_samples": 24,
+        "native_request_p50_ms": 171.08008099603467,
+        "native_request_p95_ms": 192.80179014604073,
+        "native_request_max_ms": 195.42416301555932,
+        "converged_candidates": 24,
+        "control_updates": 725
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 24,
+        "requests": 24,
+        "tcp_peak_mm": 0.4359749939921427,
+        "tcp_rmse_mm": 0.1553396593412691,
+        "original_task_tcp_peak_mm": 0.43597499399224254,
+        "rotation_peak_rad": 0.00505178044470186,
+        "common_com_rmse_mm": 0.15503405112741453,
+        "native_request_samples": 24,
+        "native_request_p50_ms": 236.7969694896601,
+        "native_request_p95_ms": 273.004743331694,
+        "native_request_max_ms": 284.5828119898215,
+        "converged_candidates": 24,
+        "control_updates": 725
+      }
+    },
+    "failure": {
+      "W": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 12,
+        "tcp_peak_mm": 0.6046951546431808,
+        "tcp_rmse_mm": 0.09277817467430599,
+        "original_task_tcp_peak_mm": 22.348134221781887,
+        "rotation_peak_rad": 0.00025361947009090567,
+        "common_com_rmse_mm": 5.322769219177813,
+        "native_request_samples": 8,
+        "native_request_p50_ms": 161.4270254794974,
+        "native_request_p95_ms": 175.9513620258076,
+        "native_request_max_ms": 177.64941399218515,
+        "converged_candidates": 8,
+        "control_updates": 425
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 12,
+        "tcp_peak_mm": 0.6165485940216892,
+        "tcp_rmse_mm": 0.09248667341862621,
+        "original_task_tcp_peak_mm": 22.348171331573877,
+        "rotation_peak_rad": 0.0002683164253240396,
+        "common_com_rmse_mm": 5.310104516597085,
+        "native_request_samples": 8,
+        "native_request_p50_ms": 244.25718598649837,
+        "native_request_p95_ms": 322.3860024911118,
+        "native_request_max_ms": 342.62245998252183,
+        "converged_candidates": 8,
+        "control_updates": 425
+      }
+    },
+    "expired": {
+      "W": {
+        "passed": true,
+        "accepted": 9,
+        "requests": 10,
+        "tcp_peak_mm": 0.6413915424541662,
+        "tcp_rmse_mm": 0.09605636339531659,
+        "original_task_tcp_peak_mm": 22.315765838690382,
+        "rotation_peak_rad": 0.0002767376884225173,
+        "common_com_rmse_mm": 4.323057517514253,
+        "native_request_samples": 10,
+        "native_request_p50_ms": 167.99285952583887,
+        "native_request_p95_ms": 186.96147420560007,
+        "native_request_max_ms": 195.02908497815952,
+        "converged_candidates": 10,
+        "control_updates": 425
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 9,
+        "requests": 10,
+        "tcp_peak_mm": 0.6525552474307482,
+        "tcp_rmse_mm": 0.09594479198939732,
+        "original_task_tcp_peak_mm": 22.315785754356412,
+        "rotation_peak_rad": 0.00029228279352987185,
+        "common_com_rmse_mm": 4.309064343881118,
+        "native_request_samples": 10,
+        "native_request_p50_ms": 258.8358304928988,
+        "native_request_p95_ms": 391.51660340430675,
+        "native_request_max_ms": 404.1746300063096,
+        "converged_candidates": 10,
+        "control_updates": 425
+      }
+    }
+  },
+  "requests_per_method": {
+    "C0": 66,
+    "W": 66
+  },
+  "accepted_per_method": {
+    "C0": 61,
+    "W": 61
+  }
+}

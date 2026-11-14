@@ -1,0 +1,72 @@
+{
+  "source_hashes_match_current": true,
+  "cases": {
+    "hold": {
+      "frozen_w_repeat_arrays_identical": true,
+      "feedback_samples": 8,
+      "feedback_max_errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "centroidal_initial": 0.0,
+        "contact_force_estimate": 0.0
+      },
+      "restoration_attempts": 0,
+      "shared_reference_identical": true,
+      "settings_and_limits_identical": true
+    },
+    "reach": {
+      "frozen_w_repeat_arrays_identical": true,
+      "feedback_samples": 12,
+      "feedback_max_errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "centroidal_initial": 0.0,
+        "contact_force_estimate": 0.0
+      },
+      "restoration_attempts": 0,
+      "shared_reference_identical": true,
+      "settings_and_limits_identical": true
+    },
+    "high_low": {
+      "frozen_w_repeat_arrays_identical": true,
+      "feedback_samples": 24,
+      "feedback_max_errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "centroidal_initial": 0.0,
+        "contact_force_estimate": 0.0
+      },
+      "restoration_attempts": 0,
+      "shared_reference_identical": true,
+      "settings_and_limits_identical": true
+    },
+    "failure": {
+      "frozen_w_repeat_arrays_identical": true,
+      "feedback_samples": 8,
+      "feedback_max_errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "centroidal_initial": 0.0,
+        "contact_force_estimate": 0.0
+      },
+      "restoration_attempts": 0,
+      "shared_reference_identical": true,
+      "settings_and_limits_identical": true
+    },
+    "expired": {
+      "frozen_w_repeat_arrays_identical": true,
+      "feedback_samples": 10,
+      "feedback_max_errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "centroidal_initial": 0.0,
+        "contact_force_estimate": 0.0
+      },
+      "restoration_attempts": 0,
+      "shared_reference_identical": true,
+      "settings_and_limits_identical": true
+    }
+  },
+  "passed": true,
+  "c0_high_low_recheck_repeat_arrays_identical": true
+}

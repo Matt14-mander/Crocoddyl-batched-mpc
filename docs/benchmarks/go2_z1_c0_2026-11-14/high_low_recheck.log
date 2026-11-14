@@ -1,0 +1,1 @@
+{"case": "high_low_C0", "passed": true, "failures": [], "checks": {"cpu_gates": true, "multiple_packets": true, "worker_closed": true, "full_duration": true, "shifted_seed_used": true, "no_rejected_delivery": true}, "accepted": 24, "requests": 24, "tcp_peak": 0.00043597499399214266, "rotation_peak": 0.00505178044470186, "native_elapsed_s": 16.056606362049934}
