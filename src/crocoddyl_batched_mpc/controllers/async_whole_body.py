@@ -16,9 +16,12 @@ from dataclasses import dataclass, replace
 import numpy as np
 
 from ..guidance import Guidance, GuidanceBuffer, _array, stationary
+from ..guidance_batch import copy_guidance
 from ..models.go2_arm import load_go2_arm
+from ..planners.cached_whole_body import CachedWholeBodyPlanner
 from ..planners.standing_whole_body import StandingWholeBodyPlanner
 from ..references.standing_arm import guidance_from_whole_body, model_identity
+from ..references.whole_body_export import WholeBodyGuidanceExporter
 from .rolling_whole_body_cpu import common_seed, preview_window, shifted_seed
 
 
@@ -80,14 +83,14 @@ class WorkerFault:
 
 
 class WWorkerEngine:
-    def __init__(self, config, common, planner_settings, settings):
+    def __init__(self, config, common, planner_settings, settings, *, optimized=True):
         self.robot = load_go2_arm(config)
         if model_identity(self.robot) != common.guidance.samples[0].model_id:
             raise ValueError("worker model differs from task")
         self.common, self.settings = common, settings
-        self.planner = StandingWholeBodyPlanner(
-            self.robot, planner_settings, common.nominal_states[0]
-        )
+        planner_type = CachedWholeBodyPlanner if optimized else StandingWholeBodyPlanner
+        self.planner = planner_type(self.robot, planner_settings, common.nominal_states[0])
+        self.exporter = WholeBodyGuidanceExporter(self.robot) if optimized else None
         self.cached = None
         self.pending = None
 
@@ -138,9 +141,12 @@ class WWorkerEngine:
             initial_state=snap.state,
         )
         solve_done = time.perf_counter()
-        packet = guidance_from_whole_body(
-            self.robot, plan, window, sequence=request.sequence, initial_state=snap.state
+        export = (
+            self.exporter.export
+            if self.exporter is not None
+            else lambda *a, **kw: guidance_from_whole_body(self.robot, *a, **kw)
         )
+        packet = export(plan, window, sequence=request.sequence, initial_state=snap.state)
         self.pending = (request.sequence, now, plan, recovery)
         return packet, dict(
             phase_timings=dict(
@@ -409,10 +415,18 @@ class AsyncWReceiver:
                 else:
                     # Pickle does not re-run dataclass validation/read-only copying.
                     try:
-                        packet = replace(packet, samples=tuple(replace(s) for s in packet.samples))
+                        packet = copy_guidance(packet)
+                        validated_at = max(now, self._now())
+                        event["validated_at"] = validated_at
+                        event["validation_wall_s"] = validated_at - now
                         event["valid_until"] = float(packet.valid_until)
-                        event["accepted"] = self.buffer.submit(packet, now)
-                        reason = None if event["accepted"] else self.buffer.last_rejection
+                        if validated_at > request.sent_at + self.settings.result_timeout:
+                            reason = "timeout"
+                        elif validated_at - request.snapshot.time > self.settings.max_state_age:
+                            reason = "state_age"
+                        else:
+                            event["accepted"] = self.buffer.submit(packet, validated_at)
+                            reason = None if event["accepted"] else self.buffer.last_rejection
                     except (ValueError, TypeError):
                         reason = "packet_contract"
                     if event["accepted"]:

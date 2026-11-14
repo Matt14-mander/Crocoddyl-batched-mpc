@@ -343,3 +343,32 @@ def test_invalid_async_settings(kwargs):
 def test_invalid_wall_settings(kwargs):
     with pytest.raises(ValueError):
         WallCPUSettings(**kwargs)
+
+
+@pytest.mark.parametrize("reason", ["timeout", "state_age", "expired"])
+def test_validation_time_counts_toward_wall_deadlines(task, monkeypatch, reason):
+    import crocoddyl_batched_mpc.controllers.async_whole_body as module
+
+    settings = dict(result_timeout=1.5, max_state_age=1.5)
+    if reason == "timeout":
+        settings["result_timeout"] = 0.25
+    elif reason == "state_age":
+        settings["max_state_age"] = 0.25
+    robot, common, clock, transport, receiver = setup(task, **settings)
+    request = submit(common, clock, receiver)
+    message = result(robot, common, request)
+    copy_packet = module.copy_guidance
+
+    def delayed_validation(packet):
+        validated = copy_packet(packet)
+        clock.value = 10.9 if reason == "expired" else 10.3
+        return validated
+
+    monkeypatch.setattr(module, "copy_guidance", delayed_validation)
+    transport.messages.append(message)
+    clock.value = 10.2
+    receiver.tick()
+    event = receiver.events[-1]
+    assert not event["accepted"] and event["reason"] == reason
+    assert event["validation_wall_s"] > 0.09
+    assert receiver.buffer.current is None and receiver.last_accepted[1] == 0

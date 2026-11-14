@@ -264,16 +264,19 @@ class StandingWholeBodyPlanner:
         if not np.allclose(reference.times, np.arange(n) * self.settings.dt, atol=1e-12, rtol=0):
             raise ValueError("reference times must be relative knots 0, dt, ..., N*dt")
         for poses in (reference.tcp_poses, reference.base_poses):
-            for pose in poses:
-                rotation = pose[:3, :3]
-                if (
-                    not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-8, rtol=0)
-                    or abs(np.linalg.det(rotation) - 1) > 1e-8
-                    or not np.allclose(pose[3], [0, 0, 0, 1], atol=1e-12, rtol=0)
-                ):
-                    raise ValueError("task poses must be rigid SE(3) transforms")
-        for x in reference.nominal_states:
-            self._native_state(x)
+            poses = np.asarray(poses)
+            rotation = poses[:, :3, :3]
+            if (
+                not np.allclose(rotation.swapaxes(-1, -2) @ rotation, np.eye(3), atol=1e-8, rtol=0)
+                or np.any(np.abs(np.linalg.det(rotation) - 1) > 1e-8)
+                or not np.allclose(poses[:, 3], [0, 0, 0, 1], atol=1e-12, rtol=0)
+            ):
+                raise ValueError("task poses must be rigid SE(3) transforms")
+        # Shape/finite checks above already cover q/v. Retain the exact per-q dot
+        # product and threshold; validation need not allocate native state copies.
+        for x in np.asarray(reference.nominal_states, dtype=float):
+            if abs(np.dot(x[3:7], x[3:7]) - 1) > 1e-8:
+                raise ValueError("q requires a unit xyzw base quaternion")
 
     def _velocity_limits(self):
         _, np, _ = _native()
@@ -414,12 +417,15 @@ class StandingWholeBodyPlanner:
             initial = self._native_state(values)
         return c.ShootingProblem(np.r_[initial, previous], running, terminal)
 
+    def _oracle_workspace(self):
+        return self.robot.model.createData()
+
     def _independent_node(self, x, u):
         """Dense Pinocchio KKT oracle, independent of Crocoddyl contact data."""
         _, np, pin = _native()
         model, s = self.robot.model, self.settings
         q, v = x[:25], x[25:49]
-        data = model.createData()
+        data = self._oracle_workspace()
         mass = pin.crba(model, data, q).copy()
         mass = np.triu(mass) + np.triu(mass, 1).T
         h = pin.nonLinearEffects(model, data, q, v).copy()
@@ -443,6 +449,8 @@ class StandingWholeBodyPlanner:
         solution = np.linalg.solve(matrix, np.r_[actuation - h, -drift])
         a, force = solution[:24], solution[24:]
         return dict(
+            base_pose=data.oMf[self.base_id].homogeneous.copy(),
+            tcp_pose=data.oMf[self.robot.tcp_id].homogeneous.copy(),
             acceleration=a,
             forces=force.reshape(4, 3),
             mass=mass,
@@ -464,7 +472,7 @@ class StandingWholeBodyPlanner:
             return float(max(0, np.max(value)))
 
         force = node["forces"]
-        base = self.robot.frame_pose(self.robot.from_native_q(x[:25]), "base")
+        base = node["base_pose"]
         return {
             "torque": excess(np.abs(u) - self.torque_limits),
             "friction": excess(
@@ -525,7 +533,7 @@ class StandingWholeBodyPlanner:
                 forces.append(node["forces"])
                 accelerations.append(self.robot.from_native_v(node["acceleration"]))
                 per_node.append(self._node_violations(x, u, node))
-                actual = self.robot.frame_pose(self.robot.from_native_q(x[:25]), "z1_tcp")
+                actual = node["tcp_pose"]
                 target = reference.tcp_poses[k]
                 tcp_errors.append(float(np.linalg.norm(actual[:3, 3] - target[:3, 3])))
                 rotation_errors.append(
@@ -620,8 +628,10 @@ class StandingWholeBodyPlanner:
             else reference
         )
         problem = self.build_problem(reference, previous_torque, initial_state=initial_state)
+        constructed = time.perf_counter()
         solver = c.SolverBoxFDDP(problem)
         solver.th_stop = self.settings.stopping_threshold
+        solver_ready = time.perf_counter()
         seed_u = [self.static_control.copy() for _ in range(self.settings.nodes)]
         seed_x = None
         if initial_guess is not None:
@@ -674,6 +684,9 @@ class StandingWholeBodyPlanner:
         )
         diagnostics["static_seed"] = self.static_diagnostics
         diagnostics["problem_build_time_s"] = started - total_started
+        diagnostics["problem_construct_time_s"] = constructed - total_started
+        diagnostics["solver_setup_time_s"] = solver_ready - constructed
+        diagnostics["seed_prepare_time_s"] = started - solver_ready
         diagnostics["validation_time_s"] = time.perf_counter() - started - elapsed
         # Invalid quaternions must never be sent through Pinocchio conversion.
         valid_states = np.isfinite(xs).all() and np.all(

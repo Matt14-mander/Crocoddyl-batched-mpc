@@ -1,0 +1,151 @@
+{
+  "settings_and_limits_identical_in_all_seven_cases": true,
+  "source_hashes_match_current": {
+    "paired.json": true,
+    "seven_cases.json": true,
+    "wall_delays.json": true,
+    "virtual_delays.json": true
+  },
+  "wall_delays.json": {
+    "all_scenarios_passed": true,
+    "tracking_passed": 6,
+    "expected_stops": 2
+  },
+  "virtual_delays.json": {
+    "all_scenarios_passed": true,
+    "tracking_passed": 6,
+    "expected_stops": 2
+  },
+  "historical_virtual_trace_comparison": {
+    "boundary_1": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    },
+    "boundary_2": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    },
+    "burst_1": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    },
+    "burst_2": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    },
+    "expired_1": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    },
+    "expired_2": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    },
+    "overrun_1": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    },
+    "overrun_2": {
+      "identical": true,
+      "max_errors": {
+        "times": 0.0,
+        "states": 0.0,
+        "torques": 0.0,
+        "forces": 0.0,
+        "controls": 0.0,
+        "wbc_states": 0.0,
+        "tcp_reference": 0.0,
+        "request_times": 0.0,
+        "request_states": 0.0,
+        "request_previous_torques": 0.0,
+        "request_sent_at": 0.0
+      }
+    }
+  },
+  "paired_archive_sha256_matches": true,
+  "passed": true
+}
