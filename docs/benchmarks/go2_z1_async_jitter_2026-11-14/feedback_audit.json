@@ -1,0 +1,422 @@
+{
+  "wall_delays": {
+    "expired_1": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2242,
+      "requests_checked": 10,
+      "wbc_states_checked": 360,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 360,
+      "max_control_interval_s": 0.056478751997929066,
+      "control_interval_p50_s": 0.021307197050191462,
+      "trace_sha256": "68eb18d3ae91fe68bef2a0879225a744896868d467740dc8c09d6d5a6f89e9cd",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "expired_2": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2235,
+      "requests_checked": 10,
+      "wbc_states_checked": 355,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 355,
+      "max_control_interval_s": 0.05426520702894777,
+      "control_interval_p50_s": 0.021376797027187422,
+      "trace_sha256": "0fd171fc3ce4397376846ce21084111130345afd3165fb685a909f2e29e21936",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "burst_1": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2206,
+      "requests_checked": 10,
+      "wbc_states_checked": 324,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 324,
+      "max_control_interval_s": 0.2473014309653081,
+      "control_interval_p50_s": 0.021729763015173376,
+      "trace_sha256": "4304f7f107c0809d12bb187f30bf0d0a3eac8719315b33dbb49d17fc5b92e309",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "burst_2": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2189,
+      "requests_checked": 10,
+      "wbc_states_checked": 314,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 314,
+      "max_control_interval_s": 0.3230935699539259,
+      "control_interval_p50_s": 0.022268381959293038,
+      "trace_sha256": "814346bb4366a20eab7949d14febea701c3a4c9e571f4228b5ccc33093dadd25",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "boundary_1": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2186,
+      "requests_checked": 10,
+      "wbc_states_checked": 300,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 300,
+      "max_control_interval_s": 0.17440493102185428,
+      "control_interval_p50_s": 0.02247587702004239,
+      "trace_sha256": "58d453b691f5a8bc1ddd9e5c32d9d5709614ee2405c44f9725e374b44cfa4962",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "boundary_2": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2223,
+      "requests_checked": 10,
+      "wbc_states_checked": 341,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 341,
+      "max_control_interval_s": 0.21664663997944444,
+      "control_interval_p50_s": 0.02100852149305865,
+      "trace_sha256": "a30ec0ef788197c6abd256aa992f66d44f4b87e4304ae0c7d247c096ca33b805",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "overrun_1": {
+      "passed": true,
+      "closed_loop_passed": false,
+      "scenario_passed": true,
+      "states_checked": 133,
+      "requests_checked": 2,
+      "wbc_states_checked": 21,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 21,
+      "max_control_interval_s": 0.047302660008426756,
+      "control_interval_p50_s": 0.02064961998257786,
+      "trace_sha256": "9e4e6d93ac8392bb0b1b58431ff0e92714bedf3a7e01cdde5d68490c973a1ce7",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "overrun_2": {
+      "passed": true,
+      "closed_loop_passed": false,
+      "scenario_passed": true,
+      "states_checked": 134,
+      "requests_checked": 1,
+      "wbc_states_checked": 21,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 21,
+      "max_control_interval_s": 0.04856132296845317,
+      "control_interval_p50_s": 0.02109778646263294,
+      "trace_sha256": "38c7a034c759277e0da079655bbbc07a4192518289b02517a6e31f0bc069ee57",
+      "original_limits_and_wbc_settings_unchanged": true
+    }
+  },
+  "seven_cases": {
+    "normal": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2283,
+      "requests_checked": 12,
+      "wbc_states_checked": 366,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 366,
+      "max_control_interval_s": 0.05769261997193098,
+      "control_interval_p50_s": 0.020994252990931273,
+      "trace_sha256": "96d87cdb1f21e5e94bb25bf542cf17fc8cb0eb91561b9269588b6a482e29a0a9",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "delay": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2266,
+      "requests_checked": 12,
+      "wbc_states_checked": 374,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 374,
+      "max_control_interval_s": 0.050692811026237905,
+      "control_interval_p50_s": 0.02072201104601845,
+      "trace_sha256": "51337ea1303b3dc5ef6a1a1fba6d44210b7a64dfd506b1dc9f5ba6595b0f3fff",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "failure": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2204,
+      "requests_checked": 12,
+      "wbc_states_checked": 332,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 332,
+      "max_control_interval_s": 0.16038047103211284,
+      "control_interval_p50_s": 0.021857955027371645,
+      "trace_sha256": "3c8ca2884bff2dfdb9f6ae32c17769e94c8ac0bf1d2ec3cfad4f0bbeaa6399d2",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "timeout": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2247,
+      "requests_checked": 10,
+      "wbc_states_checked": 361,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 361,
+      "max_control_interval_s": 0.05864975898293778,
+      "control_interval_p50_s": 0.020905984507407993,
+      "trace_sha256": "2faf5b32ea77b1b388e147135592524c727565a64ff0f50e70fe6fe6bd060d54",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "expired": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2213,
+      "requests_checked": 10,
+      "wbc_states_checked": 338,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 338,
+      "max_control_interval_s": 0.05829006701242179,
+      "control_interval_p50_s": 0.022325510042719543,
+      "trace_sha256": "0ff6975ce7ea7bd3f69f68512082f54fa86233efedb1d33b21cb3413665ce1b9",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "restart": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 2250,
+      "requests_checked": 7,
+      "wbc_states_checked": 351,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 351,
+      "max_control_interval_s": 0.06995970400748774,
+      "control_interval_p50_s": 0.02125016349600628,
+      "trace_sha256": "d7e6314e9c2f5be57880989c396db99a09eb74dd6d6d3f293b0ed67a243ecd63",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "high_low": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 3799,
+      "requests_checked": 23,
+      "wbc_states_checked": 584,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 584,
+      "max_control_interval_s": 0.1997567859943956,
+      "control_interval_p50_s": 0.021810589008964598,
+      "trace_sha256": "190673b91c6d56e039fd407289e3beb23ef17d0a3a76e951846c1a73769d697d",
+      "original_limits_and_wbc_settings_unchanged": true
+    }
+  },
+  "virtual_delays": {
+    "expired_1": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 1914,
+      "requests_checked": 10,
+      "wbc_states_checked": 213,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 213,
+      "max_control_interval_s": 0.040000000000000924,
+      "control_interval_p50_s": 0.040000000000000036,
+      "trace_sha256": "b3d8b63b5f69e54023ec713cc4265c0b186df8bea9d355374c9b1fd6723b1603",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "expired_2": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 1914,
+      "requests_checked": 10,
+      "wbc_states_checked": 213,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 213,
+      "max_control_interval_s": 0.040000000000000924,
+      "control_interval_p50_s": 0.040000000000000036,
+      "trace_sha256": "b3d8b63b5f69e54023ec713cc4265c0b186df8bea9d355374c9b1fd6723b1603",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "burst_1": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 1904,
+      "requests_checked": 10,
+      "wbc_states_checked": 203,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 203,
+      "max_control_interval_s": 0.20000000000000018,
+      "control_interval_p50_s": 0.040000000000000036,
+      "trace_sha256": "038934be713af3aa4e2fcd16d1a136003fee46ef9d4f3f96f6cf8a5ce511aa1a",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "burst_2": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 1904,
+      "requests_checked": 10,
+      "wbc_states_checked": 203,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 203,
+      "max_control_interval_s": 0.20000000000000018,
+      "control_interval_p50_s": 0.040000000000000036,
+      "trace_sha256": "038934be713af3aa4e2fcd16d1a136003fee46ef9d4f3f96f6cf8a5ce511aa1a",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "boundary_1": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 1908,
+      "requests_checked": 10,
+      "wbc_states_checked": 207,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 207,
+      "max_control_interval_s": 0.1699999999999997,
+      "control_interval_p50_s": 0.040000000000000036,
+      "trace_sha256": "eeddfb9d9c1d8d31b387195616d6a12e0f0f82eed2dae7136db968bf47913e62",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "boundary_2": {
+      "passed": true,
+      "closed_loop_passed": true,
+      "scenario_passed": true,
+      "states_checked": 1908,
+      "requests_checked": 10,
+      "wbc_states_checked": 207,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 207,
+      "max_control_interval_s": 0.1699999999999997,
+      "control_interval_p50_s": 0.040000000000000036,
+      "trace_sha256": "eeddfb9d9c1d8d31b387195616d6a12e0f0f82eed2dae7136db968bf47913e62",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "overrun_1": {
+      "passed": true,
+      "closed_loop_passed": false,
+      "scenario_passed": true,
+      "states_checked": 118,
+      "requests_checked": 2,
+      "wbc_states_checked": 13,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 13,
+      "max_control_interval_s": 0.040000000000000036,
+      "control_interval_p50_s": 0.04,
+      "trace_sha256": "97a2436e1b377316bbdaae5f78361994b0cc1aba56e0cae5d5f4929e61674bf7",
+      "original_limits_and_wbc_settings_unchanged": true
+    },
+    "overrun_2": {
+      "passed": true,
+      "closed_loop_passed": false,
+      "scenario_passed": true,
+      "states_checked": 118,
+      "requests_checked": 2,
+      "wbc_states_checked": 13,
+      "max_feedback_errors": {
+        "request_state": 0.0,
+        "wbc_state": 0.0,
+        "previous_torque": 0.0
+      },
+      "controls": 13,
+      "max_control_interval_s": 0.040000000000000036,
+      "control_interval_p50_s": 0.04,
+      "trace_sha256": "97a2436e1b377316bbdaae5f78361994b0cc1aba56e0cae5d5f4929e61674bf7",
+      "original_limits_and_wbc_settings_unchanged": true
+    }
+  }
+}

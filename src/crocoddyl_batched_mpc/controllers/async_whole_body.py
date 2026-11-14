@@ -98,6 +98,7 @@ class WWorkerEngine:
             if self.pending[0] == request.acknowledged_sequence:
                 self.cached = self.pending
             self.pending = None
+        timing_start = time.perf_counter()
         snap, now = request.snapshot, request.snapshot.time
         recovery = self.cached[3] if self.cached is not None else None
         if snap.recovering:
@@ -120,6 +121,7 @@ class WWorkerEngine:
         window = preview_window(
             self.robot, self.common, now, self.planner.settings, recovery=recovery
         )
+        preview_done = time.perf_counter()
         seed = None
         if self.cached is not None:
             seed = shifted_seed(
@@ -128,17 +130,25 @@ class WWorkerEngine:
         seed_kind = "shifted_acknowledged" if seed is not None else "common_trajectory"
         if seed is None:
             seed = common_seed(self.planner, window, snap.state)
+        seed_done = time.perf_counter()
         plan = self.planner.solve(
             window.for_whole_body(),
             snap.previous_torque,
             initial_guess=seed,
             initial_state=snap.state,
         )
+        solve_done = time.perf_counter()
         packet = guidance_from_whole_body(
             self.robot, plan, window, sequence=request.sequence, initial_state=snap.state
         )
         self.pending = (request.sequence, now, plan, recovery)
         return packet, dict(
+            phase_timings=dict(
+                preview_s=preview_done - timing_start,
+                seed_s=seed_done - preview_done,
+                solve_and_accept_s=solve_done - seed_done,
+                guidance_s=time.perf_counter() - solve_done,
+            ),
             converged=plan.converged,
             seed=seed_kind,
             cached_sequence=None if self.cached is None else self.cached[0],
@@ -411,6 +421,14 @@ class AsyncWReceiver:
         event["reason"] = reason
         self.events.append(event)
         return event["accepted"]
+
+    def wants_snapshot(self, now):
+        return (
+            self.pending is None
+            and self.worker.ready
+            and now >= self.next_due
+            and now < self.common.guidance.times[-1]
+        )
 
     def tick(self, snapshot=None):
         for result in self.worker.poll():

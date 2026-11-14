@@ -1,0 +1,48 @@
+{
+  "scope": "Paired warmed single-process microbenchmark, five alternating blocks of 100 calls; not a realtime guarantee",
+  "mean_call_seconds_by_block": {
+    "old_step": [
+      0.0006018167501315474,
+      0.000787315770285204,
+      0.0005944768496556207,
+      0.0005538483202690258,
+      0.0005226337496424093
+    ],
+    "new_step": [
+      0.00029834749992005524,
+      0.00029610254045110197,
+      0.00028297554003074764,
+      0.00028483986970968546,
+      0.0002831204602262005
+    ],
+    "old_observe": [
+      0.00033595899993088096,
+      0.00035388069052714853,
+      0.00033812539011705665,
+      0.0003338796301977709,
+      0.0003292165801394731
+    ],
+    "new_observe": [
+      5.32251299591735e-05,
+      5.974288971628994e-05,
+      5.544195009861141e-05,
+      5.39563997881487e-05,
+      4.884955997113139e-05
+    ]
+  },
+  "median_seconds": {
+    "old_step": 0.0005944768496556207,
+    "new_step": 0.00028483986970968546,
+    "old_observe": 0.00033595899993088096,
+    "new_observe": 5.39563997881487e-05
+  },
+  "speedup": {
+    "step": 2.0870563178586043,
+    "observe": 6.226490300501349
+  },
+  "source_sha256": {
+    "src/crocoddyl_batched_mpc/models/go2_arm_async_cpu.py": "088a92d0bf5d4570de9fb7ca0c1e7ecfff07ff09d413dfdc6e21ef08203c4ed9",
+    "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py": "1903c6686ee4d5ed30a834850a5254d1d839f92d9da9760b36292912c7415a88",
+    "src/crocoddyl_batched_mpc/models/go2_arm.py": "1e4e8e197be9e42e890b815584625c90d1025c9fc93fc759ce0f3ff75105f9e1"
+  }
+}

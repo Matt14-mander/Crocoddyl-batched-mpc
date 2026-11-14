@@ -51,6 +51,8 @@ def main():
         for p in (
             "controllers/async_whole_body.py",
             "controllers/async_cpu.py",
+            "controllers/async_timing.py",
+            "models/go2_arm_async_cpu.py",
             "controllers/rolling_whole_body_cpu.py",
             "controllers/whole_body_qp.py",
             "guidance.py",

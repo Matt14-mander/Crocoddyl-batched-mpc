@@ -1,0 +1,998 @@
+{
+  "scope": "cProfile observer overhead included, diagnostic only, e9a9b5e source",
+  "total_s": 17.058243476000037,
+  "functions": [
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 1,
+      "name": "<module>",
+      "calls": 1,
+      "total_s": 0.001272387,
+      "cumulative_s": 17.077188157000002
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 37,
+      "name": "main",
+      "calls": 1,
+      "total_s": 0.0043644700000000005,
+      "cumulative_s": 11.961165652
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 37,
+      "name": "run_async_cpu_episode",
+      "calls": 1,
+      "total_s": 0.040774665,
+      "cumulative_s": 11.233144103
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 129,
+      "name": "advance",
+      "calls": 412,
+      "total_s": 0.356697608,
+      "cumulative_s": 3.9833536780000003
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py",
+      "line": 34,
+      "name": "step",
+      "calls": 1912,
+      "total_s": 0.9690875520000001,
+      "cumulative_s": 2.050971627
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 329,
+      "name": "evaluate",
+      "calls": 2743,
+      "total_s": 0.8243745960000001,
+      "cumulative_s": 1.557568392
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 260,
+      "name": "solve",
+      "calls": 140,
+      "total_s": 0.050911199000000004,
+      "cumulative_s": 1.4443171670000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 176,
+      "name": "sample",
+      "calls": 467,
+      "total_s": 0.036079592,
+      "cumulative_s": 1.231591651
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/qp.py",
+      "line": 24,
+      "name": "solve_inequality_qp",
+      "calls": 140,
+      "total_s": 0.324180052,
+      "cumulative_s": 0.9971255630000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 297,
+      "name": "sample",
+      "calls": 417,
+      "total_s": 0.004145483,
+      "cumulative_s": 0.9643245610000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 108,
+      "name": "__post_init__",
+      "calls": 881,
+      "total_s": 0.03209865,
+      "cumulative_s": 0.7863682240000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 64,
+      "name": "pose_interpolate",
+      "calls": 934,
+      "total_s": 0.07120356,
+      "cumulative_s": 0.645284512
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 21,
+      "name": "_pose",
+      "calls": 1764,
+      "total_s": 0.042558877,
+      "cumulative_s": 0.6437846740000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 33,
+      "name": "quintic",
+      "calls": 2923,
+      "total_s": 0.23223863900000002,
+      "cumulative_s": 0.274469894
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 111,
+      "name": "build_problem",
+      "calls": 140,
+      "total_s": 0.034558373,
+      "cumulative_s": 0.268926879
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/qp.py",
+      "line": 65,
+      "name": "direction",
+      "calls": 1470,
+      "total_s": 0.092757593,
+      "cumulative_s": 0.249587416
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 37,
+      "name": "_vector",
+      "calls": 19399,
+      "total_s": 0.086282512,
+      "cumulative_s": 0.24545250000000002
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 47,
+      "name": "_left_jacobian",
+      "calls": 5967,
+      "total_s": 0.11521723800000001,
+      "cumulative_s": 0.223323085
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 207,
+      "name": "_q",
+      "calls": 8099,
+      "total_s": 0.06741273,
+      "cumulative_s": 0.18893838300000002
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 59,
+      "name": "_jacobian_derivative",
+      "calls": 1989,
+      "total_s": 0.029470584,
+      "cumulative_s": 0.18759246200000002
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 13,
+      "name": "_array",
+      "calls": 16739,
+      "total_s": 0.059175152,
+      "cumulative_s": 0.18755954200000002
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 214,
+      "name": "to_native_q",
+      "calls": 5857,
+      "total_s": 0.023822784000000003,
+      "cumulative_s": 0.17458614
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/qp.py",
+      "line": 9,
+      "name": "_mv",
+      "calls": 6125,
+      "total_s": 0.14608772,
+      "cumulative_s": 0.169185885
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/qp.py",
+      "line": 44,
+      "name": "step_length",
+      "calls": 2940,
+      "total_s": 0.091979772,
+      "cumulative_s": 0.16577126
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 76,
+      "name": "_quantities",
+      "calls": 140,
+      "total_s": 0.03631357,
+      "cumulative_s": 0.141377941
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 343,
+      "name": "jacobian",
+      "calls": 13715,
+      "total_s": 0.10579404,
+      "cumulative_s": 0.11963050300000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 220,
+      "name": "from_native_q",
+      "calls": 2101,
+      "total_s": 0.008796099,
+      "cumulative_s": 0.091736155
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 353,
+      "name": "<listcomp>",
+      "calls": 2743,
+      "total_s": 0.011830652,
+      "cumulative_s": 0.08592146
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 223,
+      "name": "to_native_v",
+      "calls": 4983,
+      "total_s": 0.015300178000000001,
+      "cumulative_s": 0.076593003
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 229,
+      "name": "from_native_v",
+      "calls": 4200,
+      "total_s": 0.007634501,
+      "cumulative_s": 0.049996790000000006
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 350,
+      "name": "<listcomp>",
+      "calls": 2743,
+      "total_s": 0.035304889,
+      "cumulative_s": 0.044869757
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 361,
+      "name": "load_go2_arm",
+      "calls": 1,
+      "total_s": 0.01111223,
+      "cumulative_s": 0.044734151
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 252,
+      "name": "actuation_matrix",
+      "calls": 2052,
+      "total_s": 0.025176820000000003,
+      "cumulative_s": 0.039290068000000004
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 259,
+      "name": "submit",
+      "calls": 7,
+      "total_s": 0.000350799,
+      "cumulative_s": 0.037254819
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 24,
+      "name": "_dependencies",
+      "calls": 43450,
+      "total_s": 0.036545861,
+      "cumulative_s": 0.036545861
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 237,
+      "name": "torque_limits",
+      "calls": 3964,
+      "total_s": 0.023925263000000002,
+      "cumulative_s": 0.028366020000000002
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 100,
+      "name": "build_go2_arm_urdf",
+      "calls": 1,
+      "total_s": 0.0008827030000000001,
+      "cumulative_s": 0.027820584000000002
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 142,
+      "name": "task",
+      "calls": 980,
+      "total_s": 0.022439728000000003,
+      "cumulative_s": 0.022439728000000003
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 148,
+      "name": "acceleration_task",
+      "calls": 560,
+      "total_s": 0.00834289,
+      "cumulative_s": 0.0216455
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 321,
+      "name": "frame_pose",
+      "calls": 122,
+      "total_s": 0.015921085,
+      "cumulative_s": 0.019332846
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 330,
+      "name": "<dictcomp>",
+      "calls": 140,
+      "total_s": 0.007259902,
+      "cumulative_s": 0.016288737
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 303,
+      "name": "standing_configuration",
+      "calls": 1,
+      "total_s": 0.0022668750000000002,
+      "cumulative_s": 0.016231268
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 295,
+      "name": "<listcomp>",
+      "calls": 140,
+      "total_s": 0.0007925260000000001,
+      "cumulative_s": 0.015891183
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 146,
+      "name": "__post_init__",
+      "calls": 18,
+      "total_s": 0.006720976,
+      "cumulative_s": 0.013765448000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 88,
+      "name": "frame",
+      "calls": 840,
+      "total_s": 0.010998477000000001,
+      "cumulative_s": 0.013089413000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 297,
+      "name": "integrate",
+      "calls": 188,
+      "total_s": 0.00134169,
+      "cumulative_s": 0.01132548
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 1,
+      "name": "<module>",
+      "calls": 1,
+      "total_s": 3.9030000000000004e-05,
+      "cumulative_s": 0.009804785
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 241,
+      "name": "velocity_limits",
+      "calls": 2052,
+      "total_s": 0.007178113000000001,
+      "cumulative_s": 0.009207193
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 99,
+      "name": "<listcomp>",
+      "calls": 140,
+      "total_s": 0.0008833690000000001,
+      "cumulative_s": 0.007735316000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 314,
+      "name": "<dictcomp>",
+      "calls": 140,
+      "total_s": 0.0017335940000000002,
+      "cumulative_s": 0.006793423000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 45,
+      "name": "_config",
+      "calls": 2,
+      "total_s": 0.000161373,
+      "cumulative_s": 0.006015632000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 192,
+      "name": "<genexpr>",
+      "calls": 3736,
+      "total_s": 0.0034861730000000004,
+      "cumulative_s": 0.005537912000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 202,
+      "name": "<genexpr>",
+      "calls": 3736,
+      "total_s": 0.0028719270000000002,
+      "cumulative_s": 0.00495426
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 33,
+      "name": "_asset_directory",
+      "calls": 2,
+      "total_s": 1.3859e-05,
+      "cumulative_s": 0.004845259
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 193,
+      "name": "<genexpr>",
+      "calls": 3736,
+      "total_s": 0.002235271,
+      "cumulative_s": 0.0037119350000000004
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 210,
+      "name": "inequality",
+      "calls": 560,
+      "total_s": 0.0018935380000000002,
+      "cumulative_s": 0.0035925260000000004
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 1,
+      "name": "<module>",
+      "calls": 1,
+      "total_s": 2.7190000000000002e-05,
+      "cumulative_s": 0.003469288
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 1,
+      "name": "<module>",
+      "calls": 1,
+      "total_s": 2.5961e-05,
+      "cumulative_s": 0.0033212270000000004
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 206,
+      "name": "<genexpr>",
+      "calls": 3736,
+      "total_s": 0.002136809,
+      "cumulative_s": 0.003320799
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 80,
+      "name": "<dictcomp>",
+      "calls": 1,
+      "total_s": 0.000156627,
+      "cumulative_s": 0.003040362
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 95,
+      "name": "clock",
+      "calls": 970,
+      "total_s": 0.001530749,
+      "cumulative_s": 0.001867656
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 1,
+      "name": "<module>",
+      "calls": 1,
+      "total_s": 4.2630000000000004e-05,
+      "cumulative_s": 0.001734929
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 240,
+      "name": "__init__",
+      "calls": 1,
+      "total_s": 3.2841e-05,
+      "cumulative_s": 0.001592529
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 220,
+      "name": "stationary",
+      "calls": 1,
+      "total_s": 7.404300000000001e-05,
+      "cumulative_s": 0.001515063
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 245,
+      "name": "position_limits",
+      "calls": 143,
+      "total_s": 0.0009638540000000001,
+      "cumulative_s": 0.001188007
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 25,
+      "name": "json_safe",
+      "calls": 417,
+      "total_s": 0.000685053,
+      "cumulative_s": 0.001123165
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 27,
+      "name": "<dictcomp>",
+      "calls": 41,
+      "total_s": 0.00023956500000000001,
+      "cumulative_s": 0.001112881
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/qp.py",
+      "line": 1,
+      "name": "<module>",
+      "calls": 1,
+      "total_s": 1.3075000000000001e-05,
+      "cumulative_s": 0.0008557370000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py",
+      "line": 1,
+      "name": "<module>",
+      "calls": 1,
+      "total_s": 1.2636e-05,
+      "cumulative_s": 0.0008316900000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 211,
+      "name": "<genexpr>",
+      "calls": 1400,
+      "total_s": 0.0006007110000000001,
+      "cumulative_s": 0.0007598310000000001
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 64,
+      "name": "__init__",
+      "calls": 1,
+      "total_s": 2.1139000000000002e-05,
+      "cumulative_s": 0.000466204
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 29,
+      "name": "<listcomp>",
+      "calls": 6,
+      "total_s": 1.3978e-05,
+      "cumulative_s": 0.000424548
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 267,
+      "name": "<genexpr>",
+      "calls": 700,
+      "total_s": 0.00027142400000000004,
+      "cumulative_s": 0.00027142400000000004
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 85,
+      "name": "<genexpr>",
+      "calls": 231,
+      "total_s": 0.00011558,
+      "cumulative_s": 0.00011558
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py",
+      "line": 25,
+      "name": "__init__",
+      "calls": 1,
+      "total_s": 3.3136e-05,
+      "cumulative_s": 6.364100000000001e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 373,
+      "name": "<genexpr>",
+      "calls": 19,
+      "total_s": 6.231e-05,
+      "cumulative_s": 6.231e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 96,
+      "name": "_numbers",
+      "calls": 8,
+      "total_s": 9.162000000000001e-06,
+      "cumulative_s": 5.6186e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 88,
+      "name": "bracket_inertia",
+      "calls": 1,
+      "total_s": 3.6913000000000004e-05,
+      "cumulative_s": 5.1877000000000005e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 143,
+      "name": "fixed_joint",
+      "calls": 3,
+      "total_s": 8.555e-06,
+      "cumulative_s": 4.5461000000000004e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 250,
+      "name": "reset",
+      "calls": 1,
+      "total_s": 4.4625e-05,
+      "cumulative_s": 4.4625e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 97,
+      "name": "<genexpr>",
+      "calls": 32,
+      "total_s": 1.9908e-05,
+      "cumulative_s": 3.2492e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 222,
+      "name": "<dictcomp>",
+      "calls": 1,
+      "total_s": 1.5577e-05,
+      "cumulative_s": 2.9623e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 375,
+      "name": "<genexpr>",
+      "calls": 19,
+      "total_s": 2.5299000000000003e-05,
+      "cumulative_s": 2.5299000000000003e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 376,
+      "name": "<genexpr>",
+      "calls": 19,
+      "total_s": 2.4154000000000003e-05,
+      "cumulative_s": 2.4154000000000003e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 271,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 2.1319e-05,
+      "cumulative_s": 2.1319e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 370,
+      "name": "<genexpr>",
+      "calls": 19,
+      "total_s": 1.7242000000000002e-05,
+      "cumulative_s": 1.7242000000000002e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 43,
+      "name": "__post_init__",
+      "calls": 1,
+      "total_s": 1.1194e-05,
+      "cumulative_s": 1.6246e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 30,
+      "name": "__post_init__",
+      "calls": 1,
+      "total_s": 4.064e-06,
+      "cumulative_s": 1.5883e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 305,
+      "name": "<dictcomp>",
+      "calls": 1,
+      "total_s": 7.476e-06,
+      "cumulative_s": 1.4385e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 384,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 1.3273000000000001e-05,
+      "cumulative_s": 1.3273000000000001e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 372,
+      "name": "<genexpr>",
+      "calls": 19,
+      "total_s": 1.1589e-05,
+      "cumulative_s": 1.1589e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 273,
+      "name": "<genexpr>",
+      "calls": 8,
+      "total_s": 1.0349e-05,
+      "cumulative_s": 1.0349e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 329,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 1.0152e-05,
+      "cumulative_s": 1.0152e-05
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 193,
+      "name": "Go2ArmRobot",
+      "calls": 1,
+      "total_s": 9.951e-06,
+      "cumulative_s": 9.951e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 382,
+      "name": "<genexpr>",
+      "calls": 6,
+      "total_s": 9.4e-06,
+      "cumulative_s": 9.4e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 31,
+      "name": "<genexpr>",
+      "calls": 7,
+      "total_s": 8.539e-06,
+      "cumulative_s": 8.539e-06
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 49,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 7.411000000000001e-06,
+      "cumulative_s": 7.411000000000001e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 19,
+      "name": "WBCSettings",
+      "calls": 1,
+      "total_s": 6.7770000000000005e-06,
+      "cumulative_s": 6.7770000000000005e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 88,
+      "name": "GuidanceSample",
+      "calls": 1,
+      "total_s": 6.727e-06,
+      "cumulative_s": 6.727e-06
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 129,
+      "name": "<genexpr>",
+      "calls": 5,
+      "total_s": 4.634e-06,
+      "cumulative_s": 6.606000000000001e-06
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 103,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 6.0160000000000005e-06,
+      "cumulative_s": 6.0160000000000005e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 64,
+      "name": "<genexpr>",
+      "calls": 14,
+      "total_s": 5.5420000000000005e-06,
+      "cumulative_s": 5.5420000000000005e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 232,
+      "name": "total_mass",
+      "calls": 1,
+      "total_s": 4.2850000000000005e-06,
+      "cumulative_s": 5.523e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 134,
+      "name": "Guidance",
+      "calls": 1,
+      "total_s": 5.179000000000001e-06,
+      "cumulative_s": 5.179000000000001e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/guidance.py",
+      "line": 230,
+      "name": "GuidanceBuffer",
+      "calls": 1,
+      "total_s": 4.7590000000000005e-06,
+      "cumulative_s": 4.7590000000000005e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 269,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 4.313e-06,
+      "cumulative_s": 4.313e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 21,
+      "name": "<genexpr>",
+      "calls": 7,
+      "total_s": 4.145e-06,
+      "cumulative_s": 4.145e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 53,
+      "name": "WBCResult",
+      "calls": 1,
+      "total_s": 3.7e-06,
+      "cumulative_s": 3.7e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 73,
+      "name": "reset",
+      "calls": 1,
+      "total_s": 3.2500000000000002e-06,
+      "cumulative_s": 3.2500000000000002e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 330,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 3.1170000000000004e-06,
+      "cumulative_s": 3.1170000000000004e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 332,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 3.085e-06,
+      "cumulative_s": 3.085e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py",
+      "line": 8,
+      "name": "CPUStep",
+      "calls": 1,
+      "total_s": 2.7610000000000003e-06,
+      "cumulative_s": 2.7610000000000003e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/qp.py",
+      "line": 13,
+      "name": "QPSolution",
+      "calls": 1,
+      "total_s": 2.5910000000000003e-06,
+      "cumulative_s": 2.5910000000000003e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 21,
+      "name": "WallCPUSettings",
+      "calls": 1,
+      "total_s": 2.504e-06,
+      "cumulative_s": 2.504e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 334,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 2.448e-06,
+      "cumulative_s": 2.448e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 178,
+      "name": "Go2ArmQuantities",
+      "calls": 1,
+      "total_s": 2.407e-06,
+      "cumulative_s": 2.407e-06
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 128,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 2.2370000000000004e-06,
+      "cumulative_s": 2.2370000000000004e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 306,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 2.029e-06,
+      "cumulative_s": 2.029e-06
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 104,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 1.929e-06,
+      "cumulative_s": 1.929e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm.py",
+      "line": 381,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 1.881e-06,
+      "cumulative_s": 1.881e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py",
+      "line": 63,
+      "name": "WholeBodyQP",
+      "calls": 1,
+      "total_s": 1.768e-06,
+      "cumulative_s": 1.768e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/controllers/async_cpu.py",
+      "line": 270,
+      "name": "<listcomp>",
+      "calls": 1,
+      "total_s": 1.588e-06,
+      "cumulative_s": 1.588e-06
+    },
+    {
+      "file": "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py",
+      "line": 18,
+      "name": "FixedSupportCPU",
+      "calls": 1,
+      "total_s": 1.474e-06,
+      "cumulative_s": 1.474e-06
+    },
+    {
+      "file": "examples/go2_z1_async_cpu.py",
+      "line": 174,
+      "name": "<genexpr>",
+      "calls": 2,
+      "total_s": 1.419e-06,
+      "cumulative_s": 1.419e-06
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "wall_delays": {
+    "expired_1": {
+      "passed": true,
+      "samples": 360,
+      "tcp_peak": 0.0009081108888275626,
+      "rotation_peak": 0.0005139683096551731
+    },
+    "expired_2": {
+      "passed": true,
+      "samples": 355,
+      "tcp_peak": 0.0008753191395723683,
+      "rotation_peak": 0.00034978326008707725
+    },
+    "burst_1": {
+      "passed": true,
+      "samples": 324,
+      "tcp_peak": 0.0018185818614476477,
+      "rotation_peak": 0.01210251243576943
+    },
+    "burst_2": {
+      "passed": true,
+      "samples": 314,
+      "tcp_peak": 0.0013499263998922194,
+      "rotation_peak": 0.005208034341696719
+    },
+    "boundary_1": {
+      "passed": true,
+      "samples": 300,
+      "tcp_peak": 0.001991861332669982,
+      "rotation_peak": 0.0020936607926449937
+    },
+    "boundary_2": {
+      "passed": true,
+      "samples": 341,
+      "tcp_peak": 0.0028315269818675447,
+      "rotation_peak": 0.003605365530865107
+    },
+    "overrun_1": {
+      "passed": true,
+      "samples": 21,
+      "tcp_peak": 2.587627049154009e-05,
+      "rotation_peak": 7.12013103774452e-06
+    },
+    "overrun_2": {
+      "passed": true,
+      "samples": 21,
+      "tcp_peak": 4.261421455917529e-05,
+      "rotation_peak": 4.769689961889527e-06
+    }
+  },
+  "seven_cases": {
+    "normal": {
+      "passed": true,
+      "samples": 366,
+      "tcp_peak": 3.8709790468517815e-05,
+      "rotation_peak": 8.461406992359556e-05
+    },
+    "delay": {
+      "passed": true,
+      "samples": 374,
+      "tcp_peak": 3.239327280277885e-05,
+      "rotation_peak": 8.334426802330145e-05
+    },
+    "failure": {
+      "passed": true,
+      "samples": 332,
+      "tcp_peak": 0.001070275755946396,
+      "rotation_peak": 0.0003980518510072274
+    },
+    "timeout": {
+      "passed": true,
+      "samples": 361,
+      "tcp_peak": 0.0010234229068787051,
+      "rotation_peak": 0.0003497559218995969
+    },
+    "expired": {
+      "passed": true,
+      "samples": 338,
+      "tcp_peak": 0.001098624002911093,
+      "rotation_peak": 0.0003634076589006672
+    },
+    "restart": {
+      "passed": true,
+      "samples": 351,
+      "tcp_peak": 0.00029087096715892097,
+      "rotation_peak": 0.0001313394916155729
+    },
+    "high_low": {
+      "passed": true,
+      "samples": 584,
+      "tcp_peak": 0.001047593040885425,
+      "rotation_peak": 0.009538244881708973
+    }
+  },
+  "virtual_delays": {
+    "expired_1": {
+      "passed": true,
+      "samples": 213,
+      "tcp_peak": 0.0019273157367432285,
+      "rotation_peak": 0.0010910004165927104
+    },
+    "expired_2": {
+      "passed": true,
+      "samples": 213,
+      "tcp_peak": 0.0019273157367432285,
+      "rotation_peak": 0.0010910004165927104
+    },
+    "burst_1": {
+      "passed": true,
+      "samples": 203,
+      "tcp_peak": 0.0019273157367432285,
+      "rotation_peak": 0.002462460940801
+    },
+    "burst_2": {
+      "passed": true,
+      "samples": 203,
+      "tcp_peak": 0.0019273157367432285,
+      "rotation_peak": 0.002462460940801
+    },
+    "boundary_1": {
+      "passed": true,
+      "samples": 207,
+      "tcp_peak": 0.001946299098617646,
+      "rotation_peak": 0.002028222924084057
+    },
+    "boundary_2": {
+      "passed": true,
+      "samples": 207,
+      "tcp_peak": 0.001946299098617646,
+      "rotation_peak": 0.002028222924084057
+    },
+    "overrun_1": {
+      "passed": true,
+      "samples": 13,
+      "tcp_peak": 6.733509024909875e-05,
+      "rotation_peak": 1.1983101159094863e-05
+    },
+    "overrun_2": {
+      "passed": true,
+      "samples": 13,
+      "tcp_peak": 6.733509024909875e-05,
+      "rotation_peak": 1.1983101159094863e-05
+    }
+  }
+}

@@ -1,0 +1,4241 @@
+{
+  "scope": "Wall-clock asynchronous fixed-support CPU; no 200 Hz certification",
+  "versions": {
+    "python": "3.11.4",
+    "numpy": "1.26.4",
+    "pinocchio": "4.0.0",
+    "crocoddyl": "3.2.1",
+    "torch": "2.2.2",
+    "platform": "macOS-10.16-x86_64-i386-64bit"
+  },
+  "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70",
+  "source_sha256": {
+    "src/crocoddyl_batched_mpc/controllers/async_whole_body.py": "1b6a0ad6a9239ad851e57969462895487343fbfb2d4114bbac259990c7e7e88f",
+    "src/crocoddyl_batched_mpc/controllers/async_cpu.py": "76f73f215923bdc00bbb95264a9fb8d3eec183ca300d1b619deb2044a6a9795e",
+    "src/crocoddyl_batched_mpc/controllers/async_timing.py": "d3c7a2e386adc6692d110af87d14e5e93cdcfe503e48dc06d6f6cb67d0695fab",
+    "src/crocoddyl_batched_mpc/models/go2_arm_async_cpu.py": "088a92d0bf5d4570de9fb7ca0c1e7ecfff07ff09d413dfdc6e21ef08203c4ed9",
+    "src/crocoddyl_batched_mpc/controllers/rolling_whole_body_cpu.py": "0059491606c64822557aef340fcb10b8bbf4634d19531f2a77ac546ecd169622",
+    "src/crocoddyl_batched_mpc/controllers/whole_body_qp.py": "406f6ef5798f2a757ecf77462c0e7f7b97f720dc455e5bec520428e93ea1746a",
+    "src/crocoddyl_batched_mpc/guidance.py": "1e4f14bf437a5ec7fc40a04a05a16e3475a0db9f4afeab3a8bafdd30005ef859",
+    "src/crocoddyl_batched_mpc/references/standing_arm.py": "3a10c213b5cffb38eb9a10a19b374ee3a371372b99ac91ee1492d4a2b2ce25fa",
+    "src/crocoddyl_batched_mpc/planners/standing_whole_body.py": "1634853bbd4d6cb0e5a4604c011eeff0b611ccdb0adc0042e343bd12a92b8aab",
+    "src/crocoddyl_batched_mpc/planners/_whole_body_native.py": "012f2365878e3c5770fef0db3d2ef903739d0ab5c0ad36f2a69b9e68edca24b2",
+    "src/crocoddyl_batched_mpc/models/go2_arm.py": "1e4e8e197be9e42e890b815584625c90d1025c9fc93fc759ce0f3ff75105f9e1",
+    "src/crocoddyl_batched_mpc/models/go2_arm_cpu.py": "1903c6686ee4d5ed30a834850a5254d1d839f92d9da9760b36292912c7415a88",
+    "src/crocoddyl_batched_mpc/qp.py": "5cef7aca290061ac1d5d5e426ee19f93d3420e98427b9bdd51d114156ae96b9a",
+    "examples/go2_z1_async_cpu.py": "46edac52b6233d0a3406987ad657539efc678a71cede86114798b576171a9b7d",
+    "examples/go2_z1_rolling_cpu.py": "d69a42e982a7f62b4c13cd8f7d525467c3e91df448d2d384c49a36e5f3a51223",
+    "examples/go2_z1_stance_demo.py": "f0ff756e5b17aaef350fe9e10ceca532520de1aa5579e43997a5ce9d23fb0b0d"
+  },
+  "cases": {
+    "normal": {
+      "passed": true,
+      "failures": [],
+      "termination": null,
+      "metrics": {
+        "tcp_peak": 3.363009252477646e-05,
+        "rotation_peak": 6.326920087747369e-05,
+        "foot_position": 1.5483222358618535e-07,
+        "foot_velocity": 7.546727362157953e-07,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 8.971271533812775e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "qp_equality_residual": 4.263256414560601e-13,
+        "qp_inequality_violation": 0.0,
+        "terminal_speed": 1.0162560855312622e-06,
+        "tcp_rmse": 1.4466816724106883e-05,
+        "plant_steps": 2310,
+        "control_updates": 394
+      },
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "settings": {
+        "async_planner": {
+          "replan_period": 0.5,
+          "handoff_duration": 0.4,
+          "return_duration": 1.0,
+          "recovery_duration": 0.8,
+          "result_timeout": 0.6,
+          "max_state_age": 0.65,
+          "hard_timeout": 2.0
+        },
+        "planner": {
+          "nodes": 24,
+          "dt": 0.05,
+          "max_iterations": 100,
+          "stopping_threshold": 1e-07,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "tcp_position_weight": 20000.0,
+          "tcp_rotation_weight": 500.0,
+          "tcp_velocity_weight": 5.0,
+          "com_weight": 100.0,
+          "base_weight": 200.0,
+          "posture_weight": 1.0,
+          "torque_weight": 0.0001,
+          "torque_change_weight": 0.01,
+          "barrier_weight": 100000.0,
+          "base_translation_bound": [
+            0.08,
+            0.08,
+            0.05
+          ],
+          "base_rotation_bound": 0.25,
+          "base_linear_velocity_bound": 0.5,
+          "base_angular_velocity_bound": 1.0,
+          "gap_tolerance": 1e-06,
+          "dynamics_tolerance": 1e-07,
+          "bound_tolerance": 1e-06,
+          "foot_position_tolerance": 0.001,
+          "foot_velocity_tolerance": 0.01,
+          "tcp_position_tolerance": 0.005,
+          "tcp_rotation_tolerance": 0.02
+        },
+        "wall": {
+          "control_period": 0.02,
+          "integration_step": 0.005,
+          "max_catchup": 0.2,
+          "max_command_age": 0.08,
+          "extra_time": 2.5,
+          "startup_timeout": 15.0
+        },
+        "wbc": {
+          "dt": 0.02,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "task_kp": 100.0,
+          "task_kd": 20.0,
+          "joint_kp": 40.0,
+          "joint_kd": 12.0,
+          "tcp_weight": 200.0,
+          "com_weight": 30.0,
+          "base_position_weight": 5.0,
+          "base_rotation_weight": 30.0,
+          "posture_weight": 0.1,
+          "force_weight": 0.0001,
+          "torque_change_weight": 0.001,
+          "regularization": 1e-05,
+          "qp_iterations": 40,
+          "qp_tolerance": 1e-09,
+          "constraint_tolerance": 1e-06
+        }
+      },
+      "wall_elapsed_s": 8.501978904008865,
+      "integrated_duration_s": 8.5,
+      "missed_control_slots": 31,
+      "discarded_commands": 1,
+      "max_numerical_state_lag_s": 0.0035943210241384804,
+      "startup_time_s": 2.2775557639542967,
+      "worker_startup": [
+        {
+          "kind": "ready",
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "pid": 49543,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70"
+        }
+      ],
+      "requests": 12,
+      "accepted": 12,
+      "pending_cancelled": null,
+      "events": [
+        {
+          "kind": "delivery",
+          "at": 0.28266174299642444,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 1,
+          "accepted": true,
+          "age_s": 0.28072589496150613,
+          "completed_at": 0.2722808180260472,
+          "sent_at": 0.003966178046539426,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07445865601766855,
+              "seed_s": 0.006103119987528771,
+              "solve_and_accept_s": 0.14624995400663465,
+              "guidance_s": 0.03972579998662695
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.04220043797977269,
+            "max_dynamics_gap": 8.540043672233821e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.2019358480349185,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 0.7823230270296335,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 2,
+          "accepted": true,
+          "age_s": 0.26083367300452664,
+          "completed_at": 0.7763810160104185,
+          "sent_at": 0.5268422639928758,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05919455096591264,
+              "seed_s": 0.0012194410082884133,
+              "solve_and_accept_s": 0.14482193201547489,
+              "guidance_s": 0.038982457015663385
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 1,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.056786854984238744,
+            "max_dynamics_gap": 7.185918526886326e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.721489354025107,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 1.2822345000458881,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 3,
+          "accepted": true,
+          "age_s": 0.24156604701420292,
+          "completed_at": 1.277785076003056,
+          "sent_at": 1.043899098993279,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.051845071953721344,
+              "seed_s": 0.0013445570366457105,
+              "solve_and_accept_s": 0.13632012298330665,
+              "guidance_s": 0.039878718031104654
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 2,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05431482900166884,
+            "max_dynamics_gap": 1.3365697437706103e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 2.2406684530316854,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 1.824382882041391,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 4,
+          "accepted": true,
+          "age_s": 0.26271383999846876,
+          "completed_at": 1.8029230200336315,
+          "sent_at": 1.5654225750477053,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05077067401725799,
+              "seed_s": 0.0016327559715136886,
+              "solve_and_accept_s": 0.13807483902201056,
+              "guidance_s": 0.041828615008853376
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 3,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.058725123992189765,
+            "max_dynamics_gap": 8.231002684988553e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 2.7616690420429224,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 2.3035828500287607,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 5,
+          "accepted": true,
+          "age_s": 0.22352853103075176,
+          "completed_at": 2.2967323760385625,
+          "sent_at": 2.084852088999469,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04996982298325747,
+              "seed_s": 0.0013162349932827055,
+              "solve_and_accept_s": 0.11669218802126125,
+              "guidance_s": 0.0377023890032433
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 4,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.041037852002773434,
+            "max_dynamics_gap": 8.126919276429945e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.280054318998009,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 2.8421744190272875,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 6,
+          "accepted": true,
+          "age_s": 0.24212202802300453,
+          "completed_at": 2.8309929210226983,
+          "sent_at": 2.604281770007219,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.051038074016105384,
+              "seed_s": 0.001279646996408701,
+              "solve_and_accept_s": 0.13547282898798585,
+              "guidance_s": 0.037740409024991095
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 5,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05647004599450156,
+            "max_dynamics_gap": 8.692428287576659e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.800052391004283,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.3829072630032897,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 7,
+          "accepted": true,
+          "age_s": 0.241138843994122,
+          "completed_at": 3.3745757170254365,
+          "sent_at": 3.1494165470357984,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.052662313042674214,
+              "seed_s": 0.0012295139604248106,
+              "solve_and_accept_s": 0.12952278001466766,
+              "guidance_s": 0.039290716988034546
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 6,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.0521181239746511,
+            "max_dynamics_gap": 5.4827670181722965e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.341768419009168,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.9240462080342695,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 8,
+          "accepted": true,
+          "age_s": 0.2618407300324179,
+          "completed_at": 3.904550898994785,
+          "sent_at": 3.6681239460012875,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05373322800733149,
+              "seed_s": 0.001158842002041638,
+              "solve_and_accept_s": 0.1364504439989105,
+              "guidance_s": 0.04244210699107498
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 7,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05674191698199138,
+            "max_dynamics_gap": 6.360190152321366e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.862205478001852,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.4251629980280995,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 9,
+          "accepted": true,
+          "age_s": 0.24462333001429215,
+          "completed_at": 4.41122800699668,
+          "sent_at": 4.184305461996701,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05024780397070572,
+              "seed_s": 0.0012346440344117582,
+              "solve_and_accept_s": 0.13399745395872742,
+              "guidance_s": 0.039092647028155625
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 8,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05302664003102109,
+            "max_dynamics_gap": 1.0672018824209317e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.380539668013808,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.924684141995385,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 10,
+          "accepted": true,
+          "age_s": 0.2238019139622338,
+          "completed_at": 4.913457324029878,
+          "sent_at": 4.706804896006361,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05066915898350999,
+              "seed_s": 0.0010245500016026199,
+              "solve_and_accept_s": 0.11511126899858937,
+              "guidance_s": 0.0375493640312925
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 9,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.037445416033733636,
+            "max_dynamics_gap": 6.953118636410238e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.900882228033152,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.423915241030045,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 11,
+          "accepted": true,
+          "age_s": 0.2035706799943,
+          "completed_at": 5.416933249041904,
+          "sent_at": 5.223294975992758,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.038903710956219584,
+              "seed_s": 0.001098020002245903,
+              "solve_and_accept_s": 0.11373646400170401,
+              "guidance_s": 0.038687954016495496
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 10,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03589092002948746,
+            "max_dynamics_gap": 9.033615869236122e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.420344561035745,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.966608179034665,
+          "epoch": "3e2e49b59c9d44069b48eec2b24c71f8",
+          "sequence": 12,
+          "accepted": true,
+          "age_s": 0.22304164699744433,
+          "completed_at": 5.941993848013226,
+          "sent_at": 5.753480629995465,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.03374883200740442,
+              "seed_s": 0.0010487199760973454,
+              "solve_and_accept_s": 0.11420073400950059,
+              "guidance_s": 0.03829909302294254
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 11,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03781500697368756,
+            "max_dynamics_gap": 6.651665031493295e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.943566532037221,
+          "reason": null
+        }
+      ],
+      "modes": {
+        "active": 87,
+        "handoff": 216,
+        "return_to_standing": 49,
+        "standing": 42
+      },
+      "delivery_age": {
+        "samples": 12,
+        "p50_s": 0.24184403751860373,
+        "p95_s": 0.27081926473183554,
+        "max_s": 0.28072589496150613,
+        "budget_s": 0.65,
+        "deadline_misses": 0
+      },
+      "wbc_timing": {
+        "samples": 394,
+        "p50_s": 0.007459421496605501,
+        "p95_s": 0.009601489905617199,
+        "max_s": 0.012211019988171756,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "cycle_timing": {
+        "samples": 394,
+        "p50_s": 0.012697884463705122,
+        "p95_s": 0.021745844403631046,
+        "max_s": 0.036344274994917214,
+        "budget_s": 0.02,
+        "deadline_misses": 26
+      },
+      "ipc_timing": {
+        "samples": 394,
+        "p50_s": 0.00010790448868647218,
+        "p95_s": 0.0002030522126005962,
+        "max_s": 0.02092879597330466,
+        "budget_s": 0.02,
+        "deadline_misses": 2
+      },
+      "original_task_tcp_peak_m": 0.00031741142575471553,
+      "original_task_tcp_rmse_m": 4.793049416209413e-05,
+      "offline_diagnostics_s": 1.113890769018326,
+      "realtime_accepted": false,
+      "timing_mode": "wall",
+      "injected_delays": [],
+      "execution_settings": {
+        "modeled_phase_costs_s": {},
+        "delays": [],
+        "scheduled_worker_latency_s": null
+      },
+      "optimized_cpu": true,
+      "scheduler_lateness": {
+        "samples": 395,
+        "p50_s": 0.0006787520041688921,
+        "p95_s": 0.0019280672979076206,
+        "max_s": 0.003699244994204598,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "command_age": {
+        "samples": 394,
+        "p50_s": 0.009714720508782193,
+        "p95_s": 0.013179459923412651,
+        "max_s": 0.017579859995748848,
+        "budget_s": 0.08,
+        "deadline_misses": 0
+      },
+      "phase_timings": {
+        "plant_step": {
+          "samples": 2310,
+          "p50_s": 0.0004080760118085891,
+          "p95_s": 0.0007004700251854956,
+          "max_s": 0.0014160449500195682,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 1.0193761482369155
+        },
+        "plant_diagnostics": {
+          "samples": 2310,
+          "p50_s": 0.00022881498443894088,
+          "p95_s": 0.0004083212843397631,
+          "max_s": 0.0008336530299857259,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.5908396269078366
+        },
+        "request_sample": {
+          "samples": 394,
+          "p50_s": 2.1579908207058907e-06,
+          "p95_s": 5.622181924991308e-06,
+          "max_s": 0.003001917968504131,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.026269953174050897
+        },
+        "ipc": {
+          "samples": 394,
+          "p50_s": 0.00010790448868647218,
+          "p95_s": 0.0002030522126005962,
+          "max_s": 0.02092879597330466,
+          "budget_s": 0.02,
+          "deadline_misses": 2,
+          "total_s": 0.24448338197544217
+        },
+        "reference_sample": {
+          "samples": 394,
+          "p50_s": 0.0015532525430899113,
+          "p95_s": 0.0024233609001385018,
+          "max_s": 0.004665658052545041,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.6360272992751561
+        },
+        "wbc": {
+          "samples": 394,
+          "p50_s": 0.0075193310040049255,
+          "p95_s": 0.009663316392106934,
+          "max_s": 0.012319647008553147,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 3.0190499615855515
+        }
+      },
+      "schedule": "monotonic wall clock; held-torque integration during computation; no solver waits in control",
+      "worker_closed": true,
+      "scenario_checks": {
+        "worker_closed": true,
+        "multiple_packets": true,
+        "plant_wall_duration": true,
+        "no_rejected_delivery": true
+      },
+      "trace_sha256": "8a573714c8e08294cfd883f46884c7e913997348da1ac6478c5ea23606bf51be"
+    },
+    "delay": {
+      "passed": true,
+      "failures": [],
+      "termination": null,
+      "metrics": {
+        "tcp_peak": 2.6607377120024022e-05,
+        "rotation_peak": 7.76651662710556e-05,
+        "foot_position": 1.566959522701932e-07,
+        "foot_velocity": 7.754109225500878e-07,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 8.146166575496994e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "qp_equality_residual": 5.115907697472721e-13,
+        "qp_inequality_violation": 0.0,
+        "terminal_speed": 9.534811933842621e-07,
+        "tcp_rmse": 1.3923698393465223e-05,
+        "plant_steps": 2313,
+        "control_updates": 402
+      },
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "settings": {
+        "async_planner": {
+          "replan_period": 0.5,
+          "handoff_duration": 0.4,
+          "return_duration": 1.0,
+          "recovery_duration": 0.8,
+          "result_timeout": 0.6,
+          "max_state_age": 0.65,
+          "hard_timeout": 2.0
+        },
+        "planner": {
+          "nodes": 24,
+          "dt": 0.05,
+          "max_iterations": 100,
+          "stopping_threshold": 1e-07,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "tcp_position_weight": 20000.0,
+          "tcp_rotation_weight": 500.0,
+          "tcp_velocity_weight": 5.0,
+          "com_weight": 100.0,
+          "base_weight": 200.0,
+          "posture_weight": 1.0,
+          "torque_weight": 0.0001,
+          "torque_change_weight": 0.01,
+          "barrier_weight": 100000.0,
+          "base_translation_bound": [
+            0.08,
+            0.08,
+            0.05
+          ],
+          "base_rotation_bound": 0.25,
+          "base_linear_velocity_bound": 0.5,
+          "base_angular_velocity_bound": 1.0,
+          "gap_tolerance": 1e-06,
+          "dynamics_tolerance": 1e-07,
+          "bound_tolerance": 1e-06,
+          "foot_position_tolerance": 0.001,
+          "foot_velocity_tolerance": 0.01,
+          "tcp_position_tolerance": 0.005,
+          "tcp_rotation_tolerance": 0.02
+        },
+        "wall": {
+          "control_period": 0.02,
+          "integration_step": 0.005,
+          "max_catchup": 0.2,
+          "max_command_age": 0.08,
+          "extra_time": 2.5,
+          "startup_timeout": 15.0
+        },
+        "wbc": {
+          "dt": 0.02,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "task_kp": 100.0,
+          "task_kd": 20.0,
+          "joint_kp": 40.0,
+          "joint_kd": 12.0,
+          "tcp_weight": 200.0,
+          "com_weight": 30.0,
+          "base_position_weight": 5.0,
+          "base_rotation_weight": 30.0,
+          "posture_weight": 0.1,
+          "force_weight": 0.0001,
+          "torque_change_weight": 0.001,
+          "regularization": 1e-05,
+          "qp_iterations": 40,
+          "qp_tolerance": 1e-09,
+          "constraint_tolerance": 1e-06
+        }
+      },
+      "wall_elapsed_s": 8.502861853979994,
+      "integrated_duration_s": 8.5,
+      "missed_control_slots": 23,
+      "discarded_commands": 0,
+      "max_numerical_state_lag_s": 0.0036548060015775263,
+      "startup_time_s": 2.286626034998335,
+      "worker_startup": [
+        {
+          "kind": "ready",
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "pid": 49616,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70"
+        }
+      ],
+      "requests": 12,
+      "accepted": 12,
+      "pending_cancelled": null,
+      "events": [
+        {
+          "kind": "delivery",
+          "at": 0.26435051194857806,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 1,
+          "accepted": true,
+          "age_s": 0.26282025600085035,
+          "completed_at": 0.25725327496184036,
+          "sent_at": 0.0031727259629406035,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07732231600675732,
+              "seed_s": 0.005634299013763666,
+              "solve_and_accept_s": 0.13001394498860464,
+              "guidance_s": 0.039498076017480344
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.03654903400456533,
+            "max_dynamics_gap": 8.618886854216967e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.2015302559477279,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 0.7619823159766383,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 2,
+          "accepted": true,
+          "age_s": 0.24138552701333538,
+          "completed_at": 0.7596346319769509,
+          "sent_at": 0.5248262599925511,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05830506299389526,
+              "seed_s": 0.0012674139579758048,
+              "solve_and_accept_s": 0.13355192600283772,
+              "guidance_s": 0.037969308032188565
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 1,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.053440888004843146,
+            "max_dynamics_gap": 9.337669526487957e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.7205967889633031,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 1.4234023839817382,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 3,
+          "accepted": true,
+          "age_s": 0.3824934560107067,
+          "completed_at": 1.4200272499583662,
+          "sent_at": 1.0440481549594551,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05475215602200478,
+              "seed_s": 0.0010580740054138005,
+              "solve_and_accept_s": 0.12814526696456596,
+              "guidance_s": 0.03864286304451525
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 2,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05149129900382832,
+            "max_dynamics_gap": 7.300410276300795e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 2.2409089279710317,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 1.8029819729854353,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 4,
+          "accepted": true,
+          "age_s": 0.2413419570075348,
+          "completed_at": 1.7853438059682958,
+          "sent_at": 1.5667405979475006,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05262288503581658,
+              "seed_s": 0.0011606249609030783,
+              "solve_and_accept_s": 0.12601140199694782,
+              "guidance_s": 0.03765110403764993
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 3,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05287969100754708,
+            "max_dynamics_gap": 8.56328896681191e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 2.7616400159779007,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 2.343769150960725,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 5,
+          "accepted": true,
+          "age_s": 0.240800492989365,
+          "completed_at": 2.3251373329549097,
+          "sent_at": 2.110603088978678,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.050101198023185134,
+              "seed_s": 0.0018003020086325705,
+              "solve_and_accept_s": 0.11693437496433035,
+              "guidance_s": 0.0397817010525614
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 4,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03653179301181808,
+            "max_dynamics_gap": 1.0189939170235363e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.30296865797136,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 2.8651440760004334,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 6,
+          "accepted": true,
+          "age_s": 0.2441844210261479,
+          "completed_at": 2.857908973994199,
+          "sent_at": 2.6254726049955934,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05059825099306181,
+              "seed_s": 0.001445555011741817,
+              "solve_and_accept_s": 0.13687593198847026,
+              "guidance_s": 0.03870969300623983
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 5,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05260392598574981,
+            "max_dynamics_gap": 8.894100733680688e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.8209596549742857,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.4018929149606265,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 7,
+          "accepted": true,
+          "age_s": 0.2617663099663332,
+          "completed_at": 3.3940114049473777,
+          "sent_at": 3.1433971179649234,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05009239597711712,
+              "seed_s": 0.001492594019509852,
+              "solve_and_accept_s": 0.15412875800393522,
+              "guidance_s": 0.04131877300096676
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 6,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.06820846704067662,
+            "max_dynamics_gap": 8.183037580877794e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.3401266049942935,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.902419750986155,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 8,
+          "accepted": true,
+          "age_s": 0.24079084303230047,
+          "completed_at": 3.9004973499686457,
+          "sent_at": 3.6686237760004587,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05390841199550778,
+              "seed_s": 0.0010920690256170928,
+              "solve_and_accept_s": 0.1357838650001213,
+              "guidance_s": 0.03944714699173346
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 7,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05826186103513464,
+            "max_dynamics_gap": 7.999156892424253e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.861628907953855,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.4238697739783674,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 9,
+          "accepted": true,
+          "age_s": 0.24365054297959432,
+          "completed_at": 4.408390060998499,
+          "sent_at": 4.185256877972279,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05211852100910619,
+              "seed_s": 0.0012667870032601058,
+              "solve_and_accept_s": 0.1296784210135229,
+              "guidance_s": 0.03892874298617244
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 8,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05255507299443707,
+            "max_dynamics_gap": 7.287226377883371e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.380219230998773,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.923706800967921,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 10,
+          "accepted": true,
+          "age_s": 0.22360434400616214,
+          "completed_at": 4.911812391947024,
+          "sent_at": 4.704542068997398,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05097526201279834,
+              "seed_s": 0.0011089550098404288,
+              "solve_and_accept_s": 0.11625730502419174,
+              "guidance_s": 0.03777389496099204
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 9,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03946512000402436,
+            "max_dynamics_gap": 6.54233611729893e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.900102456961759,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.422924070968293,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 11,
+          "accepted": true,
+          "age_s": 0.20243524498073384,
+          "completed_at": 5.419007418968249,
+          "sent_at": 5.223540800972842,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.042428685002960265,
+              "seed_s": 0.001049187034368515,
+              "solve_and_accept_s": 0.11178991995984688,
+              "guidance_s": 0.038901740044821054
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 10,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03459544404176995,
+            "max_dynamics_gap": 8.010432595018102e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.420488825987559,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.942946303985082,
+          "epoch": "9f4ac826e8ba46cf8107cf3bc45caa38",
+          "sequence": 12,
+          "accepted": true,
+          "age_s": 0.2023347369977273,
+          "completed_at": 5.930034215969499,
+          "sent_at": 5.743704950960819,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.029289072030223906,
+              "seed_s": 0.0010506199905648828,
+              "solve_and_accept_s": 0.11441296600969508,
+              "guidance_s": 0.036839654960203916
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 11,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03664316103095189,
+            "max_dynamics_gap": 8.365351607780006e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.9406115669873545,
+          "reason": null
+        }
+      ],
+      "modes": {
+        "active": 94,
+        "handoff": 219,
+        "return_to_standing": 48,
+        "standing": 41
+      },
+      "delivery_age": {
+        "samples": 12,
+        "p50_s": 0.2413637420104351,
+        "p95_s": 0.31667319600528565,
+        "max_s": 0.3824934560107067,
+        "budget_s": 0.65,
+        "deadline_misses": 0
+      },
+      "wbc_timing": {
+        "samples": 402,
+        "p50_s": 0.007305249979253858,
+        "p95_s": 0.008958392514614388,
+        "max_s": 0.014921022986527532,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "cycle_timing": {
+        "samples": 402,
+        "p50_s": 0.012478884978918359,
+        "p95_s": 0.01979219195200129,
+        "max_s": 0.03364196402253583,
+        "budget_s": 0.02,
+        "deadline_misses": 20
+      },
+      "ipc_timing": {
+        "samples": 402,
+        "p50_s": 0.00010414849384687841,
+        "p95_s": 0.0001882809825474396,
+        "max_s": 0.01890492398524657,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "original_task_tcp_peak_m": 0.0002703530384575721,
+      "original_task_tcp_rmse_m": 4.0869095848170585e-05,
+      "offline_diagnostics_s": 1.1365548240137286,
+      "realtime_accepted": false,
+      "timing_mode": "wall",
+      "injected_delays": [],
+      "execution_settings": {
+        "modeled_phase_costs_s": {},
+        "delays": [],
+        "scheduled_worker_latency_s": null
+      },
+      "optimized_cpu": true,
+      "scheduler_lateness": {
+        "samples": 403,
+        "p50_s": 0.0007161049847486112,
+        "p95_s": 0.0018933580471203449,
+        "max_s": 0.004327690962236286,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "command_age": {
+        "samples": 402,
+        "p50_s": 0.009548700996674597,
+        "p95_s": 0.012129863890004344,
+        "max_s": 0.016814282978884876,
+        "budget_s": 0.08,
+        "deadline_misses": 0
+      },
+      "phase_timings": {
+        "plant_step": {
+          "samples": 2313,
+          "p50_s": 0.00039994303369894624,
+          "p95_s": 0.0006502407835796477,
+          "max_s": 0.0013437539455480874,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.983165686018765
+        },
+        "plant_diagnostics": {
+          "samples": 2313,
+          "p50_s": 0.00022095994791015983,
+          "p95_s": 0.0003829564084298909,
+          "max_s": 0.0008595469989813864,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.5675000046030618
+        },
+        "request_sample": {
+          "samples": 402,
+          "p50_s": 1.465494278818369e-06,
+          "p95_s": 4.5946711907163266e-06,
+          "max_s": 0.003271909023169428,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.025266130571253598
+        },
+        "ipc": {
+          "samples": 402,
+          "p50_s": 0.00010414849384687841,
+          "p95_s": 0.0001882809825474396,
+          "max_s": 0.01890492398524657,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.23285277938703075
+        },
+        "reference_sample": {
+          "samples": 402,
+          "p50_s": 0.001565607002703473,
+          "p95_s": 0.002450245100772008,
+          "max_s": 0.0038567599840462208,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.6492111726547591
+        },
+        "wbc": {
+          "samples": 402,
+          "p50_s": 0.00735676201293245,
+          "p95_s": 0.009008318770793267,
+          "max_s": 0.01499516103649512,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 3.0078293674159795
+        }
+      },
+      "schedule": "monotonic wall clock; held-torque integration during computation; no solver waits in control",
+      "worker_closed": true,
+      "scenario_checks": {
+        "worker_closed": true,
+        "multiple_packets": true,
+        "plant_wall_duration": true,
+        "delayed_packet_accepted": true
+      },
+      "trace_sha256": "c7be730d4ce93a13eb7629a76b501eb738714d627c84b17b1d70b7b5ca3d542a"
+    },
+    "failure": {
+      "passed": true,
+      "failures": [],
+      "termination": null,
+      "metrics": {
+        "tcp_peak": 0.000724142671101012,
+        "rotation_peak": 0.0002829862948854229,
+        "foot_position": 3.593883522328133e-06,
+        "foot_velocity": 2.7623567510893357e-05,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 8.526512829121202e-14,
+        "contact_residual": 8.726444696649516e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "qp_equality_residual": 4.831690603168681e-13,
+        "qp_inequality_violation": 0.0,
+        "terminal_speed": 1.2791392529688789e-06,
+        "tcp_rmse": 0.00011250024995913458,
+        "plant_steps": 2281,
+        "control_updates": 382
+      },
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "settings": {
+        "async_planner": {
+          "replan_period": 0.5,
+          "handoff_duration": 0.4,
+          "return_duration": 1.0,
+          "recovery_duration": 0.8,
+          "result_timeout": 0.6,
+          "max_state_age": 0.65,
+          "hard_timeout": 2.0
+        },
+        "planner": {
+          "nodes": 24,
+          "dt": 0.05,
+          "max_iterations": 100,
+          "stopping_threshold": 1e-07,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "tcp_position_weight": 20000.0,
+          "tcp_rotation_weight": 500.0,
+          "tcp_velocity_weight": 5.0,
+          "com_weight": 100.0,
+          "base_weight": 200.0,
+          "posture_weight": 1.0,
+          "torque_weight": 0.0001,
+          "torque_change_weight": 0.01,
+          "barrier_weight": 100000.0,
+          "base_translation_bound": [
+            0.08,
+            0.08,
+            0.05
+          ],
+          "base_rotation_bound": 0.25,
+          "base_linear_velocity_bound": 0.5,
+          "base_angular_velocity_bound": 1.0,
+          "gap_tolerance": 1e-06,
+          "dynamics_tolerance": 1e-07,
+          "bound_tolerance": 1e-06,
+          "foot_position_tolerance": 0.001,
+          "foot_velocity_tolerance": 0.01,
+          "tcp_position_tolerance": 0.005,
+          "tcp_rotation_tolerance": 0.02
+        },
+        "wall": {
+          "control_period": 0.02,
+          "integration_step": 0.005,
+          "max_catchup": 0.2,
+          "max_command_age": 0.08,
+          "extra_time": 2.5,
+          "startup_timeout": 15.0
+        },
+        "wbc": {
+          "dt": 0.02,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "task_kp": 100.0,
+          "task_kd": 20.0,
+          "joint_kp": 40.0,
+          "joint_kd": 12.0,
+          "tcp_weight": 200.0,
+          "com_weight": 30.0,
+          "base_position_weight": 5.0,
+          "base_rotation_weight": 30.0,
+          "posture_weight": 0.1,
+          "force_weight": 0.0001,
+          "torque_change_weight": 0.001,
+          "regularization": 1e-05,
+          "qp_iterations": 40,
+          "qp_tolerance": 1e-09,
+          "constraint_tolerance": 1e-06
+        }
+      },
+      "wall_elapsed_s": 8.50094713899307,
+      "integrated_duration_s": 8.5,
+      "missed_control_slots": 43,
+      "discarded_commands": 0,
+      "max_numerical_state_lag_s": 0.00504439597716555,
+      "startup_time_s": 2.3350618479889818,
+      "worker_startup": [
+        {
+          "kind": "ready",
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "pid": 49693,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70"
+        }
+      ],
+      "requests": 12,
+      "accepted": 8,
+      "pending_cancelled": null,
+      "events": [
+        {
+          "kind": "delivery",
+          "at": 0.2841504950192757,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 1,
+          "accepted": true,
+          "age_s": 0.2824365900014527,
+          "completed_at": 0.2623536260216497,
+          "sent_at": 0.003252701018936932,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07484196999575943,
+              "seed_s": 0.005045494006481022,
+              "solve_and_accept_s": 0.13621681201038882,
+              "guidance_s": 0.03955886198673397
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.03838608699152246,
+            "max_dynamics_gap": 6.922544135146147e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.2017139050178232,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 0.7844671260099858,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 2,
+          "accepted": true,
+          "age_s": 0.26432438899064437,
+          "completed_at": 0.7630423979717307,
+          "sent_at": 0.522566546977032,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.057861382025294006,
+              "seed_s": 0.001080003974493593,
+              "solve_and_accept_s": 0.1377841270295903,
+              "guidance_s": 0.038963040977250785
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 1,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05434329598210752,
+            "max_dynamics_gap": 8.623310399080708e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.7201427370193416,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 1.0618150199879892,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 3,
+          "accepted": false,
+          "age_s": 0.021570756973233074,
+          "completed_at": 1.044122048013378,
+          "sent_at": 1.0432405800092965,
+          "diagnostics": {},
+          "error": "RuntimeError: injected worker failure",
+          "reason": "worker_error"
+        },
+        {
+          "kind": "delivery",
+          "at": 1.5823410709854215,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 4,
+          "accepted": false,
+          "age_s": 0.022306185972411186,
+          "completed_at": 1.5671135049778968,
+          "sent_at": 1.5632651430205442,
+          "diagnostics": {},
+          "error": "RuntimeError: injected worker failure",
+          "reason": "worker_error"
+        },
+        {
+          "kind": "delivery",
+          "at": 2.1019423169782385,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 5,
+          "accepted": false,
+          "age_s": 0.02112635795492679,
+          "completed_at": 2.085259886982385,
+          "sent_at": 2.0847501259995624,
+          "diagnostics": {},
+          "error": "RuntimeError: injected worker failure",
+          "reason": "worker_error"
+        },
+        {
+          "kind": "delivery",
+          "at": 2.6685097810113803,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 6,
+          "accepted": false,
+          "age_s": 0.046914760023355484,
+          "completed_at": 2.6356102409772575,
+          "sent_at": 2.6286728109698743,
+          "diagnostics": {},
+          "error": "RuntimeError: injected worker failure",
+          "reason": "worker_error"
+        },
+        {
+          "kind": "delivery",
+          "at": 3.3842354959924705,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 7,
+          "accepted": true,
+          "age_s": 0.24414609296945855,
+          "completed_at": 3.3804477020166814,
+          "sent_at": 3.141609038983006,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07543032598914579,
+              "seed_s": 0.004772427026182413,
+              "solve_and_accept_s": 0.11853989801602438,
+              "guidance_s": 0.03912178397877142
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": 2,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.036306286056060344,
+            "max_dynamics_gap": 1.0292461327665592e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.340089403023012,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.9028593170223758,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 8,
+          "accepted": true,
+          "age_s": 0.24242451804457232,
+          "completed_at": 3.8933020820259117,
+          "sent_at": 3.663522620976437,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.055277079984080046,
+              "seed_s": 0.0012805029982700944,
+              "solve_and_accept_s": 0.131652579002548,
+              "guidance_s": 0.03755322901997715
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 7,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.052421956963371485,
+            "max_dynamics_gap": 8.349571034571568e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.860434798977804,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.425021627976093,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 9,
+          "accepted": true,
+          "age_s": 0.24462982697878033,
+          "completed_at": 4.412330982973799,
+          "sent_at": 4.185161988018081,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05201172298984602,
+              "seed_s": 0.0012328430311754346,
+              "solve_and_accept_s": 0.13392452197149396,
+              "guidance_s": 0.038638830999843776
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 8,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.054308216960635036,
+            "max_dynamics_gap": 7.100570131868267e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.380391800997313,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.942102556000464,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 10,
+          "accepted": true,
+          "age_s": 0.2200724640279077,
+          "completed_at": 4.939698496018536,
+          "sent_at": 4.731903380015865,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.054676334955729544,
+              "seed_s": 0.0010236180387437344,
+              "solve_and_accept_s": 0.11308169097173959,
+              "guidance_s": 0.03764304198557511
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 9,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03558419004548341,
+            "max_dynamics_gap": 8.09213807073661e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.922030091972556,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.484642104012892,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 11,
+          "accepted": true,
+          "age_s": 0.2217655120184645,
+          "completed_at": 5.468608081981074,
+          "sent_at": 5.269189275975805,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04128115996718407,
+              "seed_s": 0.001026909041684121,
+              "solve_and_accept_s": 0.11784899997292086,
+              "guidance_s": 0.038245262985583395
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 10,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03766725695459172,
+            "max_dynamics_gap": 8.808811969782115e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.462876591994427,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 6.021907948015723,
+          "epoch": "c823d715c3d34b2787befd43181d9f71",
+          "sequence": 12,
+          "accepted": true,
+          "age_s": 0.24184806103585288,
+          "completed_at": 6.018748403002974,
+          "sent_at": 5.783756893011741,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.030099908995907754,
+              "seed_s": 0.0011607659980654716,
+              "solve_and_accept_s": 0.14869414799613878,
+              "guidance_s": 0.05301315302494913
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 11,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.05187859997386113,
+            "max_dynamics_gap": 8.466392421052518e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.980059886979871,
+          "reason": null
+        }
+      ],
+      "modes": {
+        "active": 85,
+        "handoff": 135,
+        "return_to_standing": 90,
+        "standing": 72
+      },
+      "delivery_age": {
+        "samples": 8,
+        "p50_s": 0.24328530550701544,
+        "p95_s": 0.27609731964766976,
+        "max_s": 0.2824365900014527,
+        "budget_s": 0.65,
+        "deadline_misses": 0
+      },
+      "wbc_timing": {
+        "samples": 382,
+        "p50_s": 0.007544153515482321,
+        "p95_s": 0.010248522585607133,
+        "max_s": 0.015332036011386663,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "cycle_timing": {
+        "samples": 382,
+        "p50_s": 0.012930102529935539,
+        "p95_s": 0.023293223101063628,
+        "max_s": 0.04422023304505274,
+        "budget_s": 0.02,
+        "deadline_misses": 31
+      },
+      "ipc_timing": {
+        "samples": 382,
+        "p50_s": 0.00011176947737112641,
+        "p95_s": 0.00020906826539430763,
+        "max_s": 0.020742921042256057,
+        "budget_s": 0.02,
+        "deadline_misses": 1
+      },
+      "original_task_tcp_peak_m": 0.022338768129151695,
+      "original_task_tcp_rmse_m": 0.008459072676133578,
+      "offline_diagnostics_s": 1.0418789850082248,
+      "realtime_accepted": false,
+      "timing_mode": "wall",
+      "injected_delays": [],
+      "execution_settings": {
+        "modeled_phase_costs_s": {},
+        "delays": [],
+        "scheduled_worker_latency_s": null
+      },
+      "optimized_cpu": true,
+      "scheduler_lateness": {
+        "samples": 383,
+        "p50_s": 0.0005481119966134207,
+        "p95_s": 0.0022399227733256276,
+        "max_s": 0.004828043011948502,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "command_age": {
+        "samples": 382,
+        "p50_s": 0.00985386801767163,
+        "p95_s": 0.014114659279584885,
+        "max_s": 0.020580472017172724,
+        "budget_s": 0.08,
+        "deadline_misses": 0
+      },
+      "phase_timings": {
+        "plant_step": {
+          "samples": 2281,
+          "p50_s": 0.0004206700250506401,
+          "p95_s": 0.0007997970096766949,
+          "max_s": 0.00172941799974069,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 1.0536031830706634
+        },
+        "plant_diagnostics": {
+          "samples": 2281,
+          "p50_s": 0.000235365005210042,
+          "p95_s": 0.0004522560047917068,
+          "max_s": 0.0011350279673933983,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.6123811934376135
+        },
+        "request_sample": {
+          "samples": 382,
+          "p50_s": 1.49052357301116e-06,
+          "p95_s": 4.486899706535042e-06,
+          "max_s": 0.004155716975219548,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.023388931702356786
+        },
+        "ipc": {
+          "samples": 382,
+          "p50_s": 0.00011176947737112641,
+          "p95_s": 0.00020906826539430763,
+          "max_s": 0.020742921042256057,
+          "budget_s": 0.02,
+          "deadline_misses": 1,
+          "total_s": 0.1782626129570417
+        },
+        "reference_sample": {
+          "samples": 382,
+          "p50_s": 0.0016334910178557038,
+          "p95_s": 0.002987885841866955,
+          "max_s": 0.005721065041143447,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.6347017484367825
+        },
+        "wbc": {
+          "samples": 382,
+          "p50_s": 0.007597299991175532,
+          "p95_s": 0.010302363641676493,
+          "max_s": 0.01539533497998491,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 3.023370635055471
+        }
+      },
+      "schedule": "monotonic wall clock; held-torque integration during computation; no solver waits in control",
+      "worker_closed": true,
+      "scenario_checks": {
+        "worker_closed": true,
+        "multiple_packets": true,
+        "plant_wall_duration": true,
+        "expected_rejection": true,
+        "fallback_executed": true,
+        "recovered": true
+      },
+      "trace_sha256": "2b757b7c03f31b946a59dfac66e617b06dda257ecf8e17c969fd871341150fb3"
+    },
+    "timeout": {
+      "passed": true,
+      "failures": [],
+      "termination": null,
+      "metrics": {
+        "tcp_peak": 0.0009831793600620295,
+        "rotation_peak": 0.00043012812895801354,
+        "foot_position": 5.6339303777377334e-06,
+        "foot_velocity": 4.1970089901221483e-05,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 8.526512829121202e-14,
+        "contact_residual": 8.113681167903897e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "qp_equality_residual": 4.831690603168681e-13,
+        "qp_inequality_violation": 0.0,
+        "terminal_speed": 7.071195241578177e-07,
+        "tcp_rmse": 0.00014947012944300202,
+        "plant_steps": 2295,
+        "control_updates": 387
+      },
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "settings": {
+        "async_planner": {
+          "replan_period": 0.5,
+          "handoff_duration": 0.4,
+          "return_duration": 1.0,
+          "recovery_duration": 0.8,
+          "result_timeout": 0.6,
+          "max_state_age": 0.65,
+          "hard_timeout": 2.0
+        },
+        "planner": {
+          "nodes": 24,
+          "dt": 0.05,
+          "max_iterations": 100,
+          "stopping_threshold": 1e-07,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "tcp_position_weight": 20000.0,
+          "tcp_rotation_weight": 500.0,
+          "tcp_velocity_weight": 5.0,
+          "com_weight": 100.0,
+          "base_weight": 200.0,
+          "posture_weight": 1.0,
+          "torque_weight": 0.0001,
+          "torque_change_weight": 0.01,
+          "barrier_weight": 100000.0,
+          "base_translation_bound": [
+            0.08,
+            0.08,
+            0.05
+          ],
+          "base_rotation_bound": 0.25,
+          "base_linear_velocity_bound": 0.5,
+          "base_angular_velocity_bound": 1.0,
+          "gap_tolerance": 1e-06,
+          "dynamics_tolerance": 1e-07,
+          "bound_tolerance": 1e-06,
+          "foot_position_tolerance": 0.001,
+          "foot_velocity_tolerance": 0.01,
+          "tcp_position_tolerance": 0.005,
+          "tcp_rotation_tolerance": 0.02
+        },
+        "wall": {
+          "control_period": 0.02,
+          "integration_step": 0.005,
+          "max_catchup": 0.2,
+          "max_command_age": 0.08,
+          "extra_time": 2.5,
+          "startup_timeout": 15.0
+        },
+        "wbc": {
+          "dt": 0.02,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "task_kp": 100.0,
+          "task_kd": 20.0,
+          "joint_kp": 40.0,
+          "joint_kd": 12.0,
+          "tcp_weight": 200.0,
+          "com_weight": 30.0,
+          "base_position_weight": 5.0,
+          "base_rotation_weight": 30.0,
+          "posture_weight": 0.1,
+          "force_weight": 0.0001,
+          "torque_change_weight": 0.001,
+          "regularization": 1e-05,
+          "qp_iterations": 40,
+          "qp_tolerance": 1e-09,
+          "constraint_tolerance": 1e-06
+        }
+      },
+      "wall_elapsed_s": 8.501444311987143,
+      "integrated_duration_s": 8.5,
+      "missed_control_slots": 38,
+      "discarded_commands": 0,
+      "max_numerical_state_lag_s": 0.004405230982229114,
+      "startup_time_s": 2.3148105909931473,
+      "worker_startup": [
+        {
+          "kind": "ready",
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "pid": 49772,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70"
+        }
+      ],
+      "requests": 10,
+      "accepted": 8,
+      "pending_cancelled": null,
+      "events": [
+        {
+          "kind": "delivery",
+          "at": 0.2651779009611346,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 1,
+          "accepted": true,
+          "age_s": 0.26378443697467446,
+          "completed_at": 0.25591383897699416,
+          "sent_at": 0.00324562395690009,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07284941099351272,
+              "seed_s": 0.005606182035990059,
+              "solve_and_accept_s": 0.13346189697040245,
+              "guidance_s": 0.03950776800047606
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.03847561002476141,
+            "max_dynamics_gap": 8.988643163121424e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.2013934639864603,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 0.7660416059661657,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 2,
+          "accepted": true,
+          "age_s": 0.2615940799587406,
+          "completed_at": 0.7514436619821936,
+          "sent_at": 0.512353184982203,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05911488499259576,
+              "seed_s": 0.0010903290240094066,
+              "solve_and_accept_s": 0.13439755095168948,
+              "guidance_s": 0.038474153028801084
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 1,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.0564040609751828,
+            "max_dynamics_gap": 9.31876104059981e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.7044475260074252,
+          "reason": null
+        },
+        {
+          "kind": "timeout",
+          "at": 1.6289821449900046,
+          "sequence": 3
+        },
+        {
+          "kind": "delivery",
+          "at": 2.549947657971643,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 3,
+          "accepted": false,
+          "age_s": 1.5287057340028696,
+          "completed_at": 2.5118303949711844,
+          "sent_at": 1.024162150977645,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05655780102824792,
+              "seed_s": 0.0014105579466558993,
+              "solve_and_accept_s": 0.17255085002398118,
+              "guidance_s": 0.05232802400132641
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 2,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.0734737099846825,
+            "max_dynamics_gap": 8.744220625356292e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "reason": "timeout"
+        },
+        {
+          "kind": "delivery",
+          "at": 2.924819829990156,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 4,
+          "accepted": true,
+          "age_s": 0.3434863919974305,
+          "completed_at": 2.9105929280049168,
+          "sent_at": 2.5858980789780617,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.10890449699945748,
+              "seed_s": 0.006589056982193142,
+              "solve_and_accept_s": 0.15789254801347852,
+              "guidance_s": 0.05028801801381633
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": 2,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.049473569029942155,
+            "max_dynamics_gap": 7.691070003090772e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.7813334379927257,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.36238811397925,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 5,
+          "accepted": false,
+          "age_s": 0.26219124800991267,
+          "completed_at": 3.344791980984155,
+          "sent_at": 3.10364932595985,
+          "diagnostics": {},
+          "error": "ValueError: W plan did not pass feasibility and task gates",
+          "reason": "worker_error"
+        },
+        {
+          "kind": "delivery",
+          "at": 3.8647444269736297,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 6,
+          "accepted": true,
+          "age_s": 0.24448560597375035,
+          "completed_at": 3.8445596550009213,
+          "sent_at": 3.623164675955195,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04831492999801412,
+              "seed_s": 0.0007284880266524851,
+              "solve_and_accept_s": 0.13442071399185807,
+              "guidance_s": 0.03708959900541231
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 4,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.053734590008389205,
+            "max_dynamics_gap": 6.210830461039762e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.82025882099988,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.3823956359992735,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 7,
+          "accepted": true,
+          "age_s": 0.24157441104762256,
+          "completed_at": 4.366021018999163,
+          "sent_at": 4.14378963096533,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04697650298476219,
+              "seed_s": 0.001381582987960428,
+              "solve_and_accept_s": 0.13082359702093527,
+              "guidance_s": 0.03917053999612108
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 6,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.052579076029360294,
+            "max_dynamics_gap": 1.05984665488279e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.340821224951651,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.903846140950918,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 8,
+          "accepted": true,
+          "age_s": 0.2424118099734187,
+          "completed_at": 4.881498281960376,
+          "sent_at": 4.668978602974676,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05084290896775201,
+              "seed_s": 0.0010391179821453989,
+              "solve_and_accept_s": 0.11491064704023302,
+              "guidance_s": 0.03856671700486913
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 7,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03716728795552626,
+            "max_dynamics_gap": 7.292473916398201e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.8614343309775,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.40249990997836,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 9,
+          "accepted": true,
+          "age_s": 0.22234957898035645,
+          "completed_at": 5.389883653959259,
+          "sent_at": 5.184044711990282,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04630229203030467,
+              "seed_s": 0.0014741609920747578,
+              "solve_and_accept_s": 0.11790709797060117,
+              "guidance_s": 0.03860551700927317
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 8,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03604410000843927,
+            "max_dynamics_gap": 8.640267321058381e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.380150330998004,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.903027520980686,
+          "epoch": "0e611dacb2914b21b22dbe1d1dab735f",
+          "sequence": 10,
+          "accepted": true,
+          "age_s": 0.2018570380168967,
+          "completed_at": 5.895760004990734,
+          "sent_at": 5.705106420966331,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.02953552402323112,
+              "seed_s": 0.0012530289823189378,
+              "solve_and_accept_s": 0.11780111800180748,
+              "guidance_s": 0.038207116012927145
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 9,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.038361821963917464,
+            "max_dynamics_gap": 1.0225555211601511e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.901170482963789,
+          "reason": null
+        }
+      ],
+      "modes": {
+        "active": 94,
+        "handoff": 148,
+        "return_to_standing": 94,
+        "standing": 51
+      },
+      "delivery_age": {
+        "samples": 8,
+        "p50_s": 0.24344870797358453,
+        "p95_s": 0.31559070773946585,
+        "max_s": 0.3434863919974305,
+        "budget_s": 0.65,
+        "deadline_misses": 0
+      },
+      "wbc_timing": {
+        "samples": 387,
+        "p50_s": 0.007390701968688518,
+        "p95_s": 0.009976955089950935,
+        "max_s": 0.012970625015441328,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "cycle_timing": {
+        "samples": 387,
+        "p50_s": 0.012858444009907544,
+        "p95_s": 0.020894627791130913,
+        "max_s": 0.03671306901378557,
+        "budget_s": 0.02,
+        "deadline_misses": 25
+      },
+      "ipc_timing": {
+        "samples": 387,
+        "p50_s": 0.0001063369563780725,
+        "p95_s": 0.00020425958791747687,
+        "max_s": 0.020673756022006273,
+        "budget_s": 0.02,
+        "deadline_misses": 1
+      },
+      "original_task_tcp_peak_m": 0.022328894879273267,
+      "original_task_tcp_rmse_m": 0.006066510133646334,
+      "offline_diagnostics_s": 1.1065255580469966,
+      "realtime_accepted": false,
+      "timing_mode": "wall",
+      "injected_delays": [],
+      "execution_settings": {
+        "modeled_phase_costs_s": {},
+        "delays": [],
+        "scheduled_worker_latency_s": null
+      },
+      "optimized_cpu": true,
+      "scheduler_lateness": {
+        "samples": 388,
+        "p50_s": 0.000664808966684749,
+        "p95_s": 0.0022353493125410995,
+        "max_s": 0.0045651149586773965,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "command_age": {
+        "samples": 387,
+        "p50_s": 0.009738564025610685,
+        "p95_s": 0.013525192072847856,
+        "max_s": 0.017782095994334668,
+        "budget_s": 0.08,
+        "deadline_misses": 0
+      },
+      "phase_timings": {
+        "plant_step": {
+          "samples": 2295,
+          "p50_s": 0.00040339597035199404,
+          "p95_s": 0.0006903904839418828,
+          "max_s": 0.002303728018887341,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 1.0057350575807504
+        },
+        "plant_diagnostics": {
+          "samples": 2295,
+          "p50_s": 0.00022182002430781722,
+          "p95_s": 0.00043124831863678933,
+          "max_s": 0.0014092579949647188,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.5892809509532526
+        },
+        "request_sample": {
+          "samples": 387,
+          "p50_s": 1.5529803931713104e-06,
+          "p95_s": 4.519091453403234e-06,
+          "max_s": 0.004258439992554486,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.019766341894865036
+        },
+        "ipc": {
+          "samples": 387,
+          "p50_s": 0.0001063369563780725,
+          "p95_s": 0.00020425958791747687,
+          "max_s": 0.020673756022006273,
+          "budget_s": 0.02,
+          "deadline_misses": 1,
+          "total_s": 0.18518010684056208
+        },
+        "reference_sample": {
+          "samples": 387,
+          "p50_s": 0.0015882389852777123,
+          "p95_s": 0.0026441527705173933,
+          "max_s": 0.004479984985664487,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.6286447411985137
+        },
+        "wbc": {
+          "samples": 387,
+          "p50_s": 0.007449062017258257,
+          "p95_s": 0.010046700789825991,
+          "max_s": 0.013046529027633369,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 2.990519580373075
+        }
+      },
+      "schedule": "monotonic wall clock; held-torque integration during computation; no solver waits in control",
+      "worker_closed": true,
+      "scenario_checks": {
+        "worker_closed": true,
+        "multiple_packets": true,
+        "plant_wall_duration": true,
+        "expected_rejection": true,
+        "fallback_executed": true,
+        "recovered": true
+      },
+      "trace_sha256": "614d41d54bc37e3ce31abdbc3e02fe690a18d85d075378568f35071fcbea564a"
+    },
+    "expired": {
+      "passed": false,
+      "failures": [
+        "terminated",
+        "plant_wall_duration"
+      ],
+      "termination": {
+        "time": 6.644334585987963,
+        "state_time": 6.170082393975463,
+        "reason": "wall-clock plant catch-up bound exceeded"
+      },
+      "metrics": {
+        "tcp_peak": 0.0007620195215035413,
+        "rotation_peak": 0.00031423382166954775,
+        "foot_position": 4.276424638481931e-06,
+        "foot_velocity": 2.6518163752189674e-05,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 8.258964259016954e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "qp_equality_residual": 4.831690603168681e-13,
+        "qp_inequality_violation": 0.0,
+        "terminal_speed": 0.001144440912545727,
+        "tcp_rmse": 0.00013777209810463364,
+        "plant_steps": 1658,
+        "control_updates": 285
+      },
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "settings": {
+        "async_planner": {
+          "replan_period": 0.5,
+          "handoff_duration": 0.4,
+          "return_duration": 1.0,
+          "recovery_duration": 0.8,
+          "result_timeout": 2.0,
+          "max_state_age": 2.0,
+          "hard_timeout": 2.5
+        },
+        "planner": {
+          "nodes": 24,
+          "dt": 0.05,
+          "max_iterations": 100,
+          "stopping_threshold": 1e-07,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "tcp_position_weight": 20000.0,
+          "tcp_rotation_weight": 500.0,
+          "tcp_velocity_weight": 5.0,
+          "com_weight": 100.0,
+          "base_weight": 200.0,
+          "posture_weight": 1.0,
+          "torque_weight": 0.0001,
+          "torque_change_weight": 0.01,
+          "barrier_weight": 100000.0,
+          "base_translation_bound": [
+            0.08,
+            0.08,
+            0.05
+          ],
+          "base_rotation_bound": 0.25,
+          "base_linear_velocity_bound": 0.5,
+          "base_angular_velocity_bound": 1.0,
+          "gap_tolerance": 1e-06,
+          "dynamics_tolerance": 1e-07,
+          "bound_tolerance": 1e-06,
+          "foot_position_tolerance": 0.001,
+          "foot_velocity_tolerance": 0.01,
+          "tcp_position_tolerance": 0.005,
+          "tcp_rotation_tolerance": 0.02
+        },
+        "wall": {
+          "control_period": 0.02,
+          "integration_step": 0.005,
+          "max_catchup": 0.2,
+          "max_command_age": 0.08,
+          "extra_time": 2.5,
+          "startup_timeout": 15.0
+        },
+        "wbc": {
+          "dt": 0.02,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "task_kp": 100.0,
+          "task_kd": 20.0,
+          "joint_kp": 40.0,
+          "joint_kd": 12.0,
+          "tcp_weight": 200.0,
+          "com_weight": 30.0,
+          "base_position_weight": 5.0,
+          "base_rotation_weight": 30.0,
+          "posture_weight": 0.1,
+          "force_weight": 0.0001,
+          "torque_change_weight": 0.001,
+          "regularization": 1e-05,
+          "qp_iterations": 40,
+          "qp_tolerance": 1e-09,
+          "constraint_tolerance": 1e-06
+        }
+      },
+      "wall_elapsed_s": 6.6443854040117,
+      "integrated_duration_s": 6.170082393975463,
+      "missed_control_slots": 37,
+      "discarded_commands": 0,
+      "max_numerical_state_lag_s": 0.06701362499734387,
+      "startup_time_s": 2.417921397020109,
+      "worker_startup": [
+        {
+          "kind": "ready",
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "pid": 49855,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70"
+        }
+      ],
+      "requests": 10,
+      "accepted": 8,
+      "pending_cancelled": 10,
+      "events": [
+        {
+          "kind": "delivery",
+          "at": 0.2659850859781727,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 1,
+          "accepted": true,
+          "age_s": 0.26468290999764577,
+          "completed_at": 0.25426290300674736,
+          "sent_at": 0.002867605013307184,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07464790798258036,
+              "seed_s": 0.00545865303138271,
+              "solve_and_accept_s": 0.12973621697165072,
+              "guidance_s": 0.040367636014707386
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.03860970598179847,
+            "max_dynamics_gap": 7.69218131031757e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.2013021759805271,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 0.7823245800100267,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 2,
+          "accepted": true,
+          "age_s": 0.26138710603117943,
+          "completed_at": 0.7644473370164633,
+          "sent_at": 0.5250557269901037,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.058334000990726054,
+              "seed_s": 0.0012973900302313268,
+              "solve_and_accept_s": 0.1363513899850659,
+              "guidance_s": 0.038896378013305366
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 1,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05475075397407636,
+            "max_dynamics_gap": 8.082770563966335e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.7209374739788474,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 2.643289380008355,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 3,
+          "accepted": false,
+          "age_s": 1.603149997012224,
+          "completed_at": 2.6293751500197686,
+          "sent_at": 1.0431270630215295,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04987215797882527,
+              "seed_s": 0.0016576629714109004,
+              "solve_and_accept_s": 0.13874130503972992,
+              "guidance_s": 0.04148304997943342
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 2,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05796067899791524,
+            "max_dynamics_gap": 8.062300826949809e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 2.240139382996131,
+          "reason": "expired"
+        },
+        {
+          "kind": "delivery",
+          "at": 2.944181611004751,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 4,
+          "accepted": true,
+          "age_s": 0.2635268720332533,
+          "completed_at": 2.9302463909843937,
+          "sent_at": 2.6842091400176287,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07962020899867639,
+              "seed_s": 0.005133608996402472,
+              "solve_and_accept_s": 0.11829425604082644,
+              "guidance_s": 0.039354198961518705
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": 2,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.03872971097007394,
+            "max_dynamics_gap": 8.421735531172203e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.880654738971498,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.4432786640245467,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 5,
+          "accepted": true,
+          "age_s": 0.24157199205365032,
+          "completed_at": 3.4346683630137704,
+          "sent_at": 3.20466031198157,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05734862299868837,
+              "seed_s": 0.0012990609975531697,
+              "solve_and_accept_s": 0.1307999329874292,
+              "guidance_s": 0.03905727399978787
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 4,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.054777201963588595,
+            "max_dynamics_gap": 6.740615010603079e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.401706671970897,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.963071495993063,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 6,
+          "accepted": true,
+          "age_s": 0.24239173700334504,
+          "completed_at": 3.9506258770124987,
+          "sent_at": 3.726022398972418,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05249937903136015,
+              "seed_s": 0.0013455000007525086,
+              "solve_and_accept_s": 0.13013785501243547,
+              "guidance_s": 0.037760769948363304
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 5,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.053628389025107026,
+            "max_dynamics_gap": 6.95225127467225e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.920679758989718,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.483274117985275,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 7,
+          "accepted": true,
+          "age_s": 0.24268561298958957,
+          "completed_at": 4.474157618009485,
+          "sent_at": 4.244740036025178,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04883233300643042,
+              "seed_s": 0.0010432930430397391,
+              "solve_and_accept_s": 0.13409765798132867,
+              "guidance_s": 0.04007723601534963
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 6,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05412170197814703,
+            "max_dynamics_gap": 8.167598541941601e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.440588504995685,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.983752719010226,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 8,
+          "accepted": true,
+          "age_s": 0.22289981204085052,
+          "completed_at": 4.9706119960173965,
+          "sent_at": 4.764529550971929,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04964767902856693,
+              "seed_s": 0.001016892958432436,
+              "solve_and_accept_s": 0.1129815710010007,
+              "guidance_s": 0.03804644400952384
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 7,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.036736932990606874,
+            "max_dynamics_gap": 7.423575643095148e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.960852906969376,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.5027007550233975,
+          "epoch": "9938e373991d43c29ff0ef00de5ecba3",
+          "sequence": 9,
+          "accepted": true,
+          "age_s": 0.2225749790086411,
+          "completed_at": 5.483920490019955,
+          "sent_at": 5.283045549003873,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.039367727003991604,
+              "seed_s": 0.0015081129968166351,
+              "solve_and_accept_s": 0.11637848999816924,
+              "guidance_s": 0.042100397986359894
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 8,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.04089627502253279,
+            "max_dynamics_gap": 8.114169058881515e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.480125776014757,
+          "reason": null
+        }
+      ],
+      "modes": {
+        "active": 64,
+        "handoff": 148,
+        "return_to_standing": 49,
+        "standing": 24
+      },
+      "delivery_age": {
+        "samples": 8,
+        "p50_s": 0.2425386749964673,
+        "p95_s": 0.2642782967101084,
+        "max_s": 0.26468290999764577,
+        "budget_s": 2.0,
+        "deadline_misses": 0
+      },
+      "wbc_timing": {
+        "samples": 285,
+        "p50_s": 0.007275013020262122,
+        "p95_s": 0.009150557802058756,
+        "max_s": 0.031589394027832896,
+        "budget_s": 0.02,
+        "deadline_misses": 2
+      },
+      "cycle_timing": {
+        "samples": 285,
+        "p50_s": 0.012520218035206199,
+        "p95_s": 0.020904065784998253,
+        "max_s": 0.33749021496623755,
+        "budget_s": 0.02,
+        "deadline_misses": 15
+      },
+      "ipc_timing": {
+        "samples": 285,
+        "p50_s": 9.960803436115384e-05,
+        "p95_s": 0.00021214400185272126,
+        "max_s": 0.018156993959564716,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "original_task_tcp_peak_m": 0.022331360833195965,
+      "original_task_tcp_rmse_m": 0.008003858248414354,
+      "offline_diagnostics_s": 9.123441495001316,
+      "realtime_accepted": false,
+      "timing_mode": "wall",
+      "injected_delays": [],
+      "execution_settings": {
+        "modeled_phase_costs_s": {},
+        "delays": [],
+        "scheduled_worker_latency_s": null
+      },
+      "optimized_cpu": true,
+      "scheduler_lateness": {
+        "samples": 286,
+        "p50_s": 0.0006648400146513911,
+        "p95_s": 0.0019807787210447646,
+        "max_s": 0.08063940797233915,
+        "budget_s": 0.02,
+        "deadline_misses": 1
+      },
+      "command_age": {
+        "samples": 285,
+        "p50_s": 0.009562309016473591,
+        "p95_s": 0.012497936806175858,
+        "max_s": 0.041101393988355994,
+        "budget_s": 0.08,
+        "deadline_misses": 0
+      },
+      "phase_timings": {
+        "plant_step": {
+          "samples": 1658,
+          "p50_s": 0.00040794548112899065,
+          "p95_s": 0.0007107380224624648,
+          "max_s": 0.017705267993733287,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.790058291866444
+        },
+        "plant_diagnostics": {
+          "samples": 1658,
+          "p50_s": 0.0002217410074081272,
+          "p95_s": 0.00043890375236514955,
+          "max_s": 0.015640465018805116,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.47691701987059787
+        },
+        "request_sample": {
+          "samples": 285,
+          "p50_s": 1.1979718692600727e-06,
+          "p95_s": 2.159376163035634e-06,
+          "max_s": 0.0031454910058528185,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.01896153506822884
+        },
+        "ipc": {
+          "samples": 285,
+          "p50_s": 9.960803436115384e-05,
+          "p95_s": 0.00021214400185272126,
+          "max_s": 0.018156993959564716,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.17459231871180236
+        },
+        "reference_sample": {
+          "samples": 285,
+          "p50_s": 0.0015451540239155293,
+          "p95_s": 0.0024994342122226956,
+          "max_s": 0.004947190987877548,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.4588466476998292
+        },
+        "wbc": {
+          "samples": 285,
+          "p50_s": 0.007327474013436586,
+          "p95_s": 0.009229057806078345,
+          "max_s": 0.03182127699255943,
+          "budget_s": 0.02,
+          "deadline_misses": 2,
+          "total_s": 2.190945754176937
+        }
+      },
+      "schedule": "monotonic wall clock; held-torque integration during computation; no solver waits in control",
+      "worker_closed": true,
+      "scenario_checks": {
+        "worker_closed": true,
+        "multiple_packets": true,
+        "plant_wall_duration": false,
+        "expected_rejection": true,
+        "fallback_executed": true,
+        "recovered": true
+      },
+      "trace_sha256": "e4f5d7f1420846249fda0f1a9af55fc811333ad1bafa8754579bcf4d3089cbdb"
+    },
+    "restart": {
+      "passed": true,
+      "failures": [],
+      "termination": null,
+      "metrics": {
+        "tcp_peak": 0.000247963729444663,
+        "rotation_peak": 0.00016280540518303396,
+        "foot_position": 8.28214167474676e-07,
+        "foot_velocity": 3.254377944309749e-06,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 5.684341886080802e-14,
+        "contact_residual": 8.944559502788163e-15,
+        "quaternion_error": 2.220446049250313e-16,
+        "qp_equality_residual": 6.821210263296962e-13,
+        "qp_inequality_violation": 0.0,
+        "terminal_speed": 7.288697092793364e-07,
+        "tcp_rmse": 5.085569070277977e-05,
+        "plant_steps": 2199,
+        "control_updates": 317
+      },
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "settings": {
+        "async_planner": {
+          "replan_period": 0.5,
+          "handoff_duration": 0.4,
+          "return_duration": 1.0,
+          "recovery_duration": 0.8,
+          "result_timeout": 0.5,
+          "max_state_age": 0.65,
+          "hard_timeout": 0.9
+        },
+        "planner": {
+          "nodes": 24,
+          "dt": 0.05,
+          "max_iterations": 100,
+          "stopping_threshold": 1e-07,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "tcp_position_weight": 20000.0,
+          "tcp_rotation_weight": 500.0,
+          "tcp_velocity_weight": 5.0,
+          "com_weight": 100.0,
+          "base_weight": 200.0,
+          "posture_weight": 1.0,
+          "torque_weight": 0.0001,
+          "torque_change_weight": 0.01,
+          "barrier_weight": 100000.0,
+          "base_translation_bound": [
+            0.08,
+            0.08,
+            0.05
+          ],
+          "base_rotation_bound": 0.25,
+          "base_linear_velocity_bound": 0.5,
+          "base_angular_velocity_bound": 1.0,
+          "gap_tolerance": 1e-06,
+          "dynamics_tolerance": 1e-07,
+          "bound_tolerance": 1e-06,
+          "foot_position_tolerance": 0.001,
+          "foot_velocity_tolerance": 0.01,
+          "tcp_position_tolerance": 0.005,
+          "tcp_rotation_tolerance": 0.02
+        },
+        "wall": {
+          "control_period": 0.02,
+          "integration_step": 0.005,
+          "max_catchup": 0.2,
+          "max_command_age": 0.08,
+          "extra_time": 2.5,
+          "startup_timeout": 15.0
+        },
+        "wbc": {
+          "dt": 0.02,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "task_kp": 100.0,
+          "task_kd": 20.0,
+          "joint_kp": 40.0,
+          "joint_kd": 12.0,
+          "tcp_weight": 200.0,
+          "com_weight": 30.0,
+          "base_position_weight": 5.0,
+          "base_rotation_weight": 30.0,
+          "posture_weight": 0.1,
+          "force_weight": 0.0001,
+          "torque_change_weight": 0.001,
+          "regularization": 1e-05,
+          "qp_iterations": 40,
+          "qp_tolerance": 1e-09,
+          "constraint_tolerance": 1e-06
+        }
+      },
+      "wall_elapsed_s": 8.525261225993745,
+      "integrated_duration_s": 8.5,
+      "missed_control_slots": 109,
+      "discarded_commands": 0,
+      "max_numerical_state_lag_s": 0.02474041498498991,
+      "startup_time_s": 4.471891409950331,
+      "worker_startup": [
+        {
+          "kind": "ready",
+          "epoch": "a2da28ea7774409c86a785a90a7702e2",
+          "pid": 49944,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70"
+        }
+      ],
+      "requests": 4,
+      "accepted": 3,
+      "pending_cancelled": null,
+      "events": [
+        {
+          "kind": "delivery",
+          "at": 0.4652222719741985,
+          "epoch": "a2da28ea7774409c86a785a90a7702e2",
+          "sequence": 1,
+          "accepted": true,
+          "age_s": 0.45974195399321616,
+          "completed_at": 0.4313232629792765,
+          "sent_at": 0.009346886014100164,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.10357211501104757,
+              "seed_s": 0.005208105023484677,
+              "solve_and_accept_s": 0.23821097699692473,
+              "guidance_s": 0.07297483098227531
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.07800222700461745,
+            "max_dynamics_gap": 8.184598832006174e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.2054803179809825,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 0.9282484300201759,
+          "epoch": "a2da28ea7774409c86a785a90a7702e2",
+          "sequence": 2,
+          "accepted": true,
+          "age_s": 0.40677452203817666,
+          "completed_at": 0.9111706870025955,
+          "sent_at": 0.5262935910141096,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.10028226103167981,
+              "seed_s": 0.004385225009173155,
+              "solve_and_accept_s": 0.22089925297768787,
+              "guidance_s": 0.05811909300973639
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 1,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.08291837596334517,
+            "max_dynamics_gap": 8.606310109016135e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.7214739079819994,
+          "reason": null
+        },
+        {
+          "kind": "timeout",
+          "at": 1.5653737569809891,
+          "sequence": 3
+        },
+        {
+          "kind": "worker_terminated",
+          "at": 1.9662207929650322,
+          "sequence": 3
+        },
+        {
+          "kind": "worker_restart",
+          "at": 2.0076598409796134,
+          "abandoned": false
+        },
+        {
+          "kind": "ready",
+          "epoch": "5df6c4ff606d4409b05c4b829c290505",
+          "pid": 49987,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70",
+          "at": 5.74259300500853
+        },
+        {
+          "kind": "delivery",
+          "at": 6.123029335984029,
+          "epoch": "5df6c4ff606d4409b05c4b829c290505",
+          "sequence": 4,
+          "accepted": true,
+          "age_s": 0.36155508196679875,
+          "completed_at": 6.103077697975095,
+          "sent_at": 5.765947313979268,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.09585104300640523,
+              "seed_s": 0.008165082021150738,
+              "solve_and_accept_s": 0.17685141501715407,
+              "guidance_s": 0.051271348958835006
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.05052924301708117,
+            "max_dynamics_gap": 8.605331616555467e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.96147425401723,
+          "reason": null
+        }
+      ],
+      "modes": {
+        "active": 35,
+        "handoff": 36,
+        "return_to_standing": 75,
+        "standing": 171
+      },
+      "delivery_age": {
+        "samples": 3,
+        "p50_s": 0.40677452203817666,
+        "p95_s": 0.4544452107977122,
+        "max_s": 0.45974195399321616,
+        "budget_s": 0.65,
+        "deadline_misses": 0
+      },
+      "wbc_timing": {
+        "samples": 317,
+        "p50_s": 0.009491503005847335,
+        "p95_s": 0.01499469057889655,
+        "max_s": 0.031449105008505285,
+        "budget_s": 0.02,
+        "deadline_misses": 3
+      },
+      "cycle_timing": {
+        "samples": 317,
+        "p50_s": 0.016789100016467273,
+        "p95_s": 0.029480649414472267,
+        "max_s": 0.11322511901380494,
+        "budget_s": 0.02,
+        "deadline_misses": 77
+      },
+      "ipc_timing": {
+        "samples": 317,
+        "p50_s": 9.369599865749478e-05,
+        "p95_s": 0.00020759715698659417,
+        "max_s": 0.027732576010748744,
+        "budget_s": 0.02,
+        "deadline_misses": 3
+      },
+      "original_task_tcp_peak_m": 0.022414288946844777,
+      "original_task_tcp_rmse_m": 0.010373988511424152,
+      "offline_diagnostics_s": 1.306854072958231,
+      "realtime_accepted": false,
+      "timing_mode": "wall",
+      "injected_delays": [],
+      "execution_settings": {
+        "modeled_phase_costs_s": {},
+        "delays": [],
+        "scheduled_worker_latency_s": null
+      },
+      "optimized_cpu": true,
+      "scheduler_lateness": {
+        "samples": 318,
+        "p50_s": 0.0005173199775159176,
+        "p95_s": 0.0033328614309431205,
+        "max_s": 0.005477386002894491,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "command_age": {
+        "samples": 317,
+        "p50_s": 0.011641131015494466,
+        "p95_s": 0.019035579031333325,
+        "max_s": 0.04989019094500691,
+        "budget_s": 0.08,
+        "deadline_misses": 0
+      },
+      "phase_timings": {
+        "plant_step": {
+          "samples": 2199,
+          "p50_s": 0.0005024279817007482,
+          "p95_s": 0.001010234811110422,
+          "max_s": 0.0397279110038653,
+          "budget_s": 0.02,
+          "deadline_misses": 1,
+          "total_s": 1.3117896835901774
+        },
+        "plant_diagnostics": {
+          "samples": 2199,
+          "p50_s": 0.0002759149647317827,
+          "p95_s": 0.0006156865449156612,
+          "max_s": 0.007073337968904525,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.7454399322741665
+        },
+        "request_sample": {
+          "samples": 317,
+          "p50_s": 1.7309794202446938e-06,
+          "p95_s": 5.592592060565948e-06,
+          "max_s": 0.0017435599584132433,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.005425102834124118
+        },
+        "ipc": {
+          "samples": 317,
+          "p50_s": 9.369599865749478e-05,
+          "p95_s": 0.00020759715698659417,
+          "max_s": 0.027732576010748744,
+          "budget_s": 0.02,
+          "deadline_misses": 3,
+          "total_s": 0.09628500154940411
+        },
+        "reference_sample": {
+          "samples": 317,
+          "p50_s": 0.0012262880336493254,
+          "p95_s": 0.0031738443765789255,
+          "max_s": 0.009938173985574394,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.461774819472339
+        },
+        "wbc": {
+          "samples": 317,
+          "p50_s": 0.009547324967570603,
+          "p95_s": 0.01506672060349956,
+          "max_s": 0.03153996204491705,
+          "budget_s": 0.02,
+          "deadline_misses": 3,
+          "total_s": 3.2597594027174637
+        }
+      },
+      "schedule": "monotonic wall clock; held-torque integration during computation; no solver waits in control",
+      "worker_closed": true,
+      "scenario_checks": {
+        "worker_closed": true,
+        "multiple_packets": true,
+        "plant_wall_duration": true,
+        "worker_restarted": true,
+        "recovered": true,
+        "fallback_executed": true
+      },
+      "trace_sha256": "b96b0c9b77d4ce959dbde06ea52480a71b09b6b2a3541c861a5a6ea99c63193b"
+    },
+    "high_low": {
+      "passed": true,
+      "failures": [],
+      "termination": null,
+      "metrics": {
+        "tcp_peak": 0.0006009859741315807,
+        "rotation_peak": 0.007524118185722822,
+        "foot_position": 3.788781914006989e-06,
+        "foot_velocity": 1.8468788747122012e-05,
+        "torque_violation": 0.0,
+        "joint_position_violation": 0.0,
+        "joint_velocity_violation": 0.0,
+        "force_violation": 0.0,
+        "dynamics_residual": 8.526512829121202e-14,
+        "contact_residual": 1.0276894921443911e-14,
+        "quaternion_error": 2.220446049250313e-16,
+        "qp_equality_residual": 4.263256414560601e-13,
+        "qp_inequality_violation": 0.0,
+        "terminal_speed": 6.7051058619241e-06,
+        "tcp_rmse": 0.00019763099219751823,
+        "plant_steps": 3918,
+        "control_updates": 647
+      },
+      "limits": {
+        "tcp_peak": 0.005,
+        "rotation_peak": 0.02,
+        "foot_position": 0.001,
+        "foot_velocity": 0.01,
+        "torque_violation": 1e-06,
+        "joint_position_violation": 1e-06,
+        "joint_velocity_violation": 1e-06,
+        "force_violation": 1e-05,
+        "dynamics_residual": 1e-07,
+        "contact_residual": 1e-07,
+        "quaternion_error": 1e-10,
+        "qp_equality_residual": 1e-06,
+        "qp_inequality_violation": 1e-06,
+        "terminal_speed": 0.05
+      },
+      "settings": {
+        "async_planner": {
+          "replan_period": 0.5,
+          "handoff_duration": 0.4,
+          "return_duration": 1.0,
+          "recovery_duration": 0.8,
+          "result_timeout": 0.6,
+          "max_state_age": 0.65,
+          "hard_timeout": 2.0
+        },
+        "planner": {
+          "nodes": 24,
+          "dt": 0.05,
+          "max_iterations": 100,
+          "stopping_threshold": 1e-07,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "tcp_position_weight": 20000.0,
+          "tcp_rotation_weight": 500.0,
+          "tcp_velocity_weight": 5.0,
+          "com_weight": 100.0,
+          "base_weight": 200.0,
+          "posture_weight": 1.0,
+          "torque_weight": 0.0001,
+          "torque_change_weight": 0.01,
+          "barrier_weight": 100000.0,
+          "base_translation_bound": [
+            0.08,
+            0.08,
+            0.05
+          ],
+          "base_rotation_bound": 0.25,
+          "base_linear_velocity_bound": 0.5,
+          "base_angular_velocity_bound": 1.0,
+          "gap_tolerance": 1e-06,
+          "dynamics_tolerance": 1e-07,
+          "bound_tolerance": 1e-06,
+          "foot_position_tolerance": 0.001,
+          "foot_velocity_tolerance": 0.01,
+          "tcp_position_tolerance": 0.005,
+          "tcp_rotation_tolerance": 0.02
+        },
+        "wall": {
+          "control_period": 0.02,
+          "integration_step": 0.005,
+          "max_catchup": 0.2,
+          "max_command_age": 0.08,
+          "extra_time": 2.5,
+          "startup_timeout": 15.0
+        },
+        "wbc": {
+          "dt": 0.02,
+          "friction": 0.6,
+          "normal_min": 2.0,
+          "normal_max": 200.0,
+          "contact_kp": 100.0,
+          "contact_kd": 20.0,
+          "task_kp": 100.0,
+          "task_kd": 20.0,
+          "joint_kp": 40.0,
+          "joint_kd": 12.0,
+          "tcp_weight": 200.0,
+          "com_weight": 30.0,
+          "base_position_weight": 5.0,
+          "base_rotation_weight": 30.0,
+          "posture_weight": 0.1,
+          "force_weight": 0.0001,
+          "torque_change_weight": 0.001,
+          "regularization": 1e-05,
+          "qp_iterations": 40,
+          "qp_tolerance": 1e-09,
+          "constraint_tolerance": 1e-06
+        }
+      },
+      "wall_elapsed_s": 14.502054417040199,
+      "integrated_duration_s": 14.5,
+      "missed_control_slots": 78,
+      "discarded_commands": 0,
+      "max_numerical_state_lag_s": 0.006013364996761084,
+      "startup_time_s": 3.0068601689999923,
+      "worker_startup": [
+        {
+          "kind": "ready",
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "pid": 50052,
+          "model_id": "4492b2ce17d65fe64a85b00235242a80ee065c839b2f47990d5393a16e0e5a70"
+        }
+      ],
+      "requests": 24,
+      "accepted": 24,
+      "pending_cancelled": null,
+      "events": [
+        {
+          "kind": "delivery",
+          "at": 0.3235043640015647,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 1,
+          "accepted": true,
+          "age_s": 0.32185825298074633,
+          "completed_at": 0.30396498704794794,
+          "sent_at": 0.003754661011043936,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.08184567402349785,
+              "seed_s": 0.005170711025130004,
+              "solve_and_accept_s": 0.16824997996445745,
+              "guidance_s": 0.043288026994559914
+            },
+            "converged": true,
+            "seed": "common_trajectory",
+            "cached_sequence": null,
+            "recovery": true,
+            "iterations": 2,
+            "solve_time_s": 0.043511628988198936,
+            "max_dynamics_gap": 9.303807859762162e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.2016461110208185,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 0.8233139280346222,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 2,
+          "accepted": true,
+          "age_s": 0.3026097189867869,
+          "completed_at": 0.802166625042446,
+          "sent_at": 0.5237035820027813,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.0683021520380862,
+              "seed_s": 0.001468867005314678,
+              "solve_and_accept_s": 0.16441048798151314,
+              "guidance_s": 0.043169946991838515
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 1,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.06972541700815782,
+            "max_dynamics_gap": 9.070869055882724e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 1.7207042090478355,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 1.4063421290484257,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 3,
+          "accepted": true,
+          "age_s": 0.36570755403954536,
+          "completed_at": 1.3948622440220788,
+          "sent_at": 1.0452638459973969,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07207872904837132,
+              "seed_s": 0.0021308589493855834,
+              "solve_and_accept_s": 0.22114873700775206,
+              "guidance_s": 0.05176376603776589
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 2,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.1059170060325414,
+            "max_dynamics_gap": 8.425204978124157e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 2.2406345750088805,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 1.9229215230443515,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 4,
+          "accepted": true,
+          "age_s": 0.3625015449943021,
+          "completed_at": 1.9053039110149257,
+          "sent_at": 1.5653017770382576,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.08823765197303146,
+              "seed_s": 0.0020751089905388653,
+              "solve_and_accept_s": 0.19935410103062168,
+              "guidance_s": 0.04901517496909946
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 3,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.09621027100365609,
+            "max_dynamics_gap": 6.417089082333405e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 2.7604199780500496,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 2.38285067101242,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 5,
+          "accepted": true,
+          "age_s": 0.3016850419808179,
+          "completed_at": 2.3791964340489358,
+          "sent_at": 2.084183302009478,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.057627369998954237,
+              "seed_s": 0.0014468459994532168,
+              "solve_and_accept_s": 0.18744325399165973,
+              "guidance_s": 0.04730318102519959
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 4,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.08961660700151697,
+            "max_dynamics_gap": 8.884559754562815e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.2811656290316025,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 2.8644241690053605,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 6,
+          "accepted": true,
+          "age_s": 0.264190609974321,
+          "completed_at": 2.8551279610255733,
+          "sent_at": 2.6034879650105722,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05918605101760477,
+              "seed_s": 0.0013881000340916216,
+              "solve_and_accept_s": 0.13887702795909718,
+              "guidance_s": 0.04747566604055464
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 5,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.04469985299510881,
+            "max_dynamics_gap": 1.1354805984353789e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 3.8002335590310397,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.403324345999863,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 7,
+          "accepted": true,
+          "age_s": 0.2823918219655752,
+          "completed_at": 3.3954457610379905,
+          "sent_at": 3.124336389009841,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.07903829001588747,
+              "seed_s": 0.0025903070345520973,
+              "solve_and_accept_s": 0.14009642699966207,
+              "guidance_s": 0.04488095798296854
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 6,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.04276040900731459,
+            "max_dynamics_gap": 7.551857766517275e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.320932524034288,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 3.9226448550471105,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 8,
+          "accepted": true,
+          "age_s": 0.28123264404712245,
+          "completed_at": 3.9035711450269446,
+          "sent_at": 3.645057415997144,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05571097496431321,
+              "seed_s": 0.001181897008791566,
+              "solve_and_accept_s": 0.15341440902557224,
+              "guidance_s": 0.04368622897891328
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 7,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.06254612497286871,
+            "max_dynamics_gap": 8.656595405776013e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 4.841412210999988,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.444238116033375,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 9,
+          "accepted": true,
+          "age_s": 0.28406295500462875,
+          "completed_at": 4.425376577011775,
+          "sent_at": 4.163012771052308,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05874186399159953,
+              "seed_s": 0.0012227270053699613,
+              "solve_and_accept_s": 0.15987062500789762,
+              "guidance_s": 0.040368246962316334
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 8,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.07497378601692617,
+            "max_dynamics_gap": 9.528489108845406e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.360175161028747,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 4.942893297004048,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 10,
+          "accepted": true,
+          "age_s": 0.26241411396767944,
+          "completed_at": 4.931211718998384,
+          "sent_at": 4.684145025035832,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.050364114984404296,
+              "seed_s": 0.0011840949882753193,
+              "solve_and_accept_s": 0.15277387603418902,
+              "guidance_s": 0.04029138095211238
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 9,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.07122388103744015,
+            "max_dynamics_gap": 8.059525269388246e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 5.8804791830363685,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 5.4836561400443316,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 11,
+          "accepted": true,
+          "age_s": 0.28270517801865935,
+          "completed_at": 5.463954380014911,
+          "sent_at": 5.203985196014401,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05366589594632387,
+              "seed_s": 0.0014990460476838052,
+              "solve_and_accept_s": 0.16150853998260573,
+              "guidance_s": 0.039938958012498915
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 10,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.07718319998821244,
+            "max_dynamics_gap": 6.48925357893404e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.400950962025672,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 6.004576406034175,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 12,
+          "accepted": true,
+          "age_s": 0.2833897030213848,
+          "completed_at": 6.001364836003631,
+          "sent_at": 5.723888324049767,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.051919076999183744,
+              "seed_s": 0.001026279991492629,
+              "solve_and_accept_s": 0.17782708397135139,
+              "guidance_s": 0.041331493004690856
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 11,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.09205091401236132,
+            "max_dynamics_gap": 7.294165271787278e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 6.921186703012791,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 6.522800735023338,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 13,
+          "accepted": true,
+          "age_s": 0.2810751729994081,
+          "completed_at": 6.505833939998411,
+          "sent_at": 6.248092423018534,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05511404696153477,
+              "seed_s": 0.0010072730365209281,
+              "solve_and_accept_s": 0.14915528800338507,
+              "guidance_s": 0.05111512599978596
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 12,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.0623106459970586,
+            "max_dynamics_gap": 9.320322291728189e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 7.44172556202393,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 6.982446476002224,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 14,
+          "accepted": true,
+          "age_s": 0.22198049497092143,
+          "completed_at": 6.975767542026006,
+          "sent_at": 6.763684993027709,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04917917103739455,
+              "seed_s": 0.001173086988274008,
+              "solve_and_accept_s": 0.11989640002138913,
+              "guidance_s": 0.03993845300283283
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 13,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03775039198808372,
+            "max_dynamics_gap": 6.651623696285469e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 7.9604659810313025,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 7.5224187429994345,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 15,
+          "accepted": true,
+          "age_s": 0.2401983659947291,
+          "completed_at": 7.520279932999983,
+          "sent_at": 7.289297706040088,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.056897341972216964,
+              "seed_s": 0.0011618200223892927,
+              "solve_and_accept_s": 0.12553588702576235,
+              "guidance_s": 0.04045570094604045
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 14,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.038934510957915336,
+            "max_dynamics_gap": 5.92792958817312e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 8.482220377004705,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 8.043373351043556,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 16,
+          "accepted": true,
+          "age_s": 0.24239429703447968,
+          "completed_at": 8.035598647024017,
+          "sent_at": 7.804877071001101,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04995492799207568,
+              "seed_s": 0.0013225289876572788,
+              "solve_and_accept_s": 0.13558179000392556,
+              "guidance_s": 0.0388295580050908
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 15,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05431492498610169,
+            "max_dynamics_gap": 9.840263640818053e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 9.000979054009075,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 8.562834666052368,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 17,
+          "accepted": true,
+          "age_s": 0.24228896404383704,
+          "completed_at": 8.559959953010548,
+          "sent_at": 8.323033377004322,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.05790281901136041,
+              "seed_s": 0.001796036958694458,
+              "solve_and_accept_s": 0.13423689303454012,
+              "guidance_s": 0.03825599100673571
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 16,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.057374631986021996,
+            "max_dynamics_gap": 7.841644000805559e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 9.52054570200853,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 9.104482620023191,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 18,
+          "accepted": true,
+          "age_s": 0.2635619160137139,
+          "completed_at": 9.091825276031159,
+          "sent_at": 8.845097753044683,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.04900839098263532,
+              "seed_s": 0.0010221219854429364,
+              "solve_and_accept_s": 0.1535955680301413,
+              "guidance_s": 0.03891557396855205
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 17,
+            "recovery": false,
+            "iterations": 4,
+            "solve_time_s": 0.07292522600619122,
+            "max_dynamics_gap": 7.4870665223159e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 10.040920704009476,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 9.622826533042826,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 19,
+          "accepted": true,
+          "age_s": 0.26221784204244614,
+          "completed_at": 9.617283346015029,
+          "sent_at": 9.364419082005043,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.055002347042318434,
+              "seed_s": 0.0015978249721229076,
+              "solve_and_accept_s": 0.15243934298632666,
+              "guidance_s": 0.04256796499248594
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 18,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.06021699798293412,
+            "max_dynamics_gap": 7.85205234166142e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 10.560608691000379,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 10.144899514038116,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 20,
+          "accepted": true,
+          "age_s": 0.263443247997202,
+          "completed_at": 10.131741516001057,
+          "sent_at": 9.885189937020186,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.052802207006607205,
+              "seed_s": 0.0010232339845970273,
+              "solve_and_accept_s": 0.14629082003375515,
+              "guidance_s": 0.044404109998140484
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 19,
+            "recovery": false,
+            "iterations": 3,
+            "solve_time_s": 0.05839349003508687,
+            "max_dynamics_gap": 7.741030039198904e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 11.081456266040913,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 10.645072068029549,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 21,
+          "accepted": true,
+          "age_s": 0.24373831902630627,
+          "completed_at": 10.622598362038843,
+          "sent_at": 10.404995547025464,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.051279316016007215,
+              "seed_s": 0.0012019359855912626,
+              "solve_and_accept_s": 0.12036023003747687,
+              "guidance_s": 0.04137697099940851
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 20,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.042428059969097376,
+            "max_dynamics_gap": 6.154105003375321e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 11.601333749003242,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 11.143450659001246,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 22,
+          "accepted": true,
+          "age_s": 0.222472368972376,
+          "completed_at": 11.123368504049722,
+          "sent_at": 10.924053379043471,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.0450195919838734,
+              "seed_s": 0.0011159799760207534,
+              "solve_and_accept_s": 0.11079423502087593,
+              "guidance_s": 0.03914523497223854
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 21,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.03633677400648594,
+            "max_dynamics_gap": 8.351093237481079e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 12.12097829002887,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 11.682716521027032,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 23,
+          "accepted": true,
+          "age_s": 0.24108817300293595,
+          "completed_at": 11.678581733023748,
+          "sent_at": 11.446628763049375,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.037957992986775935,
+              "seed_s": 0.001467183989007026,
+              "solve_and_accept_s": 0.14834434003569186,
+              "guidance_s": 0.04196130594937131
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 22,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.05550748103996739,
+            "max_dynamics_gap": 6.940341991433854e-14,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 12.641628348024096,
+          "reason": null
+        },
+        {
+          "kind": "delivery",
+          "at": 12.143096758052707,
+          "epoch": "88a8c1699b364b909efed9c7a463d5c2",
+          "sequence": 24,
+          "accepted": true,
+          "age_s": 0.18299400404794142,
+          "completed_at": 12.140294251032174,
+          "sent_at": 11.962869577051606,
+          "diagnostics": {
+            "phase_timings": {
+              "preview_s": 0.025161901023238897,
+              "seed_s": 0.0010109390132129192,
+              "solve_and_accept_s": 0.11202649696497247,
+              "guidance_s": 0.03801224200287834
+            },
+            "converged": true,
+            "seed": "shifted_acknowledged",
+            "cached_sequence": 23,
+            "recovery": false,
+            "iterations": 2,
+            "solve_time_s": 0.038095971976872534,
+            "max_dynamics_gap": 1.1111019737738634e-13,
+            "initial_state_error": 0.0,
+            "torque_memory_error": 0.0
+          },
+          "valid_until": 13.160102754004765,
+          "reason": null
+        }
+      ],
+      "modes": {
+        "active": 156,
+        "handoff": 420,
+        "return_to_standing": 38,
+        "standing": 33
+      },
+      "delivery_age": {
+        "samples": 24,
+        "p50_s": 0.26387626299401745,
+        "p95_s": 0.3564050511922686,
+        "max_s": 0.36570755403954536,
+        "budget_s": 0.65,
+        "deadline_misses": 0
+      },
+      "wbc_timing": {
+        "samples": 647,
+        "p50_s": 0.007678717956878245,
+        "p95_s": 0.010829592129448425,
+        "max_s": 0.019348356989212334,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "cycle_timing": {
+        "samples": 647,
+        "p50_s": 0.01381710497662425,
+        "p95_s": 0.02532763936906121,
+        "max_s": 0.03949198196642101,
+        "budget_s": 0.02,
+        "deadline_misses": 56
+      },
+      "ipc_timing": {
+        "samples": 647,
+        "p50_s": 0.00010793103137984872,
+        "p95_s": 0.0002269463089760387,
+        "max_s": 0.0211396089871414,
+        "budget_s": 0.02,
+        "deadline_misses": 2
+      },
+      "original_task_tcp_peak_m": 0.0006009859741316892,
+      "original_task_tcp_rmse_m": 0.00019795801326048866,
+      "offline_diagnostics_s": 2.3234182079904713,
+      "realtime_accepted": false,
+      "timing_mode": "wall",
+      "injected_delays": [],
+      "execution_settings": {
+        "modeled_phase_costs_s": {},
+        "delays": [],
+        "scheduled_worker_latency_s": null
+      },
+      "optimized_cpu": true,
+      "scheduler_lateness": {
+        "samples": 648,
+        "p50_s": 0.0006216105178461495,
+        "p95_s": 0.0019647820350940925,
+        "max_s": 0.004406739997211417,
+        "budget_s": 0.02,
+        "deadline_misses": 0
+      },
+      "command_age": {
+        "samples": 647,
+        "p50_s": 0.010208155028522015,
+        "p95_s": 0.014089258946478363,
+        "max_s": 0.024663274991326034,
+        "budget_s": 0.08,
+        "deadline_misses": 0
+      },
+      "phase_timings": {
+        "plant_step": {
+          "samples": 3918,
+          "p50_s": 0.0004216564993839711,
+          "p95_s": 0.0007272684684721751,
+          "max_s": 0.005711561010684818,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 1.778871105168946
+        },
+        "plant_diagnostics": {
+          "samples": 3918,
+          "p50_s": 0.0002282015047967434,
+          "p95_s": 0.00043424546311143764,
+          "max_s": 0.0039015989750623703,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 1.0331254840712063
+        },
+        "request_sample": {
+          "samples": 647,
+          "p50_s": 1.3809767551720142e-06,
+          "p95_s": 6.505422061309201e-06,
+          "max_s": 0.0029545960132963955,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 0.04430222464725375
+        },
+        "ipc": {
+          "samples": 647,
+          "p50_s": 0.00010793103137984872,
+          "p95_s": 0.0002269463089760387,
+          "max_s": 0.0211396089871414,
+          "budget_s": 0.02,
+          "deadline_misses": 2,
+          "total_s": 0.49157073762035
+        },
+        "reference_sample": {
+          "samples": 647,
+          "p50_s": 0.001664728973992169,
+          "p95_s": 0.002722914196783674,
+          "max_s": 0.004276859981473535,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 1.1345808272599243
+        },
+        "wbc": {
+          "samples": 647,
+          "p50_s": 0.00773676298558712,
+          "p95_s": 0.010895421612076458,
+          "max_s": 0.019427662016823888,
+          "budget_s": 0.02,
+          "deadline_misses": 0,
+          "total_s": 5.220352358475793
+        }
+      },
+      "schedule": "monotonic wall clock; held-torque integration during computation; no solver waits in control",
+      "worker_closed": true,
+      "scenario_checks": {
+        "worker_closed": true,
+        "multiple_packets": true,
+        "plant_wall_duration": true,
+        "no_rejected_delivery": true
+      },
+      "trace_sha256": "6869e9ad5e01316fa4c0fbf065a06bd063307a7c630f4a4bbad5bd3ad04065c0"
+    }
+  },
+  "passed": false
+}
