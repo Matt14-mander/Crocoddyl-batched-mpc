@@ -1,0 +1,387 @@
+{
+  "hold": {
+    "W": {
+      "passed": true,
+      "accepted": 8,
+      "requests": 8,
+      "tcp_peak_mm": 0.00041545309778892364,
+      "rotation_peak_rad": 4.342423415080951e-07,
+      "original_task_tcp_peak_mm": 0.00041545309778892364,
+      "execution": {
+        "common_com_peak_m": 6.3107828963869115e-06,
+        "common_com_rmse_m": 3.409711111156921e-06,
+        "actual_angular_momentum_peak_kg_m2_s": 3.5109653682719647e-05
+      },
+      "native_request_count": 8,
+      "native_request_p50_ms": 142.83923953189515,
+      "native_request_p95_ms": 190.1057702489197,
+      "phase_median_ms": {
+        "preview_s": 46.99842052650638,
+        "seed_s": 1.2095325510017574,
+        "solve_and_accept_s": 84.67628149082884,
+        "guidance_s": 10.031526006059721
+      }
+    },
+    "C0": {
+      "passed": true,
+      "accepted": 8,
+      "requests": 8,
+      "tcp_peak_mm": 0.0028898395955667157,
+      "rotation_peak_rad": 1.0085860560976172e-05,
+      "original_task_tcp_peak_mm": 0.0028898395955667157,
+      "execution": {
+        "common_com_peak_m": 0.00027457112139418614,
+        "common_com_rmse_m": 7.699084343748977e-05,
+        "actual_angular_momentum_peak_kg_m2_s": 0.0018939872891858994
+      },
+      "native_request_count": 8,
+      "native_request_p50_ms": 174.67139748623595,
+      "native_request_p95_ms": 208.26070304319725,
+      "phase_median_ms": {
+        "preview_and_measurement_s": 47.68616650835611,
+        "solve_and_accept_s": 120.61558300047182,
+        "guidance_s": 5.803453997941688
+      }
+    },
+    "C1": {
+      "passed": true,
+      "accepted": 8,
+      "requests": 8,
+      "tcp_peak_mm": 0.0028898395964864184,
+      "rotation_peak_rad": 1.008586056203182e-05,
+      "original_task_tcp_peak_mm": 0.0028898395964864184,
+      "execution": {
+        "common_com_peak_m": 0.00027457112143602246,
+        "common_com_rmse_m": 7.699084344633919e-05,
+        "actual_angular_momentum_peak_kg_m2_s": 0.001893987289446904
+      },
+      "native_request_count": 8,
+      "native_request_p50_ms": 516.8526469788048,
+      "native_request_p95_ms": 559.9566262360895,
+      "phase_median_ms": {
+        "kinematic_preview_s": 46.308734017657116,
+        "mapping_s": 6.862174486741424,
+        "quasi_static_s": 198.52682153577916,
+        "configuration_quantities_s": 11.584402993321419,
+        "preparation_overhead_s": 1.2378159735817462,
+        "measurement_s": 0.6380885024555027,
+        "solve_and_accept_s": 202.72183400811628,
+        "guidance_s": 45.210358017357066
+      },
+      "static_nodes": 200,
+      "static_peak_utilization": 0.2103559483205208,
+      "static_equilibrium_residual": 2.389199948993337e-13,
+      "predicted_static_peak_utilization": 0.2103559483205208,
+      "all_candidates_converged": true,
+      "recheck_native_request_p50_ms": 776.5401320066303
+    }
+  },
+  "reach": {
+    "W": {
+      "passed": true,
+      "accepted": 12,
+      "requests": 12,
+      "tcp_peak_mm": 0.02234856566831758,
+      "rotation_peak_rad": 5.1605424042496833e-05,
+      "original_task_tcp_peak_mm": 0.257917844562237,
+      "execution": {
+        "common_com_peak_m": 0.0001643891937316295,
+        "common_com_rmse_m": 7.300370125067369e-05,
+        "actual_angular_momentum_peak_kg_m2_s": 0.01238995135901073
+      },
+      "native_request_count": 12,
+      "native_request_p50_ms": 152.89040049538016,
+      "native_request_p95_ms": 170.12854245840572,
+      "phase_median_ms": {
+        "preview_s": 46.41250899294391,
+        "seed_s": 1.064924494130537,
+        "solve_and_accept_s": 94.22434552107006,
+        "guidance_s": 10.264479991747066
+      }
+    },
+    "C0": {
+      "passed": true,
+      "accepted": 12,
+      "requests": 12,
+      "tcp_peak_mm": 0.02171298045160345,
+      "rotation_peak_rad": 5.343894922298005e-05,
+      "original_task_tcp_peak_mm": 0.2589877939022547,
+      "execution": {
+        "common_com_peak_m": 0.00030362051927591583,
+        "common_com_rmse_m": 0.000102296706438207,
+        "actual_angular_momentum_peak_kg_m2_s": 0.012220067459208821
+      },
+      "native_request_count": 12,
+      "native_request_p50_ms": 177.06476000603288,
+      "native_request_p95_ms": 256.0585268220166,
+      "phase_median_ms": {
+        "preview_and_measurement_s": 48.7349255126901,
+        "solve_and_accept_s": 123.59510650276206,
+        "guidance_s": 5.923454504227266
+      }
+    },
+    "C1": {
+      "passed": true,
+      "accepted": 12,
+      "requests": 12,
+      "tcp_peak_mm": 0.02171912425004168,
+      "rotation_peak_rad": 5.34433015187801e-05,
+      "original_task_tcp_peak_mm": 0.25898670737913293,
+      "execution": {
+        "common_com_peak_m": 0.00030362093405308536,
+        "common_com_rmse_m": 0.00010231225120665767,
+        "actual_angular_momentum_peak_kg_m2_s": 0.012220946019946383
+      },
+      "native_request_count": 12,
+      "native_request_p50_ms": 530.0061645102687,
+      "native_request_p95_ms": 659.6117053122725,
+      "phase_median_ms": {
+        "kinematic_preview_s": 47.31693601934239,
+        "mapping_s": 7.100851507857442,
+        "quasi_static_s": 208.74383702175692,
+        "configuration_quantities_s": 11.689092498272657,
+        "preparation_overhead_s": 1.3113734894432127,
+        "measurement_s": 0.6659500068053603,
+        "solve_and_accept_s": 201.96130601107143,
+        "guidance_s": 45.07028451189399
+      },
+      "static_nodes": 300,
+      "static_peak_utilization": 0.21249450798159258,
+      "static_equilibrium_residual": 3.126388037344441e-13,
+      "predicted_static_peak_utilization": 0.21765565601787593,
+      "all_candidates_converged": true,
+      "recheck_native_request_p50_ms": 511.6998750308994
+    }
+  },
+  "high_low": {
+    "W": {
+      "passed": true,
+      "accepted": 24,
+      "requests": 24,
+      "tcp_peak_mm": 0.4483930396576332,
+      "rotation_peak_rad": 0.005016931610735743,
+      "original_task_tcp_peak_mm": 0.4483930396580452,
+      "execution": {
+        "common_com_peak_m": 0.0006908874317913082,
+        "common_com_rmse_m": 0.00022018781571041523,
+        "actual_angular_momentum_peak_kg_m2_s": 0.18348226626180997
+      },
+      "native_request_count": 24,
+      "native_request_p50_ms": 164.6287570183631,
+      "native_request_p95_ms": 185.47632558911573,
+      "phase_median_ms": {
+        "preview_s": 47.00260600657202,
+        "seed_s": 1.101259986171499,
+        "solve_and_accept_s": 100.50675252568908,
+        "guidance_s": 10.261267481837422
+      }
+    },
+    "C0": {
+      "passed": true,
+      "accepted": 24,
+      "requests": 24,
+      "tcp_peak_mm": 0.4359749939921427,
+      "rotation_peak_rad": 0.00505178044470186,
+      "original_task_tcp_peak_mm": 0.43597499399224254,
+      "execution": {
+        "common_com_peak_m": 0.0003802688046078724,
+        "common_com_rmse_m": 0.00015503405112741452,
+        "actual_angular_momentum_peak_kg_m2_s": 0.1815224559797815
+      },
+      "native_request_count": 24,
+      "native_request_p50_ms": 227.35745101817884,
+      "native_request_p95_ms": 248.41715590155218,
+      "phase_median_ms": {
+        "preview_and_measurement_s": 49.54997048480436,
+        "solve_and_accept_s": 174.62296201847494,
+        "guidance_s": 5.921970994677395
+      }
+    },
+    "C1": {
+      "passed": true,
+      "accepted": 24,
+      "requests": 24,
+      "tcp_peak_mm": 0.4359773074862979,
+      "rotation_peak_rad": 0.005051846723729466,
+      "original_task_tcp_peak_mm": 0.4359773074863979,
+      "execution": {
+        "common_com_peak_m": 0.0003802688045788367,
+        "common_com_rmse_m": 0.00015515377319975265,
+        "actual_angular_momentum_peak_kg_m2_s": 0.18153289891163346
+      },
+      "native_request_count": 24,
+      "native_request_p50_ms": 588.0518670019228,
+      "native_request_p95_ms": 611.2660681654233,
+      "phase_median_ms": {
+        "kinematic_preview_s": 46.589921024860814,
+        "mapping_s": 6.660174491116777,
+        "quasi_static_s": 181.89387049642392,
+        "configuration_quantities_s": 11.520735977683216,
+        "preparation_overhead_s": 1.2507054780144244,
+        "measurement_s": 0.6775755027774721,
+        "solve_and_accept_s": 293.7753794831224,
+        "guidance_s": 44.579037494258955
+      },
+      "static_nodes": 600,
+      "static_peak_utilization": 0.2741776998028212,
+      "static_equilibrium_residual": 9.344276416395486e-13,
+      "predicted_static_peak_utilization": 0.2741776998028212,
+      "all_candidates_converged": true,
+      "recheck_native_request_p50_ms": 725.390055013122
+    }
+  },
+  "failure": {
+    "W": {
+      "passed": true,
+      "accepted": 8,
+      "requests": 12,
+      "tcp_peak_mm": 0.6046951546431808,
+      "rotation_peak_rad": 0.00025361947009090567,
+      "original_task_tcp_peak_mm": 22.348134221781887,
+      "execution": {
+        "common_com_peak_m": 0.0147516059000093,
+        "common_com_rmse_m": 0.005322769219177813,
+        "actual_angular_momentum_peak_kg_m2_s": 0.08368112561477828
+      },
+      "native_request_count": 8,
+      "native_request_p50_ms": 158.88966302736662,
+      "native_request_p95_ms": 183.9635883428855,
+      "phase_median_ms": {
+        "preview_s": 50.89987351675518,
+        "seed_s": 1.3940694625489414,
+        "solve_and_accept_s": 93.61164798610844,
+        "guidance_s": 9.886987507343292
+      }
+    },
+    "C0": {
+      "passed": true,
+      "accepted": 8,
+      "requests": 12,
+      "tcp_peak_mm": 0.6165485940216892,
+      "rotation_peak_rad": 0.0002683164253240396,
+      "original_task_tcp_peak_mm": 22.348171331573877,
+      "execution": {
+        "common_com_peak_m": 0.014751615689495557,
+        "common_com_rmse_m": 0.005310104516597085,
+        "actual_angular_momentum_peak_kg_m2_s": 0.08106421682411052
+      },
+      "native_request_count": 8,
+      "native_request_p50_ms": 235.03347448422574,
+      "native_request_p95_ms": 307.0648931286996,
+      "phase_median_ms": {
+        "preview_and_measurement_s": 53.42784849926829,
+        "solve_and_accept_s": 174.31115498766303,
+        "guidance_s": 5.6288464984390885
+      }
+    },
+    "C1": {
+      "passed": true,
+      "accepted": 8,
+      "requests": 12,
+      "tcp_peak_mm": 0.6160450988315228,
+      "rotation_peak_rad": 0.0002685921170211072,
+      "original_task_tcp_peak_mm": 22.348171264221133,
+      "execution": {
+        "common_com_peak_m": 0.014751614597552991,
+        "common_com_rmse_m": 0.0053102710898482305,
+        "actual_angular_momentum_peak_kg_m2_s": 0.08113488396605373
+      },
+      "native_request_count": 8,
+      "native_request_p50_ms": 623.6453265300952,
+      "native_request_p95_ms": 734.3657197227002,
+      "phase_median_ms": {
+        "kinematic_preview_s": 54.407833522418514,
+        "mapping_s": 7.329144515097141,
+        "quasi_static_s": 208.99943500990048,
+        "configuration_quantities_s": 12.109192495699972,
+        "preparation_overhead_s": 1.385028997901827,
+        "measurement_s": 0.7587875006720424,
+        "solve_and_accept_s": 293.735803978052,
+        "guidance_s": 45.509600517107174
+      },
+      "static_nodes": 200,
+      "static_peak_utilization": 0.21230641467474382,
+      "static_equilibrium_residual": 4.547473508864641e-13,
+      "predicted_static_peak_utilization": 0.23268374770336936,
+      "all_candidates_converged": true,
+      "recheck_native_request_p50_ms": 733.7394425121602
+    }
+  },
+  "expired": {
+    "W": {
+      "passed": true,
+      "accepted": 9,
+      "requests": 10,
+      "tcp_peak_mm": 0.6413915424541662,
+      "rotation_peak_rad": 0.0002767376884225173,
+      "original_task_tcp_peak_mm": 22.315765838690382,
+      "execution": {
+        "common_com_peak_m": 0.014744290184480589,
+        "common_com_rmse_m": 0.004323057517514253,
+        "actual_angular_momentum_peak_kg_m2_s": 0.08869407754743132
+      },
+      "native_request_count": 10,
+      "native_request_p50_ms": 153.17649202188477,
+      "native_request_p95_ms": 175.2703120233491,
+      "phase_median_ms": {
+        "preview_s": 46.22772001312114,
+        "seed_s": 1.0743415041361004,
+        "solve_and_accept_s": 90.45583449187689,
+        "guidance_s": 10.309043020242825
+      }
+    },
+    "C0": {
+      "passed": true,
+      "accepted": 9,
+      "requests": 10,
+      "tcp_peak_mm": 0.6525552474307482,
+      "rotation_peak_rad": 0.00029228279352987185,
+      "original_task_tcp_peak_mm": 22.315785754356412,
+      "execution": {
+        "common_com_peak_m": 0.014744216726196042,
+        "common_com_rmse_m": 0.004309064343881118,
+        "actual_angular_momentum_peak_kg_m2_s": 0.08617265474581795
+      },
+      "native_request_count": 10,
+      "native_request_p50_ms": 230.61376452096738,
+      "native_request_p95_ms": 304.61966313596344,
+      "phase_median_ms": {
+        "preview_and_measurement_s": 55.52275897935033,
+        "solve_and_accept_s": 166.55917550087906,
+        "guidance_s": 6.115787517046556
+      }
+    },
+    "C1": {
+      "passed": true,
+      "accepted": 9,
+      "requests": 10,
+      "tcp_peak_mm": 0.6519225736095878,
+      "rotation_peak_rad": 0.00029245881039625954,
+      "original_task_tcp_peak_mm": 22.31578618408037,
+      "execution": {
+        "common_com_peak_m": 0.014744215665382891,
+        "common_com_rmse_m": 0.004309399055937335,
+        "actual_angular_momentum_peak_kg_m2_s": 0.08629158486564013
+      },
+      "native_request_count": 10,
+      "native_request_p50_ms": 569.5438150141854,
+      "native_request_p95_ms": 657.8942246647784,
+      "phase_median_ms": {
+        "kinematic_preview_s": 45.866836997447535,
+        "mapping_s": 6.881599489133805,
+        "quasi_static_s": 205.56842850055546,
+        "configuration_quantities_s": 11.92476152209565,
+        "preparation_overhead_s": 1.2913509854115546,
+        "measurement_s": 0.6484175100922585,
+        "solve_and_accept_s": 249.03978299698792,
+        "guidance_s": 44.24556050798856
+      },
+      "static_nodes": 250,
+      "static_peak_utilization": 0.21246728098211534,
+      "static_equilibrium_residual": 3.694822225952521e-13,
+      "predicted_static_peak_utilization": 0.2344051606086049,
+      "all_candidates_converged": true,
+      "recheck_native_request_p50_ms": 699.7587534715421
+    }
+  }
+}

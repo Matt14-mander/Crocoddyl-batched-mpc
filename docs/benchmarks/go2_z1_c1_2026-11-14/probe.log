@@ -1,0 +1,1 @@
+{"case": "hold_C1", "passed": true, "failures": [], "checks": {"cpu_gates": true, "multiple_packets": true, "worker_closed": true, "full_duration": true, "shifted_seed_used": true, "no_rejected_delivery": true}, "accepted": 8, "requests": 8, "tcp_peak": 2.8898395964864183e-06, "rotation_peak": 1.008586056203182e-05, "native_elapsed_s": 8.613856502983253}

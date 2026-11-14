@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/examples/go2_z1_c1_audit.py", line 228, in <module>
+    main()
+  File "/Users/zhengyuanhao/Desktop/Project/Crocoddyl-batched-mpc/examples/go2_z1_c1_audit.py", line 213, in main
+    args.output.write_text(json.dumps(json_safe(result), indent=2, allow_nan=False) + "\n")
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/encoder.py", line 432, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/encoder.py", line 326, in _iterencode_list
+    yield from chunks
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/encoder.py", line 406, in _iterencode_dict
+    yield from chunks
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/Users/zhengyuanhao/anaconda3/lib/python3.11/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type ndarray is not JSON serializable

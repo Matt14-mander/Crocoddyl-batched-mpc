@@ -1,0 +1,1679 @@
+{
+  "scope": "first three-way pairing and final C1 recheck; static payload probes are not dynamic payload acceptance",
+  "summary": {
+    "hold": {
+      "W": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 8,
+        "tcp_peak_mm": 0.00041545309778892364,
+        "rotation_peak_rad": 4.342423415080951e-07,
+        "original_task_tcp_peak_mm": 0.00041545309778892364,
+        "execution": {
+          "common_com_peak_m": 6.3107828963869115e-06,
+          "common_com_rmse_m": 3.409711111156921e-06,
+          "actual_angular_momentum_peak_kg_m2_s": 3.5109653682719647e-05
+        },
+        "native_request_count": 8,
+        "native_request_p50_ms": 142.83923953189515,
+        "native_request_p95_ms": 190.1057702489197,
+        "phase_median_ms": {
+          "preview_s": 46.99842052650638,
+          "seed_s": 1.2095325510017574,
+          "solve_and_accept_s": 84.67628149082884,
+          "guidance_s": 10.031526006059721
+        }
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 8,
+        "tcp_peak_mm": 0.0028898395955667157,
+        "rotation_peak_rad": 1.0085860560976172e-05,
+        "original_task_tcp_peak_mm": 0.0028898395955667157,
+        "execution": {
+          "common_com_peak_m": 0.00027457112139418614,
+          "common_com_rmse_m": 7.699084343748977e-05,
+          "actual_angular_momentum_peak_kg_m2_s": 0.0018939872891858994
+        },
+        "native_request_count": 8,
+        "native_request_p50_ms": 174.67139748623595,
+        "native_request_p95_ms": 208.26070304319725,
+        "phase_median_ms": {
+          "preview_and_measurement_s": 47.68616650835611,
+          "solve_and_accept_s": 120.61558300047182,
+          "guidance_s": 5.803453997941688
+        }
+      },
+      "C1": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 8,
+        "tcp_peak_mm": 0.0028898395964864184,
+        "rotation_peak_rad": 1.008586056203182e-05,
+        "original_task_tcp_peak_mm": 0.0028898395964864184,
+        "execution": {
+          "common_com_peak_m": 0.00027457112143602246,
+          "common_com_rmse_m": 7.699084344633919e-05,
+          "actual_angular_momentum_peak_kg_m2_s": 0.001893987289446904
+        },
+        "native_request_count": 8,
+        "native_request_p50_ms": 516.8526469788048,
+        "native_request_p95_ms": 559.9566262360895,
+        "phase_median_ms": {
+          "kinematic_preview_s": 46.308734017657116,
+          "mapping_s": 6.862174486741424,
+          "quasi_static_s": 198.52682153577916,
+          "configuration_quantities_s": 11.584402993321419,
+          "preparation_overhead_s": 1.2378159735817462,
+          "measurement_s": 0.6380885024555027,
+          "solve_and_accept_s": 202.72183400811628,
+          "guidance_s": 45.210358017357066
+        },
+        "static_nodes": 200,
+        "static_peak_utilization": 0.2103559483205208,
+        "static_equilibrium_residual": 2.389199948993337e-13,
+        "predicted_static_peak_utilization": 0.2103559483205208,
+        "all_candidates_converged": true,
+        "recheck_native_request_p50_ms": 776.5401320066303
+      }
+    },
+    "reach": {
+      "W": {
+        "passed": true,
+        "accepted": 12,
+        "requests": 12,
+        "tcp_peak_mm": 0.02234856566831758,
+        "rotation_peak_rad": 5.1605424042496833e-05,
+        "original_task_tcp_peak_mm": 0.257917844562237,
+        "execution": {
+          "common_com_peak_m": 0.0001643891937316295,
+          "common_com_rmse_m": 7.300370125067369e-05,
+          "actual_angular_momentum_peak_kg_m2_s": 0.01238995135901073
+        },
+        "native_request_count": 12,
+        "native_request_p50_ms": 152.89040049538016,
+        "native_request_p95_ms": 170.12854245840572,
+        "phase_median_ms": {
+          "preview_s": 46.41250899294391,
+          "seed_s": 1.064924494130537,
+          "solve_and_accept_s": 94.22434552107006,
+          "guidance_s": 10.264479991747066
+        }
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 12,
+        "requests": 12,
+        "tcp_peak_mm": 0.02171298045160345,
+        "rotation_peak_rad": 5.343894922298005e-05,
+        "original_task_tcp_peak_mm": 0.2589877939022547,
+        "execution": {
+          "common_com_peak_m": 0.00030362051927591583,
+          "common_com_rmse_m": 0.000102296706438207,
+          "actual_angular_momentum_peak_kg_m2_s": 0.012220067459208821
+        },
+        "native_request_count": 12,
+        "native_request_p50_ms": 177.06476000603288,
+        "native_request_p95_ms": 256.0585268220166,
+        "phase_median_ms": {
+          "preview_and_measurement_s": 48.7349255126901,
+          "solve_and_accept_s": 123.59510650276206,
+          "guidance_s": 5.923454504227266
+        }
+      },
+      "C1": {
+        "passed": true,
+        "accepted": 12,
+        "requests": 12,
+        "tcp_peak_mm": 0.02171912425004168,
+        "rotation_peak_rad": 5.34433015187801e-05,
+        "original_task_tcp_peak_mm": 0.25898670737913293,
+        "execution": {
+          "common_com_peak_m": 0.00030362093405308536,
+          "common_com_rmse_m": 0.00010231225120665767,
+          "actual_angular_momentum_peak_kg_m2_s": 0.012220946019946383
+        },
+        "native_request_count": 12,
+        "native_request_p50_ms": 530.0061645102687,
+        "native_request_p95_ms": 659.6117053122725,
+        "phase_median_ms": {
+          "kinematic_preview_s": 47.31693601934239,
+          "mapping_s": 7.100851507857442,
+          "quasi_static_s": 208.74383702175692,
+          "configuration_quantities_s": 11.689092498272657,
+          "preparation_overhead_s": 1.3113734894432127,
+          "measurement_s": 0.6659500068053603,
+          "solve_and_accept_s": 201.96130601107143,
+          "guidance_s": 45.07028451189399
+        },
+        "static_nodes": 300,
+        "static_peak_utilization": 0.21249450798159258,
+        "static_equilibrium_residual": 3.126388037344441e-13,
+        "predicted_static_peak_utilization": 0.21765565601787593,
+        "all_candidates_converged": true,
+        "recheck_native_request_p50_ms": 511.6998750308994
+      }
+    },
+    "high_low": {
+      "W": {
+        "passed": true,
+        "accepted": 24,
+        "requests": 24,
+        "tcp_peak_mm": 0.4483930396576332,
+        "rotation_peak_rad": 0.005016931610735743,
+        "original_task_tcp_peak_mm": 0.4483930396580452,
+        "execution": {
+          "common_com_peak_m": 0.0006908874317913082,
+          "common_com_rmse_m": 0.00022018781571041523,
+          "actual_angular_momentum_peak_kg_m2_s": 0.18348226626180997
+        },
+        "native_request_count": 24,
+        "native_request_p50_ms": 164.6287570183631,
+        "native_request_p95_ms": 185.47632558911573,
+        "phase_median_ms": {
+          "preview_s": 47.00260600657202,
+          "seed_s": 1.101259986171499,
+          "solve_and_accept_s": 100.50675252568908,
+          "guidance_s": 10.261267481837422
+        }
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 24,
+        "requests": 24,
+        "tcp_peak_mm": 0.4359749939921427,
+        "rotation_peak_rad": 0.00505178044470186,
+        "original_task_tcp_peak_mm": 0.43597499399224254,
+        "execution": {
+          "common_com_peak_m": 0.0003802688046078724,
+          "common_com_rmse_m": 0.00015503405112741452,
+          "actual_angular_momentum_peak_kg_m2_s": 0.1815224559797815
+        },
+        "native_request_count": 24,
+        "native_request_p50_ms": 227.35745101817884,
+        "native_request_p95_ms": 248.41715590155218,
+        "phase_median_ms": {
+          "preview_and_measurement_s": 49.54997048480436,
+          "solve_and_accept_s": 174.62296201847494,
+          "guidance_s": 5.921970994677395
+        }
+      },
+      "C1": {
+        "passed": true,
+        "accepted": 24,
+        "requests": 24,
+        "tcp_peak_mm": 0.4359773074862979,
+        "rotation_peak_rad": 0.005051846723729466,
+        "original_task_tcp_peak_mm": 0.4359773074863979,
+        "execution": {
+          "common_com_peak_m": 0.0003802688045788367,
+          "common_com_rmse_m": 0.00015515377319975265,
+          "actual_angular_momentum_peak_kg_m2_s": 0.18153289891163346
+        },
+        "native_request_count": 24,
+        "native_request_p50_ms": 588.0518670019228,
+        "native_request_p95_ms": 611.2660681654233,
+        "phase_median_ms": {
+          "kinematic_preview_s": 46.589921024860814,
+          "mapping_s": 6.660174491116777,
+          "quasi_static_s": 181.89387049642392,
+          "configuration_quantities_s": 11.520735977683216,
+          "preparation_overhead_s": 1.2507054780144244,
+          "measurement_s": 0.6775755027774721,
+          "solve_and_accept_s": 293.7753794831224,
+          "guidance_s": 44.579037494258955
+        },
+        "static_nodes": 600,
+        "static_peak_utilization": 0.2741776998028212,
+        "static_equilibrium_residual": 9.344276416395486e-13,
+        "predicted_static_peak_utilization": 0.2741776998028212,
+        "all_candidates_converged": true,
+        "recheck_native_request_p50_ms": 725.390055013122
+      }
+    },
+    "failure": {
+      "W": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 12,
+        "tcp_peak_mm": 0.6046951546431808,
+        "rotation_peak_rad": 0.00025361947009090567,
+        "original_task_tcp_peak_mm": 22.348134221781887,
+        "execution": {
+          "common_com_peak_m": 0.0147516059000093,
+          "common_com_rmse_m": 0.005322769219177813,
+          "actual_angular_momentum_peak_kg_m2_s": 0.08368112561477828
+        },
+        "native_request_count": 8,
+        "native_request_p50_ms": 158.88966302736662,
+        "native_request_p95_ms": 183.9635883428855,
+        "phase_median_ms": {
+          "preview_s": 50.89987351675518,
+          "seed_s": 1.3940694625489414,
+          "solve_and_accept_s": 93.61164798610844,
+          "guidance_s": 9.886987507343292
+        }
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 12,
+        "tcp_peak_mm": 0.6165485940216892,
+        "rotation_peak_rad": 0.0002683164253240396,
+        "original_task_tcp_peak_mm": 22.348171331573877,
+        "execution": {
+          "common_com_peak_m": 0.014751615689495557,
+          "common_com_rmse_m": 0.005310104516597085,
+          "actual_angular_momentum_peak_kg_m2_s": 0.08106421682411052
+        },
+        "native_request_count": 8,
+        "native_request_p50_ms": 235.03347448422574,
+        "native_request_p95_ms": 307.0648931286996,
+        "phase_median_ms": {
+          "preview_and_measurement_s": 53.42784849926829,
+          "solve_and_accept_s": 174.31115498766303,
+          "guidance_s": 5.6288464984390885
+        }
+      },
+      "C1": {
+        "passed": true,
+        "accepted": 8,
+        "requests": 12,
+        "tcp_peak_mm": 0.6160450988315228,
+        "rotation_peak_rad": 0.0002685921170211072,
+        "original_task_tcp_peak_mm": 22.348171264221133,
+        "execution": {
+          "common_com_peak_m": 0.014751614597552991,
+          "common_com_rmse_m": 0.0053102710898482305,
+          "actual_angular_momentum_peak_kg_m2_s": 0.08113488396605373
+        },
+        "native_request_count": 8,
+        "native_request_p50_ms": 623.6453265300952,
+        "native_request_p95_ms": 734.3657197227002,
+        "phase_median_ms": {
+          "kinematic_preview_s": 54.407833522418514,
+          "mapping_s": 7.329144515097141,
+          "quasi_static_s": 208.99943500990048,
+          "configuration_quantities_s": 12.109192495699972,
+          "preparation_overhead_s": 1.385028997901827,
+          "measurement_s": 0.7587875006720424,
+          "solve_and_accept_s": 293.735803978052,
+          "guidance_s": 45.509600517107174
+        },
+        "static_nodes": 200,
+        "static_peak_utilization": 0.21230641467474382,
+        "static_equilibrium_residual": 4.547473508864641e-13,
+        "predicted_static_peak_utilization": 0.23268374770336936,
+        "all_candidates_converged": true,
+        "recheck_native_request_p50_ms": 733.7394425121602
+      }
+    },
+    "expired": {
+      "W": {
+        "passed": true,
+        "accepted": 9,
+        "requests": 10,
+        "tcp_peak_mm": 0.6413915424541662,
+        "rotation_peak_rad": 0.0002767376884225173,
+        "original_task_tcp_peak_mm": 22.315765838690382,
+        "execution": {
+          "common_com_peak_m": 0.014744290184480589,
+          "common_com_rmse_m": 0.004323057517514253,
+          "actual_angular_momentum_peak_kg_m2_s": 0.08869407754743132
+        },
+        "native_request_count": 10,
+        "native_request_p50_ms": 153.17649202188477,
+        "native_request_p95_ms": 175.2703120233491,
+        "phase_median_ms": {
+          "preview_s": 46.22772001312114,
+          "seed_s": 1.0743415041361004,
+          "solve_and_accept_s": 90.45583449187689,
+          "guidance_s": 10.309043020242825
+        }
+      },
+      "C0": {
+        "passed": true,
+        "accepted": 9,
+        "requests": 10,
+        "tcp_peak_mm": 0.6525552474307482,
+        "rotation_peak_rad": 0.00029228279352987185,
+        "original_task_tcp_peak_mm": 22.315785754356412,
+        "execution": {
+          "common_com_peak_m": 0.014744216726196042,
+          "common_com_rmse_m": 0.004309064343881118,
+          "actual_angular_momentum_peak_kg_m2_s": 0.08617265474581795
+        },
+        "native_request_count": 10,
+        "native_request_p50_ms": 230.61376452096738,
+        "native_request_p95_ms": 304.61966313596344,
+        "phase_median_ms": {
+          "preview_and_measurement_s": 55.52275897935033,
+          "solve_and_accept_s": 166.55917550087906,
+          "guidance_s": 6.115787517046556
+        }
+      },
+      "C1": {
+        "passed": true,
+        "accepted": 9,
+        "requests": 10,
+        "tcp_peak_mm": 0.6519225736095878,
+        "rotation_peak_rad": 0.00029245881039625954,
+        "original_task_tcp_peak_mm": 22.31578618408037,
+        "execution": {
+          "common_com_peak_m": 0.014744215665382891,
+          "common_com_rmse_m": 0.004309399055937335,
+          "actual_angular_momentum_peak_kg_m2_s": 0.08629158486564013
+        },
+        "native_request_count": 10,
+        "native_request_p50_ms": 569.5438150141854,
+        "native_request_p95_ms": 657.8942246647784,
+        "phase_median_ms": {
+          "kinematic_preview_s": 45.866836997447535,
+          "mapping_s": 6.881599489133805,
+          "quasi_static_s": 205.56842850055546,
+          "configuration_quantities_s": 11.92476152209565,
+          "preparation_overhead_s": 1.2913509854115546,
+          "measurement_s": 0.6484175100922585,
+          "solve_and_accept_s": 249.03978299698792,
+          "guidance_s": 44.24556050798856
+        },
+        "static_nodes": 250,
+        "static_peak_utilization": 0.21246728098211534,
+        "static_equilibrium_residual": 3.694822225952521e-13,
+        "predicted_static_peak_utilization": 0.2344051606086049,
+        "all_candidates_converged": true,
+        "recheck_native_request_p50_ms": 699.7587534715421
+      }
+    }
+  },
+  "traces": {
+    "hold": {
+      "C1_recheck": {
+        "equal": true,
+        "arrays": 12
+      },
+      "W_frozen": {
+        "equal": true,
+        "arrays": 12
+      },
+      "C0_baseline": {
+        "equal": true,
+        "arrays": 12
+      }
+    },
+    "reach": {
+      "C1_recheck": {
+        "equal": true,
+        "arrays": 12
+      },
+      "W_frozen": {
+        "equal": true,
+        "arrays": 12
+      },
+      "C0_baseline": {
+        "equal": true,
+        "arrays": 12
+      }
+    },
+    "high_low": {
+      "C1_recheck": {
+        "equal": true,
+        "arrays": 12
+      },
+      "W_frozen": {
+        "equal": true,
+        "arrays": 12
+      },
+      "C0_baseline": {
+        "equal": true,
+        "arrays": 12
+      }
+    },
+    "failure": {
+      "C1_recheck": {
+        "equal": true,
+        "arrays": 12
+      },
+      "W_frozen": {
+        "equal": true,
+        "arrays": 12
+      },
+      "C0_baseline": {
+        "equal": true,
+        "arrays": 12
+      }
+    },
+    "expired": {
+      "C1_recheck": {
+        "equal": true,
+        "arrays": 12
+      },
+      "W_frozen": {
+        "equal": true,
+        "arrays": 12
+      },
+      "C0_baseline": {
+        "equal": true,
+        "arrays": 12
+      }
+    }
+  },
+  "feedback": [
+    {
+      "case": "hold",
+      "sequence": 1,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "hold",
+      "sequence": 2,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "hold",
+      "sequence": 3,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "hold",
+      "sequence": 4,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "hold",
+      "sequence": 5,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "hold",
+      "sequence": 6,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "hold",
+      "sequence": 7,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "hold",
+      "sequence": 8,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 1,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 2,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 3,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 4,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 5,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 6,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 7,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 8,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 9,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 10,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 11,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "reach",
+      "sequence": 12,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 1,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 2,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 3,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 4,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 5,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 6,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 7,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 8,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 9,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 10,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 11,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 12,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 13,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 14,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 15,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 16,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 17,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 18,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 19,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 20,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 21,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 22,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 23,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "high_low",
+      "sequence": 24,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 1,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 2,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 7,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 8,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 9,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 10,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 11,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "failure",
+      "sequence": 12,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 1,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 2,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 3,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 4,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 5,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 6,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 7,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 8,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 9,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    },
+    {
+      "case": "expired",
+      "sequence": 10,
+      "errors": {
+        "state": 0.0,
+        "previous_torque": 0.0,
+        "momentum": 0.0,
+        "previous_force": 0.0
+      }
+    }
+  ],
+  "feedback_requests": 62,
+  "feedback_max_errors": {
+    "state": 0.0,
+    "previous_torque": 0.0,
+    "momentum": 0.0,
+    "previous_force": 0.0
+  },
+  "payload_probes": [
+    {
+      "payload_mass_kg": 0,
+      "accepted": true,
+      "status": "SUCCESS",
+      "diagnostics": {
+        "equilibrium_residual": 1.4832579608992091e-13,
+        "force_violation": 0.0,
+        "torque_violation": 0.0,
+        "peak_utilization": 0.2103559483205208,
+        "foot_error": 0.0,
+        "joint_violation": 0.0,
+        "epigraph_residual": 0.0,
+        "qp_converged": true,
+        "qp_iterations": 8,
+        "equality_rank": 6,
+        "payload_mass_kg": 0.0,
+        "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+        "solve_time_s": 0.08132743596797809
+      },
+      "forces": [
+        [
+          -0.2110365005292023,
+          -2.1578929741124204,
+          59.17129221267305
+        ],
+        [
+          0.043396626761812995,
+          2.098299760260881,
+          59.29063460587442
+        ],
+        [
+          0.12987222194550704,
+          -0.49340798834576716,
+          46.857698469675796
+        ],
+        [
+          0.03776765182192493,
+          0.5530012021973068,
+          46.65455874407677
+        ]
+      ],
+      "torques": [
+        -3.934975278022336,
+        0.332347089418651,
+        8.81951404908902,
+        3.9640595671318084,
+        0.40786209310264326,
+        8.875506692368774,
+        -3.2530413227295694,
+        0.4335277953576919,
+        6.988626098437057,
+        3.215954388376122,
+        0.4061914298999049,
+        6.943918806062732,
+        -3.469446951953614e-18,
+        -2.2735992957849116,
+        -6.310678449615624,
+        -2.788246865458124,
+        0.0,
+        0.010577088716873167
+      ]
+    },
+    {
+      "payload_mass_kg": 1,
+      "accepted": true,
+      "status": "SUCCESS",
+      "diagnostics": {
+        "equilibrium_residual": 1.474376176702208e-13,
+        "force_violation": 0.0,
+        "torque_violation": 0.0,
+        "peak_utilization": 0.34702185190336204,
+        "foot_error": 0.0,
+        "joint_violation": 0.0,
+        "epigraph_residual": 0.0,
+        "qp_converged": true,
+        "qp_iterations": 6,
+        "equality_rank": 6,
+        "payload_mass_kg": 1.0,
+        "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+        "solve_time_s": 0.007096558983903378
+      },
+      "forces": [
+        [
+          0.005222425574031547,
+          -1.3201140148730448,
+          66.02966509622728
+        ],
+        [
+          0.006396849309969754,
+          1.319244763109781,
+          65.98855892368931
+        ],
+        [
+          -0.0064063219896100115,
+          -0.09754371164305797,
+          44.90432558612157
+        ],
+        [
+          -0.005212952894347367,
+          0.09841296340632191,
+          44.86163442626187
+        ]
+      ],
+      "torques": [
+        -4.838600218910699,
+        0.39653210249166604,
+        9.899544310262888,
+        4.834932570799481,
+        0.39688066800155153,
+        9.893437699446928,
+        -3.1839855651148077,
+        0.39308072442443737,
+        6.669933344641709,
+        3.179650567982051,
+        0.39343491286123655,
+        6.6635873642233365,
+        -3.469446951953614e-18,
+        -5.129421053274491,
+        -10.410655557100862,
+        -5.438908865458124,
+        0.0,
+        0.010577088716873167
+      ]
+    },
+    {
+      "payload_mass_kg": 5,
+      "accepted": true,
+      "status": "SUCCESS",
+      "diagnostics": {
+        "equilibrium_residual": 1.7053025658242404e-13,
+        "force_violation": 0.0,
+        "torque_violation": 0.0,
+        "peak_utilization": 0.8936854662347272,
+        "foot_error": 0.0,
+        "joint_violation": 0.0,
+        "epigraph_residual": 0.0,
+        "qp_converged": true,
+        "qp_iterations": 6,
+        "equality_rank": 6,
+        "payload_mass_kg": 5.0,
+        "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+        "solve_time_s": 0.0061680549988523126
+      },
+      "forces": [
+        [
+          -7.4508341889203375e-06,
+          -0.0003271155688528181,
+          93.14265571164434
+        ],
+        [
+          -7.317357073064433e-06,
+          0.0003269720988974804,
+          93.10075711374871
+        ],
+        [
+          7.2554321764760375e-06,
+          -4.695761195138455e-05,
+          37.411334970704495
+        ],
+        [
+          7.5127591361349e-06,
+          4.710108190672632e-05,
+          37.36943623620248
+        ]
+      ],
+      "torques": [
+        -7.819599691823514,
+        0.39497989055905136,
+        14.04154769287691,
+        7.815598418305942,
+        0.39497993017466665,
+        14.035145739017395,
+        -2.497341711121193,
+        0.3949842553356454,
+        5.525979766751541,
+        2.4933403393947904,
+        0.39498433170953007,
+        5.519577810398135,
+        -3.469446951953614e-18,
+        -16.552708083232808,
+        -26.810563987041817,
+        -16.041556865458126,
+        0.0,
+        0.010577088716873167
+      ]
+    },
+    {
+      "payload_mass_kg": 6,
+      "accepted": false,
+      "status": "QUASI_STATIC_LIMIT",
+      "diagnostics": {
+        "equilibrium_residual": 1.7408297026122455e-13,
+        "force_violation": 0.0,
+        "torque_violation": 0.9105410945270478,
+        "peak_utilization": 1.0303513698175684,
+        "foot_error": 0.0,
+        "joint_violation": 0.0,
+        "epigraph_residual": 0.0,
+        "qp_converged": true,
+        "qp_iterations": 6,
+        "equality_rank": 6,
+        "payload_mass_kg": 6.0,
+        "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+        "solve_time_s": 0.0067896179971285164
+      },
+      "forces": [
+        [
+          -5.946614847886641e-06,
+          -0.00010690540661210466,
+          99.92080434831205
+        ],
+        [
+          -5.909168317000851e-06,
+          0.00010685643549399943,
+          99.87890567845012
+        ],
+        [
+          5.879917591589616e-06,
+          -3.013306293961581e-05,
+          35.53818633403678
+        ],
+        [
+          5.975865627476751e-06,
+          3.0182034057725786e-05,
+          35.49628767150107
+        ]
+      ],
+      "torques": [
+        -8.466978244353616,
+        0.39498033700692664,
+        15.077227658731989,
+        8.462976935916286,
+        0.39498034812094684,
+        15.070825679625452,
+        -2.3184610097960787,
+        0.39498384708696316,
+        5.2397683563046975,
+        2.3144596729894347,
+        0.39498387556405795,
+        5.233366386999121,
+        -3.469446951953614e-18,
+        -19.408529840722387,
+        -30.910541094527048,
+        -18.692218865458123,
+        0.0,
+        0.010577088716873167
+      ]
+    },
+    {
+      "payload_mass_kg": 10,
+      "accepted": false,
+      "status": "QUASI_STATIC_LIMIT",
+      "diagnostics": {
+        "equilibrium_residual": 2.0605739337042905e-13,
+        "force_violation": 0.0,
+        "torque_violation": 17.310449524468005,
+        "peak_utilization": 1.5770149841489336,
+        "foot_error": 0.0,
+        "joint_violation": 0.0,
+        "epigraph_residual": 0.0,
+        "qp_converged": true,
+        "qp_iterations": 6,
+        "equality_rank": 6,
+        "payload_mass_kg": 10.0,
+        "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+        "solve_time_s": 0.007187551993411034
+      },
+      "forces": [
+        [
+          -0.00028778641921023407,
+          -0.0027505909707755214,
+          127.03340039928054
+        ],
+        [
+          -0.0002875398576293564,
+          0.0027503259958077788,
+          126.99149843295808
+        ],
+        [
+          0.00028742553079756644,
+          -0.00046506964729570025,
+          28.045590283068282
+        ],
+        [
+          0.00028790074610064373,
+          0.00046533462226344804,
+          28.003694916993116
+        ]
+      ],
+      "torques": [
+        -11.055446529122904,
+        0.3948966877821133,
+        19.21990503449609,
+        11.051444969982901,
+        0.3948967609608652,
+        19.213502582733142,
+        -1.6027889990298543,
+        0.39506740899670667,
+        4.094965082117621,
+        1.5987879129258848,
+        0.3950675500392107,
+        4.088563672783527,
+        -3.469446951953614e-18,
+        -30.831816870680708,
+        -47.310449524468005,
+        -29.294866865458125,
+        0.0,
+        0.010577088716873167
+      ]
+    }
+  ],
+  "redistribution": {
+    "status": "SUCCESS",
+    "before_peak_utilization": 1.0303513698175684,
+    "after_peak_utilization": 0.9981866296122127,
+    "trials": 61,
+    "kinematic_time_s": 0.10368527879472822,
+    "quasi_static_time_s": 0.3940154842566699,
+    "capability": {
+      "equilibrium_residual": 2.2737367544323206e-13,
+      "force_violation": 0.0,
+      "torque_violation": 0.0,
+      "peak_utilization": 0.9981866296122127,
+      "foot_error": 2.5048627894097564e-09,
+      "joint_violation": 0.0,
+      "epigraph_residual": 0.0,
+      "qp_converged": true,
+      "qp_iterations": 6,
+      "equality_rank": 6,
+      "payload_mass_kg": 6.0,
+      "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+      "solve_time_s": 0.006609358999412507
+    },
+    "payload_mass_kg": 6,
+    "initial_q": [
+      0.0,
+      0.0,
+      0.2967970581818924,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      0.8,
+      -1.6,
+      0.0,
+      1.2,
+      -1.8,
+      0.6,
+      0.0,
+      0.0
+    ],
+    "adjusted_q": [
+      0.018724169606889805,
+      0.002492179974560471,
+      0.2918925536557039,
+      -0.0004509989840554488,
+      0.006000256881807687,
+      -0.018507176724126842,
+      0.9998106210312884,
+      0.014475745201300913,
+      0.8865681041755521,
+      -1.6323639603771085,
+      0.015210136390286682,
+      0.8610968196671454,
+      -1.6528093420839647,
+      -0.034525245400820706,
+      0.8852479239528162,
+      -1.631778676535804,
+      -0.03346782782604806,
+      0.8285402805078157,
+      -1.591854716915361,
+      0.019429297251582323,
+      1.1585309682071203,
+      -1.8366975281511453,
+      0.6661494787420867,
+      0.017582486461347607,
+      0.0008910701698009973
+    ],
+    "foot_error": 2.5048627894097564e-09,
+    "tcp_pose_error": 4.604132963770269e-09
+  },
+  "shared_redistribution": {
+    "initial_rejected_nodes": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "adjusted_nodes": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "attempts": [
+      {
+        "node": 4,
+        "status": "SUCCESS",
+        "before_peak_utilization": 1.0002873162249801,
+        "after_peak_utilization": 0.9939509262528895,
+        "trials": 7,
+        "kinematic_time_s": 0.012987234978936613,
+        "quasi_static_time_s": 0.05917475704336539,
+        "capability": {
+          "equilibrium_residual": 8.526512829121202e-14,
+          "force_violation": 0.0,
+          "torque_violation": 0.0,
+          "peak_utilization": 0.9939509262528895,
+          "foot_error": 2.47756787308262e-10,
+          "joint_violation": 0.0,
+          "epigraph_residual": 0.0,
+          "qp_converged": true,
+          "qp_iterations": 7,
+          "equality_rank": 6,
+          "payload_mass_kg": 0.0,
+          "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+          "solve_time_s": 0.010889272030908614
+        }
+      },
+      {
+        "node": 5,
+        "status": "SUCCESS",
+        "before_peak_utilization": 1.0021847462700886,
+        "after_peak_utilization": 0.9962080233191605,
+        "trials": 7,
+        "kinematic_time_s": 0.011335735907778144,
+        "quasi_static_time_s": 0.050965857051778585,
+        "capability": {
+          "equilibrium_residual": 2.842170943040401e-14,
+          "force_violation": 0.0,
+          "torque_violation": 0.0,
+          "peak_utilization": 0.9962080233191605,
+          "foot_error": 3.203164400389369e-10,
+          "joint_violation": 0.0,
+          "epigraph_residual": 0.0,
+          "qp_converged": true,
+          "qp_iterations": 7,
+          "equality_rank": 6,
+          "payload_mass_kg": 0.0,
+          "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+          "solve_time_s": 0.00769340101396665
+        }
+      },
+      {
+        "node": 6,
+        "status": "SUCCESS",
+        "before_peak_utilization": 1.0040652588093721,
+        "after_peak_utilization": 0.9975129896997413,
+        "trials": 7,
+        "kinematic_time_s": 0.010939960076939315,
+        "quasi_static_time_s": 0.052657374064438045,
+        "capability": {
+          "equilibrium_residual": 4.968727520731994e-14,
+          "force_violation": 0.0,
+          "torque_violation": 0.0,
+          "peak_utilization": 0.9975129896997413,
+          "foot_error": 2.4948492993726035e-09,
+          "joint_violation": 0.0,
+          "epigraph_residual": 0.0,
+          "qp_converged": true,
+          "qp_iterations": 7,
+          "equality_rank": 6,
+          "payload_mass_kg": 0.0,
+          "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+          "solve_time_s": 0.007264151005074382
+        }
+      },
+      {
+        "node": 7,
+        "status": "SUCCESS",
+        "before_peak_utilization": 1.0056421126390211,
+        "after_peak_utilization": 0.9995505530656419,
+        "trials": 7,
+        "kinematic_time_s": 0.011624884908087552,
+        "quasi_static_time_s": 0.049676944967359304,
+        "capability": {
+          "equilibrium_residual": 1.1368683772161603e-13,
+          "force_violation": 0.0,
+          "torque_violation": 0.0,
+          "peak_utilization": 0.9995505530656419,
+          "foot_error": 3.1469843397857744e-10,
+          "joint_violation": 0.0,
+          "epigraph_residual": 0.0,
+          "qp_converged": true,
+          "qp_iterations": 7,
+          "equality_rank": 6,
+          "payload_mass_kg": 0.0,
+          "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+          "solve_time_s": 0.007125884993001819
+        }
+      },
+      {
+        "node": 8,
+        "status": "SUCCESS",
+        "before_peak_utilization": 1.0067094529200937,
+        "after_peak_utilization": 0.9943143051121069,
+        "trials": 13,
+        "kinematic_time_s": 0.02101292199222371,
+        "quasi_static_time_s": 0.09412423986941576,
+        "capability": {
+          "equilibrium_residual": 8.526512829121202e-14,
+          "force_violation": 0.0,
+          "torque_violation": 0.0,
+          "peak_utilization": 0.9943143051121069,
+          "foot_error": 3.6705960493321754e-10,
+          "joint_violation": 0.0,
+          "epigraph_residual": 0.0,
+          "qp_converged": true,
+          "qp_iterations": 7,
+          "equality_rank": 6,
+          "payload_mass_kg": 0.0,
+          "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+          "solve_time_s": 0.007282164006028324
+        }
+      },
+      {
+        "node": 9,
+        "status": "SUCCESS",
+        "before_peak_utilization": 1.0072084892705422,
+        "after_peak_utilization": 0.9939353001749723,
+        "trials": 13,
+        "kinematic_time_s": 0.021589971031062305,
+        "quasi_static_time_s": 0.09379864390939474,
+        "capability": {
+          "equilibrium_residual": 5.684341886080802e-14,
+          "force_violation": 0.0,
+          "torque_violation": 0.0,
+          "peak_utilization": 0.9939353001749723,
+          "foot_error": 4.866335390207865e-10,
+          "joint_violation": 0.0,
+          "epigraph_residual": 0.0,
+          "qp_converged": true,
+          "qp_iterations": 7,
+          "equality_rank": 6,
+          "payload_mass_kg": 0.0,
+          "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+          "solve_time_s": 0.007489983981940895
+        }
+      },
+      {
+        "node": 10,
+        "status": "SUCCESS",
+        "before_peak_utilization": 1.0072949041417034,
+        "after_peak_utilization": 0.9934555748378998,
+        "trials": 13,
+        "kinematic_time_s": 0.02364742907229811,
+        "quasi_static_time_s": 0.09554776787990704,
+        "capability": {
+          "equilibrium_residual": 8.526512829121202e-14,
+          "force_violation": 0.0,
+          "torque_violation": 0.0,
+          "peak_utilization": 0.9934555748378998,
+          "foot_error": 2.1579363296275744e-10,
+          "joint_violation": 0.0,
+          "epigraph_residual": 0.0,
+          "qp_converged": true,
+          "qp_iterations": 7,
+          "equality_rank": 6,
+          "payload_mass_kg": 0.0,
+          "payload_scope": "static gravity probe only; not added to centroidal dynamics",
+          "solve_time_s": 0.006999423960223794
+        }
+      }
+    ],
+    "kinematic_time_s": 0.12481677200412378,
+    "quasi_static_time_s": 0.5799911848152988,
+    "accepted": true,
+    "status": "REDISTRIBUTED_SHARED_REFERENCE",
+    "test_only_torque_scale": 0.211,
+    "fixed_rotation_error": 0.0
+  }
+}
